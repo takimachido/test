@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlashScreener</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overscroll-behavior: none; /* remove o fundo branco ao rolar demais */
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(135deg, #000000, #1c1179);
+      background-attachment: fixed;
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 100%;
+      padding-top: 70px;
+    }
+
+    header {
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      margin: 15px auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-box input {
+      width: 400px;
+      padding: 12px 20px;
+      border-radius: 25px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    h1 {
+      font-size: 83px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    p {
+      font-size: 18px;
+      margin: 34px 0;
+      opacity: 0.9;
+      font-style: italic;
+    }
+
+    .buttons {
+      margin-top: 5px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #1c1c4b, #2e2e83);
+      color: white;
+      font-size: 30px;
+      font-weight: bold;
+      border: none;
+      padding: 45px 45px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      min-width: 220px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #2e2e83, #4646c2);
+      transform: scale(1.05);
+    }
+
+    .btn .icons {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn .icons img {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #3e27b2;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      text-decoration: none;
+    }
+
+    .logo:hover {
+      color: #3e27b2;
+    }
+
+    footer {
+      width: 100%;
+      background: #060611;
+      color: #ccc;
+      text-align: center;
+      padding: 9px 0; /* altura bem fina */
+      font-size: 15px;
+      font-weight: normal;
+      font-style: normal;
+      border-top: 0.5px solid #333;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: #595959;
+      text-decoration: none;
+      margin: 0 8px;
+      font-weight: normal;
+    }
+
+    footer a:hover {
+      color: #b497ff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Logo com link (agora redireciona dentro do site) -->
+  <a href="/home" class="logo"> FLASHSCREENER</a>
+
+  <header>
+    <div class="search-box">
+      <input type="text" placeholder="Search CA...">
+    </div>
+    <h1>DOMINATE THE TRENCHES</h1>
+    <p>Instantly open any Solana CA from your timeline using our extension</p>
+    <p>Quickly check if dev sold or still hold any supply to dump</p>
+    <p>See who are the top holders and how much they own</p>
+  </header>
+
+  <div class="buttons">
+    <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext" class="btn" target="_blank">
+      Install Extension
+      <div class="icons">
+        <img src="brave.png" alt="Brave">
+        <img src="chrome.png" alt="Chrome">
+        <img src="edge.png" alt="Edge">
+      </div>
+    </a>
+  </div>
+
+  <!-- Rodapé super fino -->
+  <footer>
+    <a href="https://x.com/flashscreener" target="_blank">X | Twitter</a>
+    <a href="/privacy">Privacy Policy</a>
+  </footer>
+</body>
+</html>
