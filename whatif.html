@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What If Calculator - FlashScreener</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(135deg, #000000, #1c1179);
+      color: white;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    header {
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: #ffcc00;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .input-group {
+      margin: 15px 0;
+    }
+
+    .input-group input {
+      padding: 10px;
+      width: 80%;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #ffcc00;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #e6b800;
+    }
+
+    .results {
+      margin-top: 30px;
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .token-info {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .token-info img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>FlashScreener</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="whatif.html">What If</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>What If Calculator</h2>
+    <p>Compare dois tokens e veja quanto o Token 1 valeria se atingisse o Market Cap do Token 2.</p>
+
+    <div class="input-group">
+      <input id="ca1" placeholder="Contract Address do Token 1">
+    </div>
+
+    <div class="input-group">
+      <input id="ca2" placeholder="Contract Address do Token 2">
+    </div>
+
+    <div class="input-group">
+      <input id="amount" placeholder="Quantidade que você possui (opcional)" type="number">
+    </div>
+
+    <button onclick="calculate()">Calcular</button>
+
+    <div id="results" class="results" style="display:none;"></div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 FlashScreener. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    async function getTokenData(ca) {
+      const url = `https://api.geckoterminal.com/api/v2/networks/solana/tokens/${ca}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Token não encontrado. Verifique o CA.');
+      }
+      const data = await response.json();
+      return {
+        name: data.data.attributes.name,
+        ticker: data.data.attributes.symbol,
+        price_usd: parseFloat(data.data.attributes.price_usd),
+        market_cap: parseFloat(data.data.attributes.market_cap_usd),
+        logo: data.data.attributes.image_url
+      };
+    }
+
+    async function getSolanaPrice() {
+      const url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
+      const response = await fetch(url);
+      const data = await response.json();
+      return data.solana.usd;
+    }
+
+    async function calculate() {
+      const ca1 = document.getElementById('ca1').value.trim();
+      const ca2 = document.getElementById('ca2').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value.trim()) || 0;
+      const resultsDiv = document.getElementById('results');
+
+      if (!ca1 || !ca2) {
+        alert('Por favor, insira os dois Contract Addresses.');
+        return;
+      }
+
+      try {
+        const [token1, token2, solPrice] = await Promise.all([
+          getTokenData(ca1),
+          getTokenData(ca2),
+          getSolanaPrice()
+        ]);
+
+        const newPrice = (token2.market_cap / token1.market_cap) * token1.price_usd;
+        const multiplier = newPrice / token1.price_usd;
+
+        let profitUSD = 0, profitPercent = 0, profitInSol = 0;
+        if (amount > 0) {
+          profitUSD = newPrice * amount;
+          profitPercent = ((newPrice - token1.price_usd) / token1.price_usd) * 100;
+          profitInSol = profitUSD / solPrice;
+        }
+
+        resultsDiv.style.display = 'block';
+        resultsDiv.innerHTML = `
+          <div class="token-info">
+            <div>
+              <img src="${token1.logo}" alt="${token1.ticker}">
+              <p>${token1.name} ($${token1.ticker})</p>
+              <p>Preço Atual: $${token1.price_usd.toFixed(8)}</p>
+              <p>Market Cap: $${token1.market_cap.toLocaleString()}</p>
+            </div>
+            <div>
+              <img src="${token2.logo}" alt="${token2.ticker}">
+              <p>${token2.name} ($${token2.ticker})</p>
+              <p>Preço Atual: $${token2.price_usd.toFixed(8)}</p>
+              <p>Market Cap: $${token2.market_cap.toLocaleString()}</p>
+            </div>
+          </div>
+
+          <h3>Resultados:</h3>
+          <p>Preço potencial do ${token1.ticker} caso atinja o Market Cap do ${token2.ticker}: <strong>$${newPrice.toFixed(8)}</strong></p>
+          <p>Multiplicador: <span style="color: lightgreen;">${multiplier.toFixed(2)}x</span></p>
+
+          ${amount > 0 ? `
+            <h3>Seus ganhos:</h3>
+            <p>Valor estimado: $${profitUSD.toFixed(2)}</p>
+            <p>Lucro em SOL: ${profitInSol.toFixed(4)} SOL</p>
+            <p>Variação: ${profitPercent.toFixed(2)}%</p>
+          ` : ''}
+        `;
+      } catch (error) {
+        alert('Erro ao buscar dados: ' + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
