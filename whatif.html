@@ -1,213 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>What If Converter</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #333;
-    }
-    header img {
-      height: 40px;
-    }
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-    .converter {
-      background: #141414;
-      border-radius: 16px;
-      padding: 2rem;
-      max-width: 900px;
-      width: 100%;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-    }
-    .row {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .input-box {
-      flex: 1;
-      background: #1e1e1e;
-      border-radius: 12px;
-      padding: 1rem;
-    }
-    .input-box input {
-      width: 100%;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #fff;
-      font-size: 1rem;
-    }
-    .token-details {
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
-    .results {
-      margin-top: 2rem;
-      background: #1a1a1a;
-      border-radius: 16px;
-      padding: 2rem;
-      text-align: center;
-    }
-    .results h2 {
-      margin: 0 0 1rem;
-      font-size: 1.5rem;
-    }
-    .multiplier {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #00ff99;
-    }
-    .profits {
-      margin-top: 1rem;
-      font-size: 1.2rem;
-      color: #00ff99;
-    }
-    footer {
-      padding: 1rem;
-      text-align: center;
-      border-top: 1px solid #333;
-      font-size: 0.9rem;
-      color: #888;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What If Converter</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #333;
+  }
+  header img {
+    height: 40px;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .converter {
+    background: #141414;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  }
+  .row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .input-box {
+    flex: 1;
+    min-width: 200px;
+    background: #1e1e1e;
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  .input-box input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 1rem;
+  }
+  .token-details {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+  .results {
+    margin-top: 2rem;
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+  }
+  .results h2 {
+    margin: 0 0 1rem;
+    font-size: 1.5rem;
+  }
+  .multiplier {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00ff99;
+  }
+  .profits {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #00ff99;
+  }
+  footer {
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid #333;
+    font-size: 0.9rem;
+    color: #888;
+  }
+</style>
 </head>
 <body>
-  <header>
-    <img src="/logo.png" alt="Site Logo">
-  </header>
-  <main>
-    <div class="converter">
-      <div class="row">
-        <div class="input-box">
-          <input type="text" id="token1" placeholder="Token name or Contract Address (coin1)">
-          <div id="token1-details" class="token-details"></div>
-        </div>
-        <div class="input-box">
-          <input type="text" id="token2" placeholder="Token name or Contract Address (coin2)">
-          <div id="token2-details" class="token-details"></div>
-        </div>
+<header>
+  <img src="/logo.png" alt="Site Logo">
+</header>
+<main>
+  <div class="converter">
+    <div class="row">
+      <div class="input-box">
+        <input type="text" id="token1" placeholder="Token name or Contract Address (coin1)">
+        <div id="token1-details" class="token-details"></div>
       </div>
-      <div class="row">
-        <div class="input-box">
-          <input type="number" id="your-bag" placeholder="Your bags (amount of coin1)">
-        </div>
-      </div>
-      <div class="results" id="results">
-        <h2>Results</h2>
-        <div class="multiplier" id="multiplier">--</div>
-        <div id="future-price">Future Price: --</div>
-        <div id="future-mcap">Future Market Cap: --</div>
-        <div class="profits" id="profits">Your Profits: --</div>
+      <div class="input-box">
+        <input type="text" id="token2" placeholder="Token name or Contract Address (coin2)">
+        <div id="token2-details" class="token-details"></div>
       </div>
     </div>
-  </main>
-  <footer>
-    © 2025 YourSite. All rights reserved.
-  </footer>
+    <div class="row">
+      <div class="input-box">
+        <input type="number" id="your-bag" placeholder="Your bags (amount of coin1)">
+      </div>
+    </div>
+    <div class="results" id="results">
+      <h2>Results</h2>
+      <div class="multiplier" id="multiplier">--</div>
+      <div id="future-price">Future Price: --</div>
+      <div id="future-mcap">Future Market Cap: --</div>
+      <div class="profits" id="profits">Your Profits: --</div>
+    </div>
+  </div>
+</main>
+<footer>
+  © 2025 YourSite. All rights reserved.
+</footer>
 
-  <script>
-    const cgBase = 'https://api.coingecko.com/api/v3';
-    const gtBase = 'https://api.geckoterminal.com/api/v2';
+<script>
+const cgBase = 'https://api.coingecko.com/api/v3';
+const gtBase = 'https://api.geckoterminal.com/api/v2';
 
-    async function fetchTokenData(query) {
-      // Try CoinGecko by id or contract
-      try {
-        // Try as a CoinGecko id (e.g. bitcoin, ethereum)
-        let resp = await fetch(`${cgBase}/coins/${query.toLowerCase()}`);
-        if (resp.ok) {
-          let data = await resp.json();
-          return {
-            name: data.name,
-            symbol: data.symbol.toUpperCase(),
-            price: data.market_data.current_price.usd,
-            mcap: data.market_data.market_cap.usd,
-            logo: data.image.small
-          };
-        }
-      } catch(e) {}
+// Função para buscar dados do token via CoinGecko ou GeckoTerminal
+async function fetchTokenData(query) {
+  query = query.trim();
+  if (!query) return null;
 
-      try {
-        // Try GeckoTerminal search
-        let search = await fetch(`${gtBase}/search/tokens?query=${query}`);
-        if (!search.ok) throw new Error('GT search failed');
-        let sdata = await search.json();
-        if (!sdata.data || sdata.data.length === 0) throw new Error('Token not found');
-        let token = sdata.data[0].attributes;
-        let net = token.network_id;
-        let addr = token.address;
-        let tinfo = await fetch(`${gtBase}/networks/${net}/tokens/${addr}`);
-        let tdata = await tinfo.json();
-        let attr = tdata.data.attributes;
-        return {
-          name: attr.name,
-          symbol: attr.symbol.toUpperCase(),
-          price: parseFloat(attr.price_usd),
-          mcap: parseFloat(attr.market_cap_usd),
-          logo: attr.image_url
-        };
-      } catch(e) {
-        console.error(e);
-      }
-      return null;
+  // CoinGecko
+  try {
+    let resp = await fetch(`${cgBase}/coins/${query.toLowerCase()}`);
+    if (resp.ok) {
+      let data = await resp.json();
+      return {
+        name: data.name,
+        symbol: data.symbol.toUpperCase(),
+        price: data.market_data.current_price.usd,
+        mcap: data.market_data.market_cap.usd,
+        logo: data.image.small
+      };
     }
+  } catch(e) {}
 
-    async function update() {
-      const t1 = document.getElementById('token1').value.trim();
-      const t2 = document.getElementById('token2').value.trim();
-      const amount = parseFloat(document.getElementById('your-bag').value);
+  // GeckoTerminal
+  try {
+    let search = await fetch(`${gtBase}/search/tokens?query=${query}`);
+    if (!search.ok) throw new Error('GT search failed');
+    let sdata = await search.json();
+    if (!sdata.data || sdata.data.length === 0) throw new Error('Token not found');
+    let token = sdata.data[0].attributes;
+    let net = token.network_id;
+    let addr = token.address;
+    let tinfo = await fetch(`${gtBase}/networks/${net}/tokens/${addr}`);
+    let tdata = await tinfo.json();
+    let attr = tdata.data.attributes;
+    return {
+      name: attr.name,
+      symbol: attr.symbol.toUpperCase(),
+      price: parseFloat(attr.price_usd),
+      mcap: parseFloat(attr.market_cap_usd),
+      logo: attr.image_url
+    };
+  } catch(e) {
+    console.error(e);
+  }
 
-      if (!t1 || !t2) return;
+  return null;
+}
 
-      const d1 = await fetchTokenData(t1);
-      const d2 = await fetchTokenData(t2);
+// Atualiza os resultados quando inputs mudam
+async function update() {
+  const t1 = document.getElementById('token1').value.trim();
+  const t2 = document.getElementById('token2').value.trim();
+  const amount = parseFloat(document.getElementById('your-bag').value);
 
-      if (!d1 || !d2) return;
+  if (!t1 || !t2) return;
 
-      document.getElementById('token1-details').innerHTML = `${d1.name} ($${d1.symbol})<br>Price: $${d1.price.toFixed(6)}<br>MCap: $${d1.mcap.toLocaleString()}`;
-      document.getElementById('token2-details').innerHTML = `${d2.name} ($${d2.symbol})<br>Price: $${d2.price.toFixed(6)}<br>MCap: $${d2.mcap.toLocaleString()}`;
+  const d1 = await fetchTokenData(t1);
+  const d2 = await fetchTokenData(t2);
 
-      let multiplier = d2.mcap / d1.mcap;
-      let futurePrice = d1.price * multiplier;
+  if (!d1 || !d2) return;
 
-      document.getElementById('multiplier').innerText = `${multiplier.toFixed(2)}x`;
-      document.getElementById('future-price').innerText = `Future Price: $${futurePrice.toFixed(6)}`;
-      document.getElementById('future-mcap').innerText = `Future Market Cap: $${d2.mcap.toLocaleString()}`;
+  // Detalhes dos tokens
+  document.getElementById('token1-details').innerHTML = `${d1.name} (${d1.symbol})<br>Price: $${d1.price.toFixed(6)}<br>MCap: $${d1.mcap.toLocaleString()}`;
+  document.getElementById('token2-details').innerHTML = `${d2.name} (${d2.symbol})<br>Price: $${d2.price.toFixed(6)}<br>MCap: $${d2.mcap.toLocaleString()}`;
 
-      if (amount) {
-        let currentValue = amount * d1.price;
-        let futureValue = amount * futurePrice;
-        let profit = futureValue - currentValue;
-        let percent = ((futureValue / currentValue) - 1) * 100;
-        document.getElementById('profits').innerText = `Your Profits: $${profit.toFixed(2)} (+${percent.toFixed(2)}%)`;
-      }
-    }
+  // Cálculo do multiplicador e futuro preço
+  let multiplier = d2.mcap / d1.mcap;
+  let futurePrice = d1.price * multiplier;
 
-    document.getElementById('token1').addEventListener('change', update);
-    document.getElementById('token2').addEventListener('change', update);
-    document.getElementById('your-bag').addEventListener('input', update);
-  </script>
+  document.getElementById('multiplier').innerText = `${multiplier.toFixed(2)}x`;
+  document.getElementById('future-price').innerText = `Future Price: $${futurePrice.toFixed(6)}`;
+  document.getElementById('future-mcap').innerText = `Future Market Cap: $${d2.mcap.toLocaleString()}`;
+
+  // Cálculo de lucros
+  if (amount && !isNaN(amount)) {
+    let currentValue = amount * d1.price;
+    let futureValue = amount * futurePrice;
+    let profit = futureValue - currentValue;
+    let percent = ((futureValue / currentValue) - 1) * 100;
+    document.getElementById('profits').innerText = `Your Profits: $${profit.toFixed(2)} (+${percent.toFixed(2)}%)`;
+  }
+}
+
+// Event listeners
+document.getElementById('token1').addEventListener('change', update);
+document.getElementById('token2').addEventListener('change', update);
+document.getElementById('your-bag').addEventListener('input', update);
+</script>
 </body>
 </html>
+
