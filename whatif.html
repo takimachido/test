@@ -3,221 +3,211 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>What If Calculator - FlashScreener</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <title>What If Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: 'Open Sans', sans-serif;
-      background: linear-gradient(135deg, #000000, #1c1179);
-      color: white;
-      text-align: center;
-      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+      color: #fff;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      min-height: 100vh;
     }
-
     header {
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.8);
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      color: #ffcc00;
-    }
-
-    .container {
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    .input-group {
-      margin: 15px 0;
-    }
-
-    .input-group input {
-      padding: 10px;
-      width: 80%;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background: #ffcc00;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background: #e6b800;
-    }
-
-    .results {
-      margin-top: 30px;
-      background: rgba(255,255,255,0.1);
-      padding: 20px;
-      border-radius: 12px;
-    }
-
-    .token-info {
+      padding: 1rem 2rem;
       display: flex;
-      justify-content: space-around;
       align-items: center;
-      margin-bottom: 20px;
+      border-bottom: 1px solid #333;
     }
-
-    .token-info img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+    header img {
+      height: 40px;
     }
-
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .converter {
+      background: #141414;
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+    .row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .input-box {
+      flex: 1;
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    .input-box input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 1rem;
+    }
+    .token-details {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+    .results {
+      margin-top: 2rem;
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+    }
+    .results h2 {
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+    }
+    .multiplier {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #00ff99;
+    }
+    .profits {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #00ff99;
+    }
     footer {
-      background: rgba(0, 0, 0, 0.8);
-      padding: 10px;
-      font-size: 14px;
+      padding: 1rem;
+      text-align: center;
+      border-top: 1px solid #333;
+      font-size: 0.9rem;
+      color: #888;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>FlashScreener</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="whatif.html">What If</a>
-      <a href="privacy.html">Privacy</a>
-    </nav>
+    <img src="/logo.png" alt="Site Logo">
   </header>
-
-  <div class="container">
-    <h2>What If Calculator</h2>
-    <p>Compare dois tokens e veja quanto o Token 1 valeria se atingisse o Market Cap do Token 2.</p>
-
-    <div class="input-group">
-      <input id="ca1" placeholder="Contract Address do Token 1">
+  <main>
+    <div class="converter">
+      <div class="row">
+        <div class="input-box">
+          <input type="text" id="token1" placeholder="Token name or Contract Address (coin1)">
+          <div id="token1-details" class="token-details"></div>
+        </div>
+        <div class="input-box">
+          <input type="text" id="token2" placeholder="Token name or Contract Address (coin2)">
+          <div id="token2-details" class="token-details"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-box">
+          <input type="number" id="your-bag" placeholder="Your bags (amount of coin1)">
+        </div>
+      </div>
+      <div class="results" id="results">
+        <h2>Results</h2>
+        <div class="multiplier" id="multiplier">--</div>
+        <div id="future-price">Future Price: --</div>
+        <div id="future-mcap">Future Market Cap: --</div>
+        <div class="profits" id="profits">Your Profits: --</div>
+      </div>
     </div>
-
-    <div class="input-group">
-      <input id="ca2" placeholder="Contract Address do Token 2">
-    </div>
-
-    <div class="input-group">
-      <input id="amount" placeholder="Quantidade que você possui (opcional)" type="number">
-    </div>
-
-    <button onclick="calculate()">Calcular</button>
-
-    <div id="results" class="results" style="display:none;"></div>
-  </div>
-
+  </main>
   <footer>
-    <p>&copy; 2025 FlashScreener. Todos os direitos reservados.</p>
+    © 2025 YourSite. All rights reserved.
   </footer>
 
   <script>
-    async function getTokenData(ca) {
-      const url = `https://api.geckoterminal.com/api/v2/networks/solana/tokens/${ca}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Token não encontrado. Verifique o CA.');
-      }
-      const data = await response.json();
-      return {
-        name: data.data.attributes.name,
-        ticker: data.data.attributes.symbol,
-        price_usd: parseFloat(data.data.attributes.price_usd),
-        market_cap: parseFloat(data.data.attributes.market_cap_usd),
-        logo: data.data.attributes.image_url
-      };
-    }
+    const cgBase = 'https://api.coingecko.com/api/v3';
+    const gtBase = 'https://api.geckoterminal.com/api/v2';
 
-    async function getSolanaPrice() {
-      const url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
-      const response = await fetch(url);
-      const data = await response.json();
-      return data.solana.usd;
-    }
-
-    async function calculate() {
-      const ca1 = document.getElementById('ca1').value.trim();
-      const ca2 = document.getElementById('ca2').value.trim();
-      const amount = parseFloat(document.getElementById('amount').value.trim()) || 0;
-      const resultsDiv = document.getElementById('results');
-
-      if (!ca1 || !ca2) {
-        alert('Por favor, insira os dois Contract Addresses.');
-        return;
-      }
+    async function fetchTokenData(query) {
+      // Try CoinGecko by id or contract
+      try {
+        // Try as a CoinGecko id (e.g. bitcoin, ethereum)
+        let resp = await fetch(`${cgBase}/coins/${query.toLowerCase()}`);
+        if (resp.ok) {
+          let data = await resp.json();
+          return {
+            name: data.name,
+            symbol: data.symbol.toUpperCase(),
+            price: data.market_data.current_price.usd,
+            mcap: data.market_data.market_cap.usd,
+            logo: data.image.small
+          };
+        }
+      } catch(e) {}
 
       try {
-        const [token1, token2, solPrice] = await Promise.all([
-          getTokenData(ca1),
-          getTokenData(ca2),
-          getSolanaPrice()
-        ]);
+        // Try GeckoTerminal search
+        let search = await fetch(`${gtBase}/search/tokens?query=${query}`);
+        if (!search.ok) throw new Error('GT search failed');
+        let sdata = await search.json();
+        if (!sdata.data || sdata.data.length === 0) throw new Error('Token not found');
+        let token = sdata.data[0].attributes;
+        let net = token.network_id;
+        let addr = token.address;
+        let tinfo = await fetch(`${gtBase}/networks/${net}/tokens/${addr}`);
+        let tdata = await tinfo.json();
+        let attr = tdata.data.attributes;
+        return {
+          name: attr.name,
+          symbol: attr.symbol.toUpperCase(),
+          price: parseFloat(attr.price_usd),
+          mcap: parseFloat(attr.market_cap_usd),
+          logo: attr.image_url
+        };
+      } catch(e) {
+        console.error(e);
+      }
+      return null;
+    }
 
-        const newPrice = (token2.market_cap / token1.market_cap) * token1.price_usd;
-        const multiplier = newPrice / token1.price_usd;
+    async function update() {
+      const t1 = document.getElementById('token1').value.trim();
+      const t2 = document.getElementById('token2').value.trim();
+      const amount = parseFloat(document.getElementById('your-bag').value);
 
-        let profitUSD = 0, profitPercent = 0, profitInSol = 0;
-        if (amount > 0) {
-          profitUSD = newPrice * amount;
-          profitPercent = ((newPrice - token1.price_usd) / token1.price_usd) * 100;
-          profitInSol = profitUSD / solPrice;
-        }
+      if (!t1 || !t2) return;
 
-        resultsDiv.style.display = 'block';
-        resultsDiv.innerHTML = `
-          <div class="token-info">
-            <div>
-              <img src="${token1.logo}" alt="${token1.ticker}">
-              <p>${token1.name} ($${token1.ticker})</p>
-              <p>Preço Atual: $${token1.price_usd.toFixed(8)}</p>
-              <p>Market Cap: $${token1.market_cap.toLocaleString()}</p>
-            </div>
-            <div>
-              <img src="${token2.logo}" alt="${token2.ticker}">
-              <p>${token2.name} ($${token2.ticker})</p>
-              <p>Preço Atual: $${token2.price_usd.toFixed(8)}</p>
-              <p>Market Cap: $${token2.market_cap.toLocaleString()}</p>
-            </div>
-          </div>
+      const d1 = await fetchTokenData(t1);
+      const d2 = await fetchTokenData(t2);
 
-          <h3>Resultados:</h3>
-          <p>Preço potencial do ${token1.ticker} caso atinja o Market Cap do ${token2.ticker}: <strong>$${newPrice.toFixed(8)}</strong></p>
-          <p>Multiplicador: <span style="color: lightgreen;">${multiplier.toFixed(2)}x</span></p>
+      if (!d1 || !d2) return;
 
-          ${amount > 0 ? `
-            <h3>Seus ganhos:</h3>
-            <p>Valor estimado: $${profitUSD.toFixed(2)}</p>
-            <p>Lucro em SOL: ${profitInSol.toFixed(4)} SOL</p>
-            <p>Variação: ${profitPercent.toFixed(2)}%</p>
-          ` : ''}
-        `;
-      } catch (error) {
-        alert('Erro ao buscar dados: ' + error.message);
+      document.getElementById('token1-details').innerHTML = `${d1.name} ($${d1.symbol})<br>Price: $${d1.price.toFixed(6)}<br>MCap: $${d1.mcap.toLocaleString()}`;
+      document.getElementById('token2-details').innerHTML = `${d2.name} ($${d2.symbol})<br>Price: $${d2.price.toFixed(6)}<br>MCap: $${d2.mcap.toLocaleString()}`;
+
+      let multiplier = d2.mcap / d1.mcap;
+      let futurePrice = d1.price * multiplier;
+
+      document.getElementById('multiplier').innerText = `${multiplier.toFixed(2)}x`;
+      document.getElementById('future-price').innerText = `Future Price: $${futurePrice.toFixed(6)}`;
+      document.getElementById('future-mcap').innerText = `Future Market Cap: $${d2.mcap.toLocaleString()}`;
+
+      if (amount) {
+        let currentValue = amount * d1.price;
+        let futureValue = amount * futurePrice;
+        let profit = futureValue - currentValue;
+        let percent = ((futureValue / currentValue) - 1) * 100;
+        document.getElementById('profits').innerText = `Your Profits: $${profit.toFixed(2)} (+${percent.toFixed(2)}%)`;
       }
     }
+
+    document.getElementById('token1').addEventListener('change', update);
+    document.getElementById('token2').addEventListener('change', update);
+    document.getElementById('your-bag').addEventListener('input', update);
   </script>
 </body>
 </html>
