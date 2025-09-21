@@ -13,7 +13,7 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overscroll-behavior: none; /* remove o fundo branco ao rolar demais */
+      overscroll-behavior: none;
     }
 
     body {
@@ -68,6 +68,7 @@
       margin-top: 5px;
       display: flex;
       justify-content: center;
+      gap: 20px;
     }
 
     .btn {
@@ -83,6 +84,7 @@
       text-decoration: none;
       display: inline-block;
       min-width: 220px;
+      text-align: center;
     }
 
     .btn:hover {
@@ -122,7 +124,7 @@
       background: #060611;
       color: #ccc;
       text-align: center;
-      padding: 9px 0; /* altura bem fina */
+      padding: 9px 0;
       font-size: 15px;
       font-weight: normal;
       font-style: normal;
@@ -143,7 +145,7 @@
   </style>
 </head>
 <body>
-  <!-- Logo com link (agora redireciona dentro do site) -->
+  <!-- Logo -->
   <a href="/home/" class="logo"> FLASHSCREENER</a>
 
   <header>
@@ -157,6 +159,7 @@
   </header>
 
   <div class="buttons">
+    <!-- Botão para instalar extensão -->
     <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext" class="btn" target="_blank">
       Install Extension
       <div class="icons">
@@ -165,12 +168,17 @@
         <img src="edge.png" alt="Edge">
       </div>
     </a>
+
+    <!-- Novo botão para a calculadora -->
+    <a href="whatif.html" class="btn">
+      MKT CAP CALCULATOR
+    </a>
   </div>
 
-  <!-- Rodapé super fino -->
   <footer>
     <a href="https://x.com/flashscreener" target="_blank">X | Twitter</a>
     <a href="/privacy/">Privacy Policy</a>
   </footer>
 </body>
 </html>
+
