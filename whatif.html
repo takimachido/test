@@ -37,11 +37,16 @@
 
     /* Layout */
     main{flex:1; width:min(1280px, 96vw); margin:90px auto 40px; position:relative}
-    .grid{display:grid; grid-template-columns:1fr 200px 1fr; grid-template-rows: 66px 180px 60px 280px; gap:18px;}
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 200px 1fr;
+      grid-template-rows: auto auto 60px auto;
+      gap:12px;
+    }
 
     /* Inputs */
     .search{
-      grid-row:1; height:60px; display:flex; align-items:center; justify-content:center
+      grid-row:1; height:60px; display:flex; align-items:center; justify-content:center; margin-bottom:-6px;
     }
     .search input{
       width:420px; height:52px; border-radius:999px; border:none; outline:none; padding:0 22px; font-size:18px; color:#fff;
@@ -77,8 +82,27 @@
       color:#fff; font-size:20px; padding:0 16px; outline:none}
     .bags input::placeholder{color:var(--placeholder)}
 
-    .result{grid-column:2; grid-row:4}
-    .result-card{position:relative; background:linear-gradient(180deg, var(--card), var(--card-2)); border:1px solid var(--stroke); border-radius:26px; padding:20px; width:400px; height:240px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:var(--shadow)}
+    .result{
+      grid-column:1 / span 3; /* ocupa todas as colunas */
+      grid-row:4;
+      display:flex;
+      justify-content:center; /* centraliza horizontal */
+    }
+    .result-card{
+      position:relative;
+      background:linear-gradient(180deg, var(--card), var(--card-2));
+      border:1px solid var(--stroke);
+      border-radius:26px;
+      padding:20px;
+      max-width:420px;
+      width:100%;
+      height:240px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      box-shadow:var(--shadow)
+    }
     .result-sym{position:absolute; top:12px; font-size:28px; font-weight:800}
     .pfp{width:90px; height:90px; border-radius:12px; background:#fff; margin:10px auto; object-fit:cover}
     .xleft,.xright{position:absolute; top:90px; font-size:46px; font-weight:900; color:var(--green)}
@@ -137,15 +161,14 @@
       <section class="bags">
         <div class="title">YOUR BAGS</div>
         <input id="bags" placeholder="Token amount" inputmode="decimal" />
-        <div class="hint">Insira a quantidade de <span id="bagsTicker">token</span> que você possui.</div>
       </section>
 
       <section class="result">
         <div class="result-card">
           <div class="result-sym" id="resultTicker">$ticker</div>
           <img class="pfp" id="resultImg" alt="pfp"/>
-          <div class="xleft" id="xLeft">x25</div>
-          <div class="xright" id="xRight">x25</div>
+          <div class="xleft" id="xLeft">x0</div>
+          <div class="xright" id="xRight">x0</div>
           <div class="big-price" id="resultPrice">PRICE $USD</div>
           <div class="cap muted" id="resultCap">MKT CAP:</div>
         </div>
@@ -162,4 +185,3 @@
   </main>
 </body>
 </html>
-
