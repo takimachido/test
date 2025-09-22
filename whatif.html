@@ -175,7 +175,7 @@
       <section class="bags">
         <div class="title">YOUR BAGS</div>
         <input id="bags" placeholder="Token amount" inputmode="decimal" />
-        <div class="hint">Insira a quantidade de <span id="bagsTicker">token</span> que você possui.</div>
+        <div class="hint">Enter the amount of <span id="bagsTicker">token</span> you hold.</div>
       </section>
 
       <section class="result">
@@ -397,7 +397,7 @@
         paintToken(side, tok);
         if (state.t1 && state.t2) compute();
       }catch(e){
-        const msg = 'Não foi possível localizar o token. Verifique o endereço do contrato.';
+        const msg = 'Ops. Incert a new CA.';
         if (side===1){ $('#title1').textContent = msg; $('#price1').textContent='PRICE —'; $('#cap1').textContent='MKT CAP: —'; $('#img1').removeAttribute('src'); }
         else         { $('#title2').textContent = msg; $('#price2').textContent='PRICE —'; $('#cap2').textContent='MKT CAP: —'; $('#img2').removeAttribute('src'); }
       }
