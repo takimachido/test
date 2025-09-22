@@ -83,10 +83,11 @@
     .bags input::placeholder{color:var(--placeholder)}
 
     .result{
-      grid-column:1 / span 3; /* ocupa todas as colunas */
+      grid-column:1 / span 3;
       grid-row:4;
       display:flex;
-      justify-content:center; /* centraliza horizontal */
+      justify-content:center;
+      z-index:1;
     }
     .result-card{
       position:relative;
@@ -108,80 +109,4 @@
     .xleft,.xright{position:absolute; top:90px; font-size:46px; font-weight:900; color:var(--green)}
     .xleft{left:20px}
     .xright{right:20px}
-    .big-price{font-size:34px; font-weight:900}
-    .cap{margin-top:6px; font-size:18px}
-
-    .profits{grid-column:3; grid-row:4}
-    .profits .title{font-size:28px; font-weight:900; margin-bottom:10px}
-    .profits .line{font-size:28px; font-weight:900; color:var(--green)}
-
-    @media (max-width:1180px){
-      .grid{grid-template-columns:1fr; grid-template-rows:auto auto auto auto auto; gap:14px}
-      .left-card,.right-card,.btn-wrap,.result,.bags,.profits{grid-column:1}
-      .left-card{grid-row:2}
-      .btn-wrap{grid-row:3}
-      .right-card{grid-row:4}
-      .result{grid-row:5}
-      .bags{grid-row:6}
-      .profits{grid-row:7}
-      .result-card{width:100%}
-    }
-  </style>
-</head>
-<body>
-  <div class="brand">FLASH<span>SCREENER</span></div>
-  <main>
-    <div class="grid">
-      <!-- Inputs -->
-      <div class="search" style="grid-column:1"><input id="q1" placeholder="Token name, CA..." autocomplete="off"/></div>
-      <div class="search" style="grid-column:3"><input id="q2" placeholder="Token name, CA..." autocomplete="off"/></div>
-
-      <!-- Cards -->
-      <section class="card left-card" id="card1">
-        <img class="token-img" id="img1" alt="token1"/>
-        <div class="token-info">
-          <div class="token-title" id="title1">Token name ($ticker)</div>
-          <div class="token-price" id="price1">PRICE $USD</div>
-          <div class="muted" id="cap1">MKT CAP:</div>
-        </div>
-      </section>
-
-      <div class="btn-wrap"><button id="go" class="btn">WHAT IF</button></div>
-
-      <section class="card right-card" id="card2">
-        <img class="token-img" id="img2" alt="token2"/>
-        <div class="token-info">
-          <div class="token-title" id="title2">Token name ($ticker)</div>
-          <div class="token-price" id="price2">PRICE $USD</div>
-          <div class="muted" id="cap2">MKT CAP:</div>
-        </div>
-      </section>
-
-      <!-- Bottom -->
-      <section class="bags">
-        <div class="title">YOUR BAGS</div>
-        <input id="bags" placeholder="Token amount" inputmode="decimal" />
-      </section>
-
-      <section class="result">
-        <div class="result-card">
-          <div class="result-sym" id="resultTicker">$ticker</div>
-          <img class="pfp" id="resultImg" alt="pfp"/>
-          <div class="xleft" id="xLeft">x0</div>
-          <div class="xright" id="xRight">x0</div>
-          <div class="big-price" id="resultPrice">PRICE $USD</div>
-          <div class="cap muted" id="resultCap">MKT CAP:</div>
-        </div>
-      </section>
-
-      <section class="profits">
-        <div class="title">YOUR PROFITS</div>
-        <div class="line" id="pPct">+0%</div>
-        <div class="line" id="pUsd">+$0</div>
-        <div class="line" id="pSol">+0 SOL</div>
-        <div class="hint" id="hint"></div>
-      </section>
-    </div>
-  </main>
-</body>
-</html>
+    .big-price{font-si
