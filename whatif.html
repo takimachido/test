@@ -150,29 +150,29 @@
       .result-card{width:100%}
       .search input{width:100%}
     }
-/* === Ajustes pedidos (apenas overrides, nada do existente foi alterado) === */
+    /* === Ajustes pedidos (apenas overrides, nada do existente foi alterado) === */
 
-/* 1) Centralizar a seção YOUR BAGS sobre o input */
-.bags{
-  display: flex;
-  flex-direction: column;
-  align-items: center;   /* centraliza título e hint */
-  text-align: center;    /* centraliza textos dentro da seção */
-}
-.bags input{
-  display: block;
-  margin: 0 auto;        /* garante o input centralizado */
-}
+    /* 1) Centralizar a seção YOUR BAGS sobre o input */
+    .bags{
+      display: flex;
+      flex-direction: column;
+      align-items: center;   /* centraliza título e hint */
+      text-align: center;    /* centraliza textos dentro da seção */
+    }
+    .bags input{
+      display: block;
+      margin: 0 auto;        /* garante o input centralizado */
+    }
 
-/* 2) Trazer a seção YOUR PROFITS um pouco mais para a esquerda */
-.profits{
-  transform: translateX(-55px);  /* ajuste fino: aproxime do card de resultado */
-}
+    /* 2) Trazer a seção YOUR PROFITS um pouco mais para a esquerda */
+    .profits{
+      transform: translateX(-55px);  /* ajuste fino: aproxime do card de resultado */
+    }
 
-/* No mobile, não desloque para não colidir */
-@media (max-width:1180px){
-  .profits{ transform:none; }
-}
+    /* No mobile, não desloque para não colidir */
+    @media (max-width:1180px){
+      .profits{ transform:none; }
+    }
   </style>
 </head>
 <body>
@@ -189,7 +189,8 @@
 
       <!-- Cards -->
       <section class="card left-card" id="card1">
-        <img class="token-img" id="img1" alt="token1"/>
+        <!-- placeholder padrão -->
+        <img class="token-img" id="img1" src="whatif.png" alt="token1"/>
         <div class="token-info">
           <div class="token-title" id="title1">Token name ($ticker)</div>
           <div class="token-price" id="price1">PRICE $USD</div>
@@ -200,7 +201,8 @@
       <div class="btn-wrap"><button id="go" class="btn">WHAT IF</button></div>
 
       <section class="card right-card" id="card2">
-        <img class="token-img" id="img2" alt="token2"/>
+        <!-- placeholder padrão -->
+        <img class="token-img" id="img2" src="whatif.png" alt="token2"/>
         <div class="token-info">
           <div class="token-title" id="title2">Token name ($ticker)</div>
           <div class="token-price" id="price2">PRICE $USD</div>
@@ -218,7 +220,8 @@
       <section class="result">
         <div class="result-card" id="resultCard">
           <div class="result-sym" id="resultTicker">$ticker</div>
-          <img class="pfp" id="resultImg" alt="pfp"/>
+          <!-- placeholder padrão -->
+          <img class="pfp" id="resultImg" src="whatif.png" alt="pfp"/>
           <div class="xleft" id="xLeft">x0</div>
           <div class="xright" id="xRight">x0</div>
           <div class="big-price" id="resultPrice">PRICE $USD</div>
@@ -369,15 +372,15 @@
         $('#title1').textContent = `${t.name} ($${t.symbol||'?'})`;
         $('#price1').textContent = t.price!=null ? `PRICE ${nfUSD.format(t.price)}` : 'PRICE —';
         $('#cap1').textContent = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
-        $('#img1').src = t.image || '';
+        $('#img1').src = t.image || 'whatif.png';
         $('#bagsTicker').textContent = `$${t.symbol||'token'}`;
         $('#resultTicker').textContent = `$${t.symbol||'ticker'}`;
-        $('#resultImg').src = t.image || '';
+        $('#resultImg').src = t.image || 'whatif.png';
       } else {
         $('#title2').textContent = `${t.name} ($${t.symbol||'?'})`;
         $('#price2').textContent = t.price!=null ? `PRICE ${nfUSD.format(t.price)}` : 'PRICE —';
         $('#cap2').textContent = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
-        $('#img2').src = t.image || '';
+        $('#img2').src = t.image || 'whatif.png';
       }
     }
 
@@ -450,8 +453,13 @@
         if (state.t1 && state.t2) compute();
       }catch(e){
         const msg = 'Ops. Incert a new CA.';
-        if (side===1){ $('#title1').textContent = msg; $('#price1').textContent='PRICE —'; $('#cap1').textContent='MKT CAP: —'; $('#img1').removeAttribute('src'); }
-        else         { $('#title2').textContent = msg; $('#price2').textContent='PRICE —'; $('#cap2').textContent='MKT CAP: —'; $('#img2').removeAttribute('src'); }
+        if (side===1){
+          $('#title1').textContent = msg; $('#price1').textContent='PRICE —'; $('#cap1').textContent='MKT CAP: —';
+          $('#img1').src = 'whatif.png';
+        } else {
+          $('#title2').textContent = msg; $('#price2').textContent='PRICE —'; $('#cap2').textContent='MKT CAP: —';
+          $('#img2').src = 'whatif.png';
+        }
       }
     }
 
@@ -471,4 +479,3 @@
   </script>
 </body>
 </html>
-
