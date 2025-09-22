@@ -58,8 +58,8 @@
     /* Botão central entre os cards (linha 2, coluna 2) */
     .btn-wrap{grid-column:2; grid-row:2; display:flex; align-items:center; justify-content:center}
     .btn{
-      display:inline-flex; align-items:center; justify-content:center; height:50px; min-width:160px; padding:0 26px; border-radius:999px;
-      background:var(--purple); color:#fff; font-weight:800; letter-spacing:.5px; border:none; cursor:pointer; box-shadow:var(--shadow);
+      display:inline-flex; align-items:center; justify-content:center; height:60px; min-width:180px; padding:0 26px; border-radius:999px;
+      background:var(--purple); color:#fff; font-size:20px; font-weight:800; letter-spacing:.5px; border:none; cursor:pointer; box-shadow:var(--shadow);
       transition:transform .08s ease, background .2s ease
     }
     .btn:hover{background:var(--purple-2)}
@@ -347,11 +347,11 @@
     function compute(){
       const t1 = state.t1, t2 = state.t2;
       if (!t1 || !t2){
-        $('#hint').innerHTML = '<span class="err">Preencha os dois tokens e clique em WHAT IF.</span>';
+        $('#hint').innerHTML = '<span class="err">Insert both CAs and click WHAT IF.</span>';
         return;
       }
       if (!(t1.price>0 && t1.marketCap>0 && t2.marketCap>0)){
-        $('#hint').innerHTML = '<span class="err">Faltam dados (preço/market cap). Tente outro provedor/CA.</span>';
+        $('#hint').innerHTML = '<span class="err">Missing data (preço/market cap). Try another CA.</span>';
         return;
       }
 
