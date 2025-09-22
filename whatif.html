@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,16 +7,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root{
-      --bg1:#0a0715; /* quase preto azulado */
-      --bg2:#2a1b6c; /* roxo profundo */
-      --card:#241f3b; /* roxo escuro do card */
+      --bg1:#0a0715;
+      --bg2:#2a1b6c;
+      --card:#241f3b;
       --card-2:#2b2550;
       --stroke:#4a3f7a;
-      --purple:#6b3aff; /* botão "WHAT IF" */
+      --purple:#6b3aff;
       --purple-2:#7c4dff;
       --muted:#a6a2c7;
       --text:#ffffff;
-      --green:#22e06b; /* números verdes */
+      --green:#22e06b;
       --input:#352e63;
       --placeholder:#a9a6cf88;
       --shadow: 0 20px 40px rgba(0,0,0,.35);
@@ -25,23 +25,23 @@
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family:'Inter',system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
+      margin:0; font-family:'Inter',sans-serif; color:var(--text);
       background: radial-gradient(1200px 800px at 15% 5%, #140d37 0%, transparent 60%),
                   radial-gradient(1000px 700px at 85% 40%, #1e0d63 0%, transparent 60%),
                   linear-gradient(135deg, var(--bg1), var(--bg2));
       display:flex; flex-direction:column; min-height:100vh;
     }
-    /* Top brand */
-    .brand{position:fixed; left:20px; top:18px; font-weight:800; letter-spacing:2px; font-size:25px; color:#9a7dff; opacity:.95}
+    /* Logo */
+    .brand{position:fixed; left:20px; top:18px; font-weight:800; letter-spacing:2px; font-size:25px; color:#9a7dff}
     .brand span{color:#9a7dff}
 
-    /* Layout grid */
+    /* Layout */
     main{flex:1; width:min(1280px, 96vw); margin:90px auto 40px; position:relative}
-    .grid{display:grid; grid-template-columns: 1fr 240px 1fr; grid-template-rows: 86px 36px 260px 60px 280px; gap:18px;}
+    .grid{display:grid; grid-template-columns:1fr 200px 1fr; grid-template-rows: 86px 260px 60px 280px; gap:18px;}
 
-    /* Search bars */
+    /* Inputs */
     .search{
-      grid-row:1; height:60px; align-self:end; display:flex; align-items:center; justify-content:center
+      grid-row:1; height:60px; display:flex; align-items:center; justify-content:center
     }
     .search input{
       width:420px; height:52px; border-radius:999px; border:none; outline:none; padding:0 22px; font-size:18px; color:#fff;
@@ -49,65 +49,58 @@
     }
     .search input::placeholder{color:var(--placeholder)}
 
-    .btn-wrap{grid-row:2; display:flex; align-items:center; justify-content:center}
+    /* Botão central */
+    .btn-wrap{grid-column:2; grid-row:2; display:flex; align-items:center; justify-content:center}
     .btn{
-      display:inline-flex; align-items:center; justify-content:center; height:44px; min-width:220px; padding:0 26px; border-radius:999px;
+      display:inline-flex; align-items:center; justify-content:center; height:50px; min-width:160px; padding:0 26px; border-radius:999px;
       background:var(--purple); color:#fff; font-weight:800; letter-spacing:.5px; border:none; cursor:pointer; box-shadow:var(--shadow);
-      transition:transform .08s ease, box-shadow .2s ease, background .2s ease
+      transition:transform .08s ease, background .2s ease
     }
-    .btn:active{transform:translateY(1px)}
     .btn:hover{background:var(--purple-2)}
 
-    /* Token cards */
+    /* Cards */
     .card{background:linear-gradient(180deg, var(--card), var(--card-2)); border-radius:var(--radius); box-shadow:var(--shadow);
       padding:22px; border:1px solid var(--stroke); display:flex; gap:18px; align-items:center}
-    .left-card{grid-column:1; grid-row:3}
-    .right-card{grid-column:3; grid-row:3}
+    .left-card{grid-column:1; grid-row:2}
+    .right-card{grid-column:3; grid-row:2}
 
-    .token-img{width:84px; height:84px; border-radius:12px; background:#fff; flex:0 0 auto; object-fit:cover}
+    .token-img{width:84px; height:84px; border-radius:12px; background:#fff; object-fit:cover}
     .token-info{display:flex; flex-direction:column; gap:8px}
-    .token-title{font-size:28px; font-weight:700}
-    .token-price{font-size:32px; font-weight:800; letter-spacing:1px}
-    .muted{color:var(--muted); font-weight:600; letter-spacing:.5px}
+    .token-title{font-size:24px; font-weight:700}
+    .token-price{font-size:28px; font-weight:800}
+    .muted{color:var(--muted); font-weight:600}
 
-    /* Bottom area */
-    .bags{grid-column:1; grid-row:5; align-self:start}
-    .bags .title{font-size:32px; font-weight:800; margin-bottom:12px}
-    .bags input{width:300px; height:56px; border-radius:14px; border:1px solid var(--stroke); background:rgba(255,255,255,.04);
-      color:#fff; font-size:22px; padding:0 16px; outline:none}
+    /* Bottom */
+    .bags{grid-column:1; grid-row:4}
+    .bags .title{font-size:28px; font-weight:800; margin-bottom:12px}
+    .bags input{width:280px; height:50px; border-radius:14px; border:1px solid var(--stroke); background:rgba(255,255,255,.04);
+      color:#fff; font-size:20px; padding:0 16px; outline:none}
     .bags input::placeholder{color:var(--placeholder)}
 
-    .result{grid-column:2; grid-row:5; align-self:start}
-    .result-card{position:relative; background:linear-gradient(180deg, var(--card), var(--card-2)); border:1px solid var(--stroke); border-radius:26px; padding:26px 22px 30px; width:520px; height:260px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:var(--shadow)}
-    .result-sym{position:absolute; top:18px; font-size:36px; font-weight:800; opacity:.95}
-    .pfp{width:110px; height:110px; border-radius:12px; background:#fff; margin:8px auto 10px; object-fit:cover}
-    .xleft,.xright{position:absolute; top:108px; font-size:56px; font-weight:900; color:var(--green)}
-    .xleft{left:24px}
-    .xright{right:24px}
-    .big-price{font-size:46px; font-weight:900; letter-spacing:1px; margin-top:6px}
-    .cap{margin-top:6px; font-size:22px}
+    .result{grid-column:2; grid-row:4}
+    .result-card{position:relative; background:linear-gradient(180deg, var(--card), var(--card-2)); border:1px solid var(--stroke); border-radius:26px; padding:20px; width:400px; height:240px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:var(--shadow)}
+    .result-sym{position:absolute; top:12px; font-size:28px; font-weight:800}
+    .pfp{width:90px; height:90px; border-radius:12px; background:#fff; margin:10px auto; object-fit:cover}
+    .xleft,.xright{position:absolute; top:90px; font-size:46px; font-weight:900; color:var(--green)}
+    .xleft{left:20px}
+    .xright{right:20px}
+    .big-price{font-size:34px; font-weight:900}
+    .cap{margin-top:6px; font-size:18px}
 
-    .profits{grid-column:3; grid-row:5; align-self:start}
-    .profits .title{font-size:32px; font-weight:900; margin-bottom:10px}
-    .profits .line{font-size:36px; font-weight:900; color:var(--green); line-height:1.35}
+    .profits{grid-column:3; grid-row:4}
+    .profits .title{font-size:28px; font-weight:900; margin-bottom:10px}
+    .profits .line{font-size:28px; font-weight:900; color:var(--green)}
 
-    /* subtle helpers */
-    .hint{font-size:12px; color:#c7c3e3a6; margin-top:6px}
-    .err{color:#ff7d7d; font-weight:700}
-
-    /* Responsive (maintain composition) */
-    @media (max-width: 1180px){
-      .grid{grid-template-columns:1fr; grid-template-rows: 60px 44px auto auto auto auto; gap:14px}
-      .left-card,.right-card,.result,.bags,.profits{grid-column:1}
-      .left-card{grid-row:3}
+    @media (max-width:1180px){
+      .grid{grid-template-columns:1fr; grid-template-rows:auto auto auto auto auto; gap:14px}
+      .left-card,.right-card,.btn-wrap,.result,.bags,.profits{grid-column:1}
+      .left-card{grid-row:2}
+      .btn-wrap{grid-row:3}
       .right-card{grid-row:4}
-      .result{grid-row:5; display:flex; justify-content:center}
+      .result{grid-row:5}
       .bags{grid-row:6}
       .profits{grid-row:7}
       .result-card{width:100%}
-      .xleft{left:18px}
-      .xright{right:18px}
-      .search input{width:100%}
     }
   </style>
 </head>
@@ -115,12 +108,11 @@
   <div class="brand">FLASH<span>SCREENER</span></div>
   <main>
     <div class="grid">
-      <!-- Search Row -->
+      <!-- Inputs -->
       <div class="search" style="grid-column:1"><input id="q1" placeholder="Token name, CA..." autocomplete="off"/></div>
-      <div class="btn-wrap"><button id="go" class="btn">WHAT IF</button></div>
       <div class="search" style="grid-column:3"><input id="q2" placeholder="Token name, CA..." autocomplete="off"/></div>
 
-      <!-- Token Cards -->
+      <!-- Cards -->
       <section class="card left-card" id="card1">
         <img class="token-img" id="img1" alt="token1"/>
         <div class="token-info">
@@ -129,6 +121,8 @@
           <div class="muted" id="cap1">MKT CAP:</div>
         </div>
       </section>
+
+      <div class="btn-wrap"><button id="go" class="btn">WHAT IF</button></div>
 
       <section class="card right-card" id="card2">
         <img class="token-img" id="img2" alt="token2"/>
@@ -139,10 +133,7 @@
         </div>
       </section>
 
-      <!-- Spacer Row for composition -->
-      <div style="grid-row:4"></div>
-
-      <!-- Bottom: Bags / Result / Profits -->
+      <!-- Bottom -->
       <section class="bags">
         <div class="title">YOUR BAGS</div>
         <input id="bags" placeholder="Token amount" inputmode="decimal" />
@@ -164,232 +155,11 @@
         <div class="title">YOUR PROFITS</div>
         <div class="line" id="pPct">+0%</div>
         <div class="line" id="pUsd">+$0</div>
-        <div class="line" id="pSol">+ 0 SOL</div>
+        <div class="line" id="pSol">+0 SOL</div>
         <div class="hint" id="hint"></div>
       </section>
     </div>
   </main>
-
-  <script>
-    // ==============================
-    // Helpers
-    // ==============================
-    const $ = (q)=>document.querySelector(q);
-    const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
-
-    const nfUSD = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:6 });
-    const nf0 = new Intl.NumberFormat('en-US', { maximumFractionDigits:0 });
-    const nf2 = new Intl.NumberFormat('en-US', { maximumFractionDigits:2 });
-
-    const shortUSD = (n)=>{
-      if (n === null || n === undefined || !isFinite(n)) return '—';
-      const abs = Math.abs(n);
-      if (abs >= 1e12) return '$' + nf2.format(n/1e12) + 'T';
-      if (abs >= 1e9)  return '$' + nf2.format(n/1e9)  + 'B';
-      if (abs >= 1e6)  return '$' + nf2.format(n/1e6)  + 'M';
-      if (abs >= 1e3)  return '$' + nf2.format(n/1e3)  + 'K';
-      return nfUSD.format(n);
-    };
-
-    const looksLikeEVM = (s)=>/^0x[a-fA-F0-9]{40}$/.test(s.trim());
-    const looksLikeSol = (s)=>/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(s.trim()) && !s.startsWith('0x');
-
-    const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
-    const GECKOT_BASE   = 'https://api.geckoterminal.com/api/v2';
-
-    const EVM_PLATFORMS = [
-      'ethereum','binance-smart-chain','polygon-pos','arbitrum-one','optimism','base','avalanche','fantom','cronos','moonriver','gnosis','aurora','celo','harmony-shard-0','zksync','blast','linea'
-    ];
-
-    async function fetchJSON(url, opts={}){
-      const ctrl = new AbortController();
-      const id = setTimeout(()=>ctrl.abort(), opts.timeout || 12000);
-      try{
-        const res = await fetch(url, { signal: ctrl.signal, headers: { 'Accept':'application/json' } });
-        if (!res.ok) throw new Error('HTTP '+res.status);
-        return await res.json();
-      } finally{ clearTimeout(id); }
-    }
-
-    // ==============================
-    // Providers
-    // ==============================
-    async function fromCoinGeckoByContract(address){
-      let lastErr;
-      for (const chain of EVM_PLATFORMS){
-        try{
-          const qs = 'localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false';
-          const url = `${COINGECKO_BASE}/coins/${chain}/contract/${address}?${qs}`;
-          const j = await fetchJSON(url);
-          const md = j.market_data || {};
-          return {
-            provider: 'coingecko',
-            chain,
-            address,
-            id: j.id,
-            name: j.name,
-            symbol: (j.symbol||'').toUpperCase(),
-            image: j.image?.large || j.image?.thumb || '',
-            price: Number(md.current_price?.usd) || null,
-            marketCap: Number(md.market_cap?.usd) || null
-          };
-        }catch(e){ lastErr = e; }
-      }
-      throw lastErr || new Error('not found');
-    }
-
-    async function fromCoinGeckoByName(q){
-      // Search by name/ticker -> then /coins/{id}
-      const s = await fetchJSON(`${COINGECKO_BASE}/search?query=${encodeURIComponent(q)}`);
-      const hit = (s.coins||[])[0];
-      if (!hit) throw new Error('Sem resultados');
-      const j = await fetchJSON(`${COINGECKO_BASE}/coins/${hit.id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`);
-      const md = j.market_data || {};
-      return {
-        provider: 'coingecko',
-        chain: j.asset_platform_id || 'coingecko',
-        address: j.contract_address || '',
-        id: j.id,
-        name: j.name,
-        symbol: (j.symbol||'').toUpperCase(),
-        image: j.image?.large || j.image?.thumb || '',
-        price: Number(md.current_price?.usd) || null,
-        marketCap: Number(md.market_cap?.usd) || null
-      };
-    }
-
-    async function fromGeckoTerminalSol(address){
-      // Tries the token endpoint and falls back to pools if required
-      const url = `${GECKOT_BASE}/networks/solana/tokens/${address}`;
-      const j = await fetchJSON(url);
-      // Typical shape: { data: { attributes: { name, symbol, price_usd, market_cap_usd, fdv_usd, image_url }}}
-      const a = j?.data?.attributes || {};
-      const price = Number(a.price_usd);
-      const mc = a.market_cap_usd != null ? Number(a.market_cap_usd) : (a.fdv_usd != null ? Number(a.fdv_usd) : null);
-      return {
-        provider:'geckoterminal', chain:'solana', address,
-        id: a.address || address,
-        name: a.name || 'Unknown',
-        symbol: (a.symbol||'').toUpperCase(),
-        image: a.image_url || '',
-        price: isFinite(price)? price : null,
-        marketCap: isFinite(mc)? mc : null
-      };
-    }
-
-    async function getSolPriceUSD(){
-      const j = await fetchJSON(`${COINGECKO_BASE}/simple/price?ids=solana&vs_currencies=usd`);
-      return Number(j.solana?.usd) || null;
-    }
-
-    async function resolveToken(input){
-      const q = (input||'').trim();
-      if (!q) throw new Error('Vazio');
-      if (looksLikeEVM(q)) return await fromCoinGeckoByContract(q);
-      if (looksLikeSol(q)) return await fromGeckoTerminalSol(q);
-      // Otherwise try a name search on CoinGecko
-      return await fromCoinGeckoByName(q);
-    }
-
-    // ==============================
-    // UI State
-    // ==============================
-    const state = {
-      t1:null, t2:null, solPrice:null
-    };
-
-    function paintToken(side, t){
-      if (side === 1){
-        $('#title1').textContent = `${t.name} ($${t.symbol||'?'})`;
-        $('#price1').textContent = t.price!=null ? `PRICE ${nfUSD.format(t.price)}` : 'PRICE —';
-        $('#cap1').textContent = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
-        $('#img1').src = t.image || '';
-        $('#bagsTicker').textContent = `$${t.symbol||'token'}`;
-        $('#resultTicker').textContent = `$${t.symbol||'ticker'}`;
-        $('#resultImg').src = t.image || '';
-      } else {
-        $('#title2').textContent = `${t.name} ($${t.symbol||'?'})`;
-        $('#price2').textContent = t.price!=null ? `PRICE ${nfUSD.format(t.price)}` : 'PRICE —';
-        $('#cap2').textContent = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
-        $('#img2').src = t.image || '';
-      }
-    }
-
-    function compute(){
-      const t1 = state.t1, t2 = state.t2;
-      if (!t1 || !t2){
-        $('#hint').innerHTML = '<span class="err">Preencha os dois tokens e clique em WHAT IF.</span>';
-        return;
-      }
-      if (!(t1.price>0 && t1.marketCap>0 && t2.marketCap>0)){
-        $('#hint').innerHTML = '<span class="err">Faltam dados (preço/market cap). Tente outro provedor/CA.</span>';
-        return;
-      }
-      const multiplier = t2.marketCap / t1.marketCap;
-      const targetPrice = t1.price * multiplier;
-
-      $('#xLeft').textContent = `x${nf2.format(multiplier)}`;
-      $('#xRight').textContent = `x${nf2.format(multiplier)}`;
-      $('#resultPrice').textContent = `PRICE ${nfUSD.format(targetPrice)}`;
-      $('#resultCap').textContent = `MKT CAP: ${shortUSD(t2.marketCap)}`;
-
-      // bags / profits
-      const qty = parseFloat(($('#bags').value||'').replace(',', '.')) || 0;
-      const currentVal = qty * (t1.price||0);
-      const targetVal  = qty * (targetPrice||0);
-      const profitUSD  = targetVal - currentVal;
-      const pct = (multiplier - 1) * 100;
-
-      $('#pPct').textContent = `${profitUSD>=0?'+':''}${nf2.format(pct)}%`;
-      $('#pUsd').textContent = `${profitUSD>=0?'+':''}${nfUSD.format(profitUSD)}`;
-
-      if (state.solPrice){
-        const sol = profitUSD / state.solPrice;
-        $('#pSol').textContent = `${profitUSD>=0?'+':''}${nf2.format(sol)} SOL`;
-      } else {
-        $('#pSol').textContent = '—';
-      }
-
-      $('#hint').textContent = '';
-    }
-
-    // ==============================
-    // Wire up
-    // ==============================
-    (async ()=>{ state.solPrice = await getSolPriceUSD().catch(()=>null); })();
-
-    async function handle(side){
-      const input = side===1? $('#q1').value : $('#q2').value;
-      try{
-        const tok = await resolveToken(input);
-        state[side===1?'t1':'t2'] = tok;
-        paintToken(side, tok);
-        if (state.t1 && state.t2) compute();
-      }catch(e){
-        const msg = 'Não foi possível localizar o token. Verifique o endereço do contrato.';
-        if (side===1){ $('#title1').textContent = msg; $('#price1').textContent='PRICE —'; $('#cap1').textContent='MKT CAP: —'; $('#img1').removeAttribute('src'); }
-        else         { $('#title2').textContent = msg; $('#price2').textContent='PRICE —'; $('#cap2').textContent='MKT CAP: —'; $('#img2').removeAttribute('src'); }
-      }
-    }
-
-    // Enter submits
-    for (const el of ['#q1','#q2','#bags']){
-      $(el).addEventListener('keydown', (e)=>{ if (e.key==='Enter') $('#go').click(); });
-    }
-
-    $('#go').addEventListener('click', async ()=>{
-      // Resolve tokens if not already
-      if (!state.t1) await handle(1);
-      if (!state.t2) await handle(2);
-      compute();
-    });
-
-    // Resolve on blur for snappier UX
-    $('#q1').addEventListener('blur', ()=>handle(1));
-    $('#q2').addEventListener('blur', ()=>handle(2));
-
-    // Recompute on bags change
-    $('#bags').addEventListener('input', ()=>{ if (state.t1 && state.t2) compute(); });
-  </script>
 </body>
 </html>
+
