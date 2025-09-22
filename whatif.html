@@ -45,7 +45,7 @@
       gap:12px;
     }
 
-    /* Inputs */
+    /* Inputs (linha 1) */
     .search{
       grid-row:1; height:60px; display:flex; align-items:center; justify-content:center; margin-bottom:-6px;
     }
@@ -55,7 +55,7 @@
     }
     .search input::placeholder{color:var(--placeholder)}
 
-    /* Botão central entre os cards */
+    /* Botão central entre os cards (linha 2, coluna 2) */
     .btn-wrap{grid-column:2; grid-row:2; display:flex; align-items:center; justify-content:center}
     .btn{
       display:inline-flex; align-items:center; justify-content:center; height:50px; min-width:160px; padding:0 26px; border-radius:999px;
@@ -64,7 +64,7 @@
     }
     .btn:hover{background:var(--purple-2)}
 
-    /* Cards dos tokens */
+    /* Cards dos tokens (linha 2) */
     .card{background:linear-gradient(180deg, var(--card), var(--card-2)); border-radius:var(--radius); box-shadow:var(--shadow);
       padding:22px; border:1px solid var(--stroke); display:flex; gap:18px; align-items:center}
     .left-card{grid-column:1; grid-row:2}
@@ -76,16 +76,18 @@
     .token-price{font-size:28px; font-weight:800}
     .muted{color:var(--muted); font-weight:600}
 
-    /* Bottom: esquerda = bags, centro = result, direita = profits */
+    /* Bottom: esquerda = bags, centro = result, direita = profits (linha 4) */
     .bags{grid-column:1; grid-row:4}
     .bags .title{font-size:28px; font-weight:800; margin-bottom:12px}
     .bags input{width:280px; height:50px; border-radius:14px; border:1px solid var(--stroke); background:rgba(255,255,255,.04);
       color:#fff; font-size:20px; padding:0 16px; outline:none}
     .bags input::placeholder{color:var(--placeholder)}
+    .hint{font-size:12px; color:#c7c3e3a6; margin-top:6px}
+    .err{color:#ff7d7d; font-weight:700}
 
     .result{
       grid-column:2; grid-row:4;
-      display:flex; justify-content:center; /* garante centralização na coluna do meio */
+      display:flex; justify-content:center;
     }
     .result-card{
       position:relative;
@@ -173,6 +175,7 @@
       <section class="bags">
         <div class="title">YOUR BAGS</div>
         <input id="bags" placeholder="Token amount" inputmode="decimal" />
+        <div class="hint">Insira a quantidade de <span id="bagsTicker">token</span> que você possui.</div>
       </section>
 
       <section class="result">
@@ -195,5 +198,229 @@
       </section>
     </div>
   </main>
+
+  <script>
+    // ==============================
+    // Helpers
+    // ==============================
+    const $ = (q)=>document.querySelector(q);
+
+    const nfUSD = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:6 });
+    const nf2 = new Intl.NumberFormat('en-US', { maximumFractionDigits:2 });
+
+    const shortUSD = (n)=>{
+      if (n === null || n === undefined || !isFinite(n)) return '—';
+      const abs = Math.abs(n);
+      if (abs >= 1e12) return '$' + nf2.format(n/1e12) + 'T';
+      if (abs >= 1e9)  return '$' + nf2.format(n/1e9)  + 'B';
+      if (abs >= 1e6)  return '$' + nf2.format(n/1e6)  + 'M';
+      if (abs >= 1e3)  return '$' + nf2.format(n/1e3)  + 'K';
+      return nfUSD.format(n);
+    };
+
+    const looksLikeEVM = (s)=>/^0x[a-fA-F0-9]{40}$/.test(s.trim());
+    const looksLikeSol = (s)=>/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(s.trim()) && !s.startsWith('0x');
+
+    const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
+    const GECKOT_BASE   = 'https://api.geckoterminal.com/api/v2';
+
+    // Algumas EVM chains comuns na CoinGecko (por contrato)
+    const EVM_PLATFORMS = [
+      'ethereum','binance-smart-chain','polygon-pos','arbitrum-one','optimism',
+      'base','avalanche','fantom','cronos','gnosis','aurora','celo',
+      'harmony-shard-0','zksync','blast','linea'
+    ];
+
+    async function fetchJSON(url, opts={}){
+      const ctrl = new AbortController();
+      const id = setTimeout(()=>ctrl.abort(), opts.timeout || 12000);
+      try{
+        const res = await fetch(url, { signal: ctrl.signal, headers: { 'Accept':'application/json' } });
+        if (!res.ok) throw new Error('HTTP '+res.status);
+        return await res.json();
+      } finally{ clearTimeout(id); }
+    }
+
+    // ==============================
+    // Providers
+    // ==============================
+    async function fromCoinGeckoByContract(address){
+      let lastErr;
+      for (const chain of EVM_PLATFORMS){
+        try{
+          const qs = 'localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false';
+          const url = `${COINGECKO_BASE}/coins/${chain}/contract/${address}?${qs}`;
+          const j = await fetchJSON(url);
+          const md = j.market_data || {};
+          return {
+            provider: 'coingecko',
+            chain,
+            address,
+            id: j.id,
+            name: j.name,
+            symbol: (j.symbol||'').toUpperCase(),
+            image: j.image?.large || j.image?.thumb || '',
+            price: Number(md.current_price?.usd) || null,
+            marketCap: Number(md.market_cap?.usd) || null
+          };
+        }catch(e){ lastErr = e; }
+      }
+      throw lastErr || new Error('not found');
+    }
+
+    async function fromCoinGeckoByName(q){
+      const s = await fetchJSON(`${COINGECKO_BASE}/search?query=${encodeURIComponent(q)}`);
+      const hit = (s.coins||[])[0];
+      if (!hit) throw new Error('Sem resultados');
+      const j = await fetchJSON(`${COINGECKO_BASE}/coins/${hit.id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`);
+      const md = j.market_data || {};
+      return {
+        provider: 'coingecko',
+        chain: j.asset_platform_id || 'coingecko',
+        address: j.contract_address || '',
+        id: j.id,
+        name: j.name,
+        symbol: (j.symbol||'').toUpperCase(),
+        image: j.image?.large || j.image?.thumb || '',
+        price: Number(md.current_price?.usd) || null,
+        marketCap: Number(md.market_cap?.usd) || null
+      };
+    }
+
+    async function fromGeckoTerminalSol(address){
+      const url = `${GECKOT_BASE}/networks/solana/tokens/${address}`;
+      const j = await fetchJSON(url);
+      const a = j?.data?.attributes || {};
+      const price = Number(a.price_usd);
+      const mc = a.market_cap_usd != null ? Number(a.market_cap_usd) : (a.fdv_usd != null ? Number(a.fdv_usd) : null);
+      return {
+        provider:'geckoterminal', chain:'solana', address,
+        id: a.address || address,
+        name: a.name || 'Unknown',
+        symbol: (a.symbol||'').toUpperCase(),
+        image: a.image_url || '',
+        price: isFinite(price)? price : null,
+        marketCap: isFinite(mc)? mc : null
+      };
+    }
+
+    async function getSolPriceUSD(){
+      try{
+        const j = await fetchJSON(`${COINGECKO_BASE}/simple/price?ids=solana&vs_currencies=usd`);
+        return Number(j.solana?.usd) || null;
+      }catch{
+        return null;
+      }
+    }
+
+    async function resolveToken(input){
+      const q = (input||'').trim();
+      if (!q) throw new Error('Vazio');
+      if (looksLikeEVM(q)) return await fromCoinGeckoByContract(q);
+      if (looksLikeSol(q)) return await fromGeckoTerminalSol(q);
+      // Nome / ticker → CoinGecko
+      return await fromCoinGeckoByName(q);
+    }
+
+    // ==============================
+    // State + UI
+    // ==============================
+    const state = { t1:null, t2:null, solPrice:null };
+
+    function paintToken(side, t){
+      if (side === 1){
+        $('#title1').textContent = `${t.name} ($${t.symbol||'?'})`;
+        $('#price1').textContent = t.price!=null ? `PRICE ${nfUSD.format(t.price)}` : 'PRICE —';
+        $('#cap1').textContent = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
+        $('#img1').src = t.image || '';
+        $('#bagsTicker').textContent = `$${t.symbol||'token'}`;
+        $('#resultTicker').textContent = `$${t.symbol||'ticker'}`;
+        $('#resultImg').src = t.image || '';
+      } else {
+        $('#title2').textContent = `${t.name} ($${t.symbol||'?'})`;
+        $('#price2').textContent = t.price!=null ? `PRICE ${nfUSD.format(t.price)}` : 'PRICE —';
+        $('#cap2').textContent = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
+        $('#img2').src = t.image || '';
+      }
+    }
+
+    function compute(){
+      const t1 = state.t1, t2 = state.t2;
+      if (!t1 || !t2){
+        $('#hint').innerHTML = '<span class="err">Preencha os dois tokens e clique em WHAT IF.</span>';
+        return;
+      }
+      if (!(t1.price>0 && t1.marketCap>0 && t2.marketCap>0)){
+        $('#hint').innerHTML = '<span class="err">Faltam dados (preço/market cap). Tente outro provedor/CA.</span>';
+        return;
+      }
+
+      const multiplier = t2.marketCap / t1.marketCap;
+      const targetPrice = t1.price * multiplier;
+
+      $('#xLeft').textContent  = `x${nf2.format(multiplier)}`;
+      $('#xRight').textContent = `x${nf2.format(multiplier)}`;
+      $('#resultPrice').textContent = `PRICE ${nfUSD.format(targetPrice)}`;
+      $('#resultCap').textContent   = `MKT CAP: ${shortUSD(t2.marketCap)}`;
+
+      // bags / profits
+      const qty = parseFloat(($('#bags').value||'').replace(',', '.')) || 0;
+      const currentVal = qty * (t1.price||0);
+      const targetVal  = qty * (targetPrice||0);
+      const profitUSD  = targetVal - currentVal;
+      const pct = (multiplier - 1) * 100;
+
+      $('#pPct').textContent = `${profitUSD>=0?'+':''}${nf2.format(pct)}%`;
+      $('#pUsd').textContent = `${profitUSD>=0?'+':''}${nfUSD.format(profitUSD)}`;
+
+      if (state.solPrice){
+        const sol = profitUSD / state.solPrice;
+        $('#pSol').textContent = `${profitUSD>=0?'+':''}${nf2.format(sol)} SOL`;
+      } else {
+        $('#pSol').textContent = '—';
+      }
+
+      $('#hint').textContent = '';
+    }
+
+    // ==============================
+    // Wire up
+    // ==============================
+    // Carrega preço da SOL para conversão
+    (async ()=>{ state.solPrice = await getSolPriceUSD(); })();
+
+    async function handle(side){
+      const input = side===1? $('#q1').value : $('#q2').value;
+      try{
+        const tok = await resolveToken(input);
+        state[side===1?'t1':'t2'] = tok;
+        paintToken(side, tok);
+        if (state.t1 && state.t2) compute();
+      }catch(e){
+        const msg = 'Não foi possível localizar o token. Verifique o endereço do contrato.';
+        if (side===1){ $('#title1').textContent = msg; $('#price1').textContent='PRICE —'; $('#cap1').textContent='MKT CAP: —'; $('#img1').removeAttribute('src'); }
+        else         { $('#title2').textContent = msg; $('#price2').textContent='PRICE —'; $('#cap2').textContent='MKT CAP: —'; $('#img2').removeAttribute('src'); }
+      }
+    }
+
+    // Enter em qualquer campo dispara o botão
+    for (const sel of ['#q1','#q2','#bags']){
+      $(sel).addEventListener('keydown', (e)=>{ if (e.key==='Enter') $('#go').click(); });
+    }
+
+    // Clique no WHAT IF
+    $('#go').addEventListener('click', async ()=>{
+      if (!state.t1) await handle(1);
+      if (!state.t2) await handle(2);
+      compute();
+    });
+
+    // Resolve no blur (UX mais rápida)
+    $('#q1').addEventListener('blur', ()=>handle(1));
+    $('#q2').addEventListener('blur', ()=>handle(2));
+
+    // Recalcula ao mudar bags
+    $('#bags').addEventListener('input', ()=>{ if (state.t1 && state.t2) compute(); });
+  </script>
 </body>
 </html>
