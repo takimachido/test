@@ -104,6 +104,9 @@
       justify-content:center;
       box-shadow:var(--shadow)
     }
+    /* aumenta a altura quando mostramos o mega-mult */
+    .result-card.tall{ height:280px; }
+
     .result-sym{position:absolute; top:8px; font-size:28px; font-weight:800}
     .pfp{width:90px; height:90px; border-radius:12px; background:#fff; margin:10px auto; object-fit:cover}
     .xleft,.xright{position:absolute; top:90px; font-size:40px; font-weight:900; color:var(--green)}
@@ -111,6 +114,17 @@
     .xright{right:18px}
     .big-price{font-size:34px; font-weight:900}
     .cap{margin-top:6px; font-size:18px}
+
+    /* NOVO: multiplicador gigante abaixo do MKT CAP (só quando > x100) */
+    .mega-mult{
+      display:none;            /* padrão: escondido */
+      margin-top:6px;
+      font-size:40px;
+      font-weight:900;
+      color:var(--green);
+      text-align:center;
+      line-height:1.1;
+    }
 
     .profits{
       grid-column:3; grid-row:4;
@@ -179,13 +193,15 @@
       </section>
 
       <section class="result">
-        <div class="result-card">
+        <div class="result-card" id="resultCard">
           <div class="result-sym" id="resultTicker">$ticker</div>
           <img class="pfp" id="resultImg" alt="pfp"/>
           <div class="xleft" id="xLeft">x0</div>
           <div class="xright" id="xRight">x0</div>
           <div class="big-price" id="resultPrice">PRICE $USD</div>
           <div class="cap muted" id="resultCap">MKT CAP:</div>
+          <!-- NOVO: multiplicador gigante abaixo do MKT CAP -->
+          <div class="mega-mult" id="megaX">x0</div>
         </div>
       </section>
 
@@ -224,7 +240,6 @@
     const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
     const GECKOT_BASE   = 'https://api.geckoterminal.com/api/v2';
 
-    // Algumas EVM chains comuns na CoinGecko (por contrato)
     const EVM_PLATFORMS = [
       'ethereum','binance-smart-chain','polygon-pos','arbitrum-one','optimism',
       'base','avalanche','fantom','cronos','gnosis','aurora','celo',
@@ -318,7 +333,6 @@
       if (!q) throw new Error('Vazio');
       if (looksLikeEVM(q)) return await fromCoinGeckoByContract(q);
       if (looksLikeSol(q)) return await fromGeckoTerminalSol(q);
-      // Nome / ticker → CoinGecko
       return await fromCoinGeckoByName(q);
     }
 
@@ -358,10 +372,26 @@
       const multiplier = t2.marketCap / t1.marketCap;
       const targetPrice = t1.price * multiplier;
 
-      $('#xLeft').textContent  = `x${nf2.format(multiplier)}`;
-      $('#xRight').textContent = `x${nf2.format(multiplier)}`;
+      // Preço e cap
       $('#resultPrice').textContent = `PRICE ${nfUSD.format(targetPrice)}`;
       $('#resultCap').textContent   = `MKT CAP: ${shortUSD(t2.marketCap)}`;
+
+      // NOVO: modo mega (multiplier > 100)
+      const mega = $('#megaX');
+      const card = $('#resultCard');
+      if (multiplier > 100){
+        $('#xLeft').textContent = '🤑';
+        $('#xRight').textContent = '🤑';
+        mega.textContent = `x${nf2.format(multiplier)}`;
+        mega.style.display = 'block';
+        card.classList.add('tall');
+      }else{
+        const mtxt = `x${nf2.format(multiplier)}`;
+        $('#xLeft').textContent  = mtxt;
+        $('#xRight').textContent = mtxt;
+        mega.style.display = 'none';
+        card.classList.remove('tall');
+      }
 
       // bags / profits
       const qty = parseFloat(($('#bags').value||'').replace(',', '.')) || 0;
@@ -386,7 +416,6 @@
     // ==============================
     // Wire up
     // ==============================
-    // Carrega preço da SOL para conversão
     (async ()=>{ state.solPrice = await getSolPriceUSD(); })();
 
     async function handle(side){
@@ -403,24 +432,20 @@
       }
     }
 
-    // Enter em qualquer campo dispara o botão
     for (const sel of ['#q1','#q2','#bags']){
-      $(sel).addEventListener('keydown', (e)=>{ if (e.key==='Enter') $('#go').click(); });
+      document.querySelector(sel).addEventListener('keydown', (e)=>{ if (e.key==='Enter') document.querySelector('#go').click(); });
     }
 
-    // Clique no WHAT IF
-    $('#go').addEventListener('click', async ()=>{
+    document.querySelector('#go').addEventListener('click', async ()=>{
       if (!state.t1) await handle(1);
       if (!state.t2) await handle(2);
       compute();
     });
 
-    // Resolve no blur (UX mais rápida)
-    $('#q1').addEventListener('blur', ()=>handle(1));
-    $('#q2').addEventListener('blur', ()=>handle(2));
-
-    // Recalcula ao mudar bags
-    $('#bags').addEventListener('input', ()=>{ if (state.t1 && state.t2) compute(); });
+    document.querySelector('#q1').addEventListener('blur', ()=>handle(1));
+    document.querySelector('#q2').addEventListener('blur', ()=>handle(2));
+    document.querySelector('#bags').addEventListener('input', ()=>{ if (state.t1 && state.t2) compute(); });
   </script>
 </body>
 </html>
+
