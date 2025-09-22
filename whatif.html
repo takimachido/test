@@ -107,7 +107,7 @@
     /* aumenta a altura quando mostramos o mega-mult */
     .result-card.tall{ height:280px; }
 
-    .result-sym{position:absolute; top:6px; font-size:28px; font-weight:800}
+    .result-sym{position:absolute; top:4px; font-size:28px; font-weight:800}
     .pfp{width:90px; height:90px; border-radius:12px; background:#fff; margin:10px auto; object-fit:cover}
     .xleft,.xright{position:absolute; top:90px; font-size:40px; font-weight:900; color:var(--green)}
     .xleft{left:18px}
@@ -150,6 +150,29 @@
       .result-card{width:100%}
       .search input{width:100%}
     }
+/* === Ajustes pedidos (apenas overrides, nada do existente foi alterado) === */
+
+/* 1) Centralizar a seção YOUR BAGS sobre o input */
+.bags{
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* centraliza título e hint */
+  text-align: center;    /* centraliza textos dentro da seção */
+}
+.bags input{
+  display: block;
+  margin: 0 auto;        /* garante o input centralizado */
+}
+
+/* 2) Trazer a seção YOUR PROFITS um pouco mais para a esquerda */
+.profits{
+  transform: translateX(-40px);  /* ajuste fino: aproxime do card de resultado */
+}
+
+/* No mobile, não desloque para não colidir */
+@media (max-width:1180px){
+  .profits{ transform:none; }
+}
   </style>
 </head>
 <body>
