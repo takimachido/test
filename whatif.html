@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>What If • FLASHSCREENER</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="shortcut icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root{
@@ -31,7 +34,6 @@
                   linear-gradient(135deg, var(--bg1), var(--bg2));
       display:flex; flex-direction:column; min-height:100vh;
     }
-    /* Logo (agora é link) */
     .brand{
       position:fixed; left:20px; top:20px;
       font-weight:800; letter-spacing:1px; font-size:22px;
@@ -40,18 +42,13 @@
     .brand span{color:#3e27b2}
     .brand:focus-visible{outline:2px solid var(--purple); outline-offset:3px; border-radius:6px}
     .brand:hover{filter:brightness(1.2)}
-
-    /* Layout */
     main{flex:1; width:min(1280px, 96vw); margin:90px auto 40px; position:relative}
     .grid{
       display:grid;
-      /* Coluna central elástica para manter o RESULT no centro sem sobrepor */
       grid-template-columns: 1fr minmax(420px, 520px) 1fr;
       grid-template-rows: auto auto 60px auto;
       gap:12px;
     }
-
-    /* Inputs (linha 1) */
     .search{
       grid-row:1; height:60px; display:flex; align-items:center; justify-content:center; margin-bottom:-6px;
     }
@@ -60,8 +57,6 @@
       background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
     }
     .search input::placeholder{color:var(--placeholder)}
-
-    /* Botão central entre os cards (linha 2, coluna 2) */
     .btn-wrap{grid-column:2; grid-row:2; display:flex; align-items:center; justify-content:center}
     .btn{
       display:inline-flex; align-items:center; justify-content:center; height:60px; min-width:180px; padding:0 26px; border-radius:999px;
@@ -69,20 +64,17 @@
       transition:transform .08s ease, background .2s ease
     }
     .btn:hover{background:var(--purple-2)}
-
-    /* Cards dos tokens (linha 2) */
-    .card{background:linear-gradient(180deg, var(--card), var(--card-2)); border-radius:var(--radius); box-shadow:var(--shadow);
-      padding:22px; border:1px solid var(--stroke); display:flex; gap:18px; align-items:center}
+    .card{
+      background:linear-gradient(180deg, var(--card), var(--card-2)); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:22px; border:1px solid var(--stroke); display:flex; gap:18px; align-items:center
+    }
     .left-card{grid-column:1; grid-row:2}
     .right-card{grid-column:3; grid-row:2}
-
     .token-img{width:84px; height:84px; border-radius:12px; background:#fff; object-fit:cover}
     .token-info{display:flex; flex-direction:column; gap:8px}
     .token-title{font-size:24px; font-weight:700}
     .token-price{font-size:28px; font-weight:800}
     .muted{color:var(--muted); font-weight:600}
-
-    /* Bottom: esquerda = bags, centro = result, direita = profits (linha 4) */
     .bags{grid-column:1; grid-row:4}
     .bags .title{font-size:28px; font-weight:800; margin-bottom:12px}
     .bags input{width:280px; height:50px; border-radius:14px; border:1px solid var(--stroke); background:rgba(255,255,255,.04);
@@ -90,7 +82,6 @@
     .bags input::placeholder{color:var(--placeholder)}
     .hint{font-size:12px; color:#c7c3e3a6; margin-top:6px}
     .err{color:#ff7d7d; font-weight:700}
-
     .result{
       grid-column:2; grid-row:4;
       display:flex; justify-content:center;
@@ -110,9 +101,7 @@
       justify-content:center;
       box-shadow:var(--shadow)
     }
-    /* aumenta a altura quando mostramos o mega-mult */
     .result-card.tall{ height:280px; }
-
     .result-sym{position:absolute; top:4px; font-size:28px; font-weight:800}
     .pfp{width:90px; height:90px; border-radius:12px; background:#fff; margin:10px auto; object-fit:cover}
     .xleft,.xright{position:absolute; top:90px; font-size:40px; font-weight:900; color:var(--green)}
@@ -120,10 +109,8 @@
     .xright{right:18px}
     .big-price{font-size:34px; font-weight:900}
     .cap{margin-top:6px; font-size:18px}
-
-    /* NOVO: multiplicador gigante abaixo do MKT CAP (só quando > x100) */
     .mega-mult{
-      display:none;            /* padrão: escondido */
+      display:none;
       margin-top:6px;
       font-size:40px;
       font-weight:900;
@@ -131,15 +118,12 @@
       text-align:center;
       line-height:1.1;
     }
-
     .profits{
       grid-column:3; grid-row:4;
-      display:flex; flex-direction:column; align-items:flex-end; /* alinha à direita */
+      display:flex; flex-direction:column; align-items:flex-end;
     }
     .profits .title{font-size:28px; font-weight:900; margin-bottom:10px}
     .profits .line{font-size:28px; font-weight:900; color:var(--green)}
-
-    /* Responsivo */
     @media (max-width:1180px){
       .grid{
         grid-template-columns:1fr;
@@ -156,33 +140,22 @@
       .result-card{width:100%}
       .search input{width:100%}
     }
-    /* === Ajustes pedidos (apenas overrides, nada do existente foi alterado) === */
-
-    /* 1) Centralizar a seção YOUR BAGS sobre o input */
     .bags{
-      display: flex;
-      flex-direction: column;
-      align-items: center;   /* centraliza título e hint */
-      text-align: center;    /* centraliza textos dentro da seção */
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
     }
     .bags input{
-      display: block;
-      margin: 0 auto;        /* garante o input centralizado */
+      display:block;
+      margin:0 auto;
     }
-
-    /* 2) Trazer a seção YOUR PROFITS um pouco mais para a esquerda */
     .profits{
-      transform: translateX(-55px);  /* ajuste fino: aproxime do card de resultado */
+      transform: translateX(-55px);
     }
-
-    /* No mobile, não desloque para não colidir */
     @media (max-width:1180px){
       .profits{ transform:none; }
     }
-
-    /* ===================== */
-    /* CSS do FOOTER (novo) */
-    /* ===================== */
     footer {
       width: 100%;
       background: #060611;
@@ -193,7 +166,6 @@
       font-style: normal;
       border-top: 0.5px solid #333;
       margin-top: auto;
-
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -213,22 +185,16 @@
   </style>
 </head>
 <body>
-  <!-- LOGO como link para a home -->
   <a href="https://flashscreener.com/" rel="home" class="brand" aria-label="Voltar para a página inicial">FLASH<span>SCREENER</span></a>
-
   <main>
     <div class="grid">
-      <!-- Inputs -->
       <div class="search" style="grid-column:1">
         <input id="q1" placeholder="Token name, CA..." autocomplete="off"/>
       </div>
       <div class="search" style="grid-column:3">
         <input id="q2" placeholder="Token name, CA..." autocomplete="off"/>
       </div>
-
-      <!-- Cards -->
       <section class="card left-card" id="card1">
-        <!-- placeholder padrão -->
         <img class="token-img" id="img1" src="whatif.png" alt="token1"/>
         <div class="token-info">
           <div class="token-title" id="title1">Token ($ticker)</div>
@@ -236,11 +202,8 @@
           <div class="muted" id="cap1">MKT CAP:</div>
         </div>
       </section>
-
       <div class="btn-wrap"><button id="go" class="btn">WHAT IF</button></div>
-
       <section class="card right-card" id="card2">
-        <!-- placeholder padrão -->
         <img class="token-img" id="img2" src="whatif.png" alt="token2"/>
         <div class="token-info">
           <div class="token-title" id="title2">Token ($ticker)</div>
@@ -248,28 +211,22 @@
           <div class="muted" id="cap2">MKT CAP:</div>
         </div>
       </section>
-
-      <!-- Bottom -->
       <section class="bags">
         <div class="title">YOUR BAGS</div>
         <input id="bags" placeholder="Token amount" inputmode="decimal" />
         <div class="hint">Enter the amount of <span id="bagsTicker">token</span> you hold.</div>
       </section>
-
       <section class="result">
         <div class="result-card" id="resultCard">
           <div class="result-sym" id="resultTicker">$ticker</div>
-          <!-- placeholder padrão -->
           <img class="pfp" id="resultImg" src="whatif.png" alt="pfp"/>
           <div class="xleft" id="xLeft">x0</div>
           <div class="xright" id="xRight">x0</div>
           <div class="big-price" id="resultPrice">PRICE $USD</div>
           <div class="cap muted" id="resultCap">MKT CAP:</div>
-          <!-- NOVO: multiplicador gigante abaixo do MKT CAP -->
           <div class="mega-mult" id="megaX">x0</div>
         </div>
       </section>
-
       <section class="profits">
         <div class="title">YOUR PROFITS</div>
         <div class="line" id="pPct">+0%</div>
@@ -279,8 +236,6 @@
       </section>
     </div>
   </main>
-
-  <!-- FOOTER -->
   <footer>
     <div class="left">
       <a href="https://x.com/flashscreener" target="_blank">X | Twitter</a>
@@ -288,16 +243,10 @@
     </div>
     <div class="right">Market data provided by CoinGecko</div>
   </footer>
-
   <script>
-    // ==============================
-    // Helpers
-    // ==============================
     const $ = (q)=>document.querySelector(q);
-
     const nfUSD = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:6 });
     const nf2 = new Intl.NumberFormat('en-US', { maximumFractionDigits:2 });
-
     const shortUSD = (n)=>{
       if (n === null || n === undefined || !isFinite(n)) return '—';
       const abs = Math.abs(n);
@@ -307,19 +256,15 @@
       if (abs >= 1e3)  return '$' + nf2.format(n/1e3)  + 'K';
       return nfUSD.format(n);
     };
-
     const looksLikeEVM = (s)=>/^0x[a-fA-F0-9]{40}$/.test(s.trim());
     const looksLikeSol = (s)=>/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(s.trim()) && !s.startsWith('0x');
-
     const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
     const GECKOT_BASE   = 'https://api.geckoterminal.com/api/v2';
-
     const EVM_PLATFORMS = [
       'ethereum','binance-smart-chain','polygon-pos','arbitrum-one','optimism',
       'base','avalanche','fantom','cronos','gnosis','aurora','celo',
       'harmony-shard-0','zksync','blast','linea'
     ];
-
     async function fetchJSON(url, opts={}){
       const ctrl = new AbortController();
       const id = setTimeout(()=>ctrl.abort(), opts.timeout || 12000);
@@ -329,16 +274,12 @@
         return await res.json();
       } finally{ clearTimeout(id); }
     }
-
-    // ==============================
-    // Providers
-    // ==============================
     async function fromCoinGeckoByContract(address){
       let lastErr;
       for (const chain of EVM_PLATFORMS){
         try{
-          const qs = 'localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false';
-        const url = `${COINGECKO_BASE}/coins/${chain}/contract/${address}?${qs}`;
+          const qs = 'localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&parkline=false';
+          const url = `${COINGECKO_BASE}/coins/${chain}/contract/${address}?${qs}`;
           const j = await fetchJSON(url);
           const md = j.market_data || {};
           return {
@@ -356,7 +297,6 @@
       }
       throw lastErr || new Error('not found');
     }
-
     async function fromCoinGeckoByName(q){
       const s = await fetchJSON(`${COINGECKO_BASE}/search?query=${encodeURIComponent(q)}`);
       const hit = (s.coins||[])[0];
@@ -375,7 +315,6 @@
         marketCap: Number(md.market_cap?.usd) || null
       };
     }
-
     async function fromGeckoTerminalSol(address){
       const url = `${GECKOT_BASE}/networks/solana/tokens/${address}`;
       const j = await fetchJSON(url);
@@ -392,7 +331,6 @@
         marketCap: isFinite(mc)? mc : null
       };
     }
-
     async function getSolPriceUSD(){
       try{
         const j = await fetchJSON(`${COINGECKO_BASE}/simple/price?ids=solana&vs_currencies=usd`);
@@ -401,7 +339,6 @@
         return null;
       }
     }
-
     async function resolveToken(input){
       const q = (input||'').trim();
       if (!q) throw new Error('Vazio');
@@ -409,12 +346,7 @@
       if (looksLikeSol(q)) return await fromGeckoTerminalSol(q);
       return await fromCoinGeckoByName(q);
     }
-
-    // ==============================
-    // State + UI
-    // ==============================
     const state = { t1:null, t2:null, solPrice:null };
-
     function paintToken(side, t){
       if (side === 1){
         $('#title1').textContent = `${t.name} ($${t.symbol||'?'})`;
@@ -431,7 +363,6 @@
         $('#img2').src = t.image || 'whatif.png';
       }
     }
-
     function compute(){
       const t1 = state.t1, t2 = state.t2;
       if (!t1 || !t2){
@@ -442,15 +373,10 @@
         $('#hint').innerHTML = '<span class="err">Missing data (preço/market cap). Try another CA.</span>';
         return;
       }
-
       const multiplier = t2.marketCap / t1.marketCap;
       const targetPrice = t1.price * multiplier;
-
-      // Preço e cap
       $('#resultPrice').textContent = `PRICE ${nfUSD.format(targetPrice)}`;
       $('#resultCap').textContent   = `MKT CAP: ${shortUSD(t2.marketCap)}`;
-
-      // NOVO: modo mega (multiplier > 100)
       const mega = $('#megaX');
       const card = $('#resultCard');
       if (multiplier > 100){
@@ -466,32 +392,22 @@
         mega.style.display = 'none';
         card.classList.remove('tall');
       }
-
-      // bags / profits
       const qty = parseFloat(($('#bags').value||'').replace(',', '.')) || 0;
       const currentVal = qty * (t1.price||0);
       const targetVal  = qty * (targetPrice||0);
       const profitUSD  = targetVal - currentVal;
       const pct = (multiplier - 1) * 100;
-
       $('#pPct').textContent = `${profitUSD>=0?'+':''}${nf2.format(pct)}%`;
       $('#pUsd').textContent = `${profitUSD>=0?'+':''}${nfUSD.format(profitUSD)}`;
-
       if (state.solPrice){
         const sol = profitUSD / state.solPrice;
         $('#pSol').textContent = `${profitUSD>=0?'+':''}${nf2.format(sol)} SOL`;
       } else {
         $('#pSol').textContent = '—';
       }
-
       $('#hint').textContent = '';
     }
-
-    // ==============================
-    // Wire up
-    // ==============================
     (async ()=>{ state.solPrice = await getSolPriceUSD(); })();
-
     async function handle(side){
       const input = side===1? $('#q1').value : $('#q2').value;
       try{
@@ -510,17 +426,14 @@
         }
       }
     }
-
     for (const sel of ['#q1','#q2','#bags']){
       document.querySelector(sel).addEventListener('keydown', (e)=>{ if (e.key==='Enter') document.querySelector('#go').click(); });
     }
-
     document.querySelector('#go').addEventListener('click', async ()=>{
       if (!state.t1) await handle(1);
       if (!state.t2) await handle(2);
       compute();
     });
-
     document.querySelector('#q1').addEventListener('blur', ()=>handle(1));
     document.querySelector('#q2').addEventListener('blur', ()=>handle(2));
     document.querySelector('#bags').addEventListener('input', ()=>{ if (state.t1 && state.t2) compute(); });
