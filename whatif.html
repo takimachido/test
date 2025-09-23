@@ -31,9 +31,15 @@
                   linear-gradient(135deg, var(--bg1), var(--bg2));
       display:flex; flex-direction:column; min-height:100vh;
     }
-    /* Logo */
-    .brand{position:fixed; left:20px; top:20px; font-weight:800; letter-spacing:1px; font-size:22px; color:#3e27b2}
+    /* Logo (agora é link) */
+    .brand{
+      position:fixed; left:20px; top:20px;
+      font-weight:800; letter-spacing:1px; font-size:22px;
+      color:#3e27b2; text-decoration:none; z-index:10;
+    }
     .brand span{color:#3e27b2}
+    .brand:focus-visible{outline:2px solid var(--purple); outline-offset:3px; border-radius:6px}
+    .brand:hover{filter:brightness(1.2)}
 
     /* Layout */
     main{flex:1; width:min(1280px, 96vw); margin:90px auto 40px; position:relative}
@@ -207,7 +213,9 @@
   </style>
 </head>
 <body>
-  <div class="brand">FLASH<span>SCREENER</span></div>
+  <!-- LOGO como link para a home -->
+  <a href="https://flashscreener.com/" rel="home" class="brand" aria-label="Voltar para a página inicial">FLASH<span>SCREENER</span></a>
+
   <main>
     <div class="grid">
       <!-- Inputs -->
@@ -272,7 +280,7 @@
     </div>
   </main>
 
-  <!-- FOOTER (novo) -->
+  <!-- FOOTER -->
   <footer>
     <div class="left">
       <a href="https://x.com/flashscreener" target="_blank">X | Twitter</a>
@@ -330,7 +338,7 @@
       for (const chain of EVM_PLATFORMS){
         try{
           const qs = 'localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false';
-          const url = `${COINGECKO_BASE}/coins/${chain}/contract/${address}?${qs}`;
+        const url = `${COINGECKO_BASE}/coins/${chain}/contract/${address}?${qs}`;
           const j = await fetchJSON(url);
           const md = j.market_data || {};
           return {
