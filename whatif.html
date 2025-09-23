@@ -32,7 +32,7 @@
       display:flex; flex-direction:column; min-height:100vh;
     }
     /* Logo */
-    .brand{position:fixed; left:20px; top:18px; font-weight:800; letter-spacing:1px; font-size:22px; color:#3e27b2}
+    .brand{position:fixed; left:20px; top:20px; font-weight:800; letter-spacing:1px; font-size:22px; color:#3e27b2}
     .brand span{color:#3e27b2}
 
     /* Layout */
@@ -492,7 +492,7 @@
         paintToken(side, tok);
         if (state.t1 && state.t2) compute();
       }catch(e){
-        const msg = 'Ops. Incert a new CA.';
+        const msg = 'Ops. Try again.';
         if (side===1){
           $('#title1').textContent = msg; $('#price1').textContent='PRICE —'; $('#cap1').textContent='MKT CAP: —';
           $('#img1').src = 'whatif.png';
