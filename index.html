@@ -116,12 +116,35 @@
       border-radius: 15px;
     }
 
+    /* WHAT IF */
     .btn-whatif {
       font-size: 25px;
       padding: 35px 30px;
       line-height: 2.5;
     }
     .btn-whatif .line-1 { display: block; font-size: 43px; }
+
+    /* CHARTS (soon) */
+    .btn-charts {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 30px 36px;
+      font-size: 28px;
+      line-height: 1.1;
+      text-transform: none;
+    }
+    .btn-charts .line-1 { font-size: 42px; font-weight: 800; }
+    .btn-charts .line-2 { font-size: 15px; opacity: 0.9; font-weight: 600; }
+
+    /* Estado "soon" desativado */
+    .btn.is-disabled {
+      opacity: 0.6;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
 
     .logo {
       font-size: 22px;
@@ -171,6 +194,12 @@
   </header>
 
   <div class="buttons">
+    <!-- Novo botão: CHARTS (soon) – à esquerda do Install Extension -->
+    <a href="/charts/" class="btn btn-charts is-disabled" aria-disabled="true" title="Charts • soon">
+      <span class="line-1">Charts</span>
+      <span class="line-2">soon</span>
+    </a>
+
     <!-- Botão 1 -->
     <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext"
        class="btn btn-install" target="_blank" rel="noopener">
@@ -182,11 +211,10 @@
       </div>
     </a>
 
-    <!-- Botão 2 com imagem convert.png -->
+    <!-- Botão 2 -->
     <a href="/whatif/" class="btn btn-whatif">
       <span class="line-1">😭 WHAT IF 🤑</span>
-      <div class="icons">
-      </div>
+      <div class="icons"></div>
     </a>
   </div>
 
