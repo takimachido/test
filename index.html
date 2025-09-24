@@ -102,16 +102,6 @@
       transform: scale(1.05);
     }
 
-    /* Aumenta apenas o botão do meio (Install Extension) */
-    .btn-install { 
-      transform: scale(1.06);
-      position: relative; 
-      z-index: 1;           /* evita que pareça “atrás” dos vizinhos ao escalar */
-    }
-    .btn-install:hover { 
-      transform: scale(1.12); 
-    }
-
     .btn .icons {
       margin-top: 15px;
       display: flex;
@@ -150,6 +140,17 @@
     }
     .btn-charts .line-1 { font-size: 42px; font-weight: 800; opacity: 1 }
     .btn-charts .line-2 { font-size: 16px; font-style: italic; opacity: 0.7; font-weight: 500; letter-spacing: 0.02em; }
+
+    /* Apenas o botão do meio MAIOR por layout */
+    .btn-install {
+      min-width: 260px;      /* > 220px dos outros */
+      height: 130px;         /* > 115px dos outros */
+      padding: 42px 54px;    /* mais “corpo” */
+    }
+    .btn-install .icons img {
+      width: 72px;           /* ícones um pouco maiores só neste botão */
+      height: 72px;
+    }
 
     .logo {
       font-size: 22px;
@@ -200,13 +201,13 @@
   </header>
 
   <div class="buttons">
-    <!-- Botão esquerdo: CHARTS (soon) -->
+    <!-- Esquerda: CHARTS (soon) -->
     <a class="btn btn-charts is-disabled" aria-disabled="true" title="Charts • soon">
       <span class="line-1">CHARTS</span>
       <span class="line-2">Soon</span>
     </a>
 
-    <!-- Botão do meio: Install Extension (maior) -->
+    <!-- Meio: Install Extension (maior) -->
     <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext"
        class="btn btn-install" target="_blank" rel="noopener">
       Install Extension
@@ -217,7 +218,7 @@
       </div>
     </a>
 
-    <!-- Botão direito: WHAT IF -->
+    <!-- Direita: WHAT IF -->
     <a href="/whatif/" class="btn btn-whatif">
       <span class="line-1">WHAT IF</span>
       <span class="line-2">Compare Marketcaps</span>
@@ -238,4 +239,3 @@
   </script>
 </body>
 </html>
-
