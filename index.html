@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FlashScreener</title>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="favicon.png"/>
 
   <style>
+    :root{
+      --btn-bg:#2e2e83;
+      --btn-bg-hover:#4646c2;
+      --footer-bg:#060611;
+      --brand:#3e27b2;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -30,9 +36,7 @@
       padding-top: 70px;
     }
 
-    header {
-      margin-bottom: 20px;
-    }
+    header { margin-bottom: 20px; }
 
     .search-box {
       margin: 15px auto;
@@ -42,6 +46,7 @@
 
     .search-box input {
       width: 400px;
+      max-width: 90vw;
       padding: 12px 20px;
       border-radius: 25px;
       border: none;
@@ -60,6 +65,7 @@
     p {
       font-size: 18px;
       margin: 34px 0;
+      color: #ffffff;
       opacity: 0.9;
       font-style: italic;
     }
@@ -68,27 +74,29 @@
       margin-top: 5px;
       display: flex;
       justify-content: center;
-      gap: 20px;
+      align-items: stretch;
+      gap: 16px;
+      flex-wrap: wrap;
     }
 
     .btn {
-      background: linear-gradient(135deg, #1c1c4b, #2e2e83);
+      background: var(--btn-bg);
       color: white;
-      font-size: 30px;
+      font-size: 35px;
       font-weight: bold;
       border: none;
       padding: 45px 45px;
       border-radius: 15px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: transform .3s, background .3s;
       text-decoration: none;
       display: inline-block;
       min-width: 220px;
-      text-align: center;
+      line-height: 1.1;
     }
 
     .btn:hover {
-      background: linear-gradient(135deg, #2e2e83, #4646c2);
+      background: var(--btn-bg-hover);
       transform: scale(1.05);
     }
 
@@ -103,25 +111,32 @@
       width: 65px;
       height: 65px;
       object-fit: contain;
+      border-radius: 15px;
     }
+
+    .btn-whatif {
+      font-size: 26px;
+      padding: 50px 40px;
+      line-height: 1.3;
+    }
+    .btn-whatif .line-1 { display: block; font-size: 32px; }
+    .btn-whatif .line-2 { display: block; font-size: 32px; margin-top: 4px; opacity: .95; }
 
     .logo {
       font-size: 22px;
       font-weight: bold;
-      color: #3e27b2;
+      color: var(--brand);
       position: fixed;
       top: 20px;
       left: 20px;
       text-decoration: none;
+      cursor: pointer;
     }
-
-    .logo:hover {
-      color: #3e27b2;
-    }
+    .logo:hover { color: var(--brand); }
 
     footer {
       width: 100%;
-      background: #060611;
+      background: var(--footer-bg);
       color: #ccc;
       text-align: center;
       padding: 9px 0;
@@ -138,15 +153,11 @@
       margin: 0 8px;
       font-weight: normal;
     }
-
-    footer a:hover {
-      color: #b497ff;
-    }
+    footer a:hover { color: #b497ff; }
   </style>
 </head>
 <body>
-  <!-- Logo -->
-  <a href="/home/" class="logo"> FLASHSCREENER</a>
+  <a href="https://flashscreener.com/" class="logo" id="logoLink">FLASHSCREENER</a>
 
   <header>
     <div class="search-box">
@@ -159,8 +170,9 @@
   </header>
 
   <div class="buttons">
-    <!-- Botão para instalar extensão -->
-    <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext" class="btn" target="_blank">
+    <!-- Botão 1 -->
+    <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext"
+       class="btn btn-install" target="_blank" rel="noopener">
       Install Extension
       <div class="icons">
         <img src="brave.png" alt="Brave">
@@ -169,16 +181,26 @@
       </div>
     </a>
 
-    <!-- Novo botão para a calculadora -->
-    <a href="whatif.html" class="btn">
-      MKT CAP CALCULATOR
+    <!-- Botão 2 com imagem convert.png -->
+    <a href="/whatif/" class="btn btn-whatif">
+      <span class="line-1">WHAT IF</span>
+      <span class="line-2">MARKETCAP</span>
+      <div class="icons">
+        <img src="convert.png" alt="Convert">
+      </div>
     </a>
   </div>
 
   <footer>
-    <a href="https://x.com/flashscreener" target="_blank">X | Twitter</a>
+    <a href="https://x.com/flashscreener" target="_blank" rel="noopener">X | Twitter</a>
     <a href="/privacy/">Privacy Policy</a>
   </footer>
+
+  <script>
+    document.getElementById('logoLink').addEventListener('click', function (e) {
+      e.preventDefault();
+      window.location.href = 'https://flashscreener.com/';
+    });
+  </script>
 </body>
 </html>
-
