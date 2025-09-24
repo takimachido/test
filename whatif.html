@@ -66,12 +66,54 @@
       display:flex; align-items:center; justify-content:center;
       flex-direction:column;
     }
+    /* ===== efeito hover igual aos botões da home ===== */
     .btn{
-      display:inline-flex; align-items:center; justify-content:center; height:60px; min-width:180px; padding:0 26px; border-radius:999px;
-      background:var(--purple); color:#fff; font-size:20px; font-weight:800; letter-spacing:.5px; border:none; cursor:pointer; box-shadow:var(--shadow);
-      transition:transform .08s ease, background .2s ease
+      position:relative;           /* para o brilho (::before) */
+      overflow:hidden;             /* esconde o brilho fora do botão */
+      display:inline-flex; align-items:center; justify-content:center;
+      height:60px; min-width:180px; padding:0 26px; border-radius:999px;
+      background:var(--purple); color:#fff; font-size:20px; font-weight:800; letter-spacing:.5px;
+      border:none; cursor:pointer; box-shadow:var(--shadow);
+      transition:
+        transform .15s cubic-bezier(.2,.7,.2,1),
+        box-shadow .2s ease,
+        background .2s ease,
+        filter .2s ease;
     }
-    .btn:hover{background:var(--purple-2)}
+    .btn::before{
+      content:"";
+      position:absolute; top:-50%; left:-30%;
+      width:30%; height:200%;
+      transform:skewX(-20deg) translateX(-120%);
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+      transition:transform .65s ease;
+      pointer-events:none;
+    }
+    .btn:hover{
+      background:var(--purple-2);
+      transform:translateY(-2px) scale(1.02);
+      box-shadow:
+        0 14px 34px rgba(123,77,255,.40),
+        0 0 0 1px rgba(255,255,255,.06) inset;
+    }
+    .btn:hover::before{
+      transform:skewX(-20deg) translateX(360%);
+    }
+    .btn:active{
+      transform:translateY(0) scale(.99);
+      box-shadow:
+        0 8px 18px rgba(123,77,255,.35),
+        0 0 0 1px rgba(255,255,255,.06) inset;
+    }
+    .btn:focus-visible{
+      outline:none;
+      box-shadow:
+        0 0 0 3px rgba(124,77,255,.55),
+        0 12px 28px rgba(123,77,255,.35),
+        0 0 0 1px rgba(255,255,255,.06) inset;
+    }
+    /* ===== /efeito hover ===== */
+
     .under-btn-note{
       margin-top:10px;
       font-family:'Open Sans', sans-serif;
@@ -402,12 +444,10 @@
     }
 
     function setLossStyles({ isLoss, isDown }){
-      // pinta/limpa vermelho nos números de lucro
       ['#pPct','#pUsd','#pSol'].forEach(sel=>{
         const el = $(sel);
         if (el) el.classList.toggle('neg', isLoss);
       });
-      // pinta multiplicadores em vermelho quando o alvo é menor que o atual (queda)
       const card = $('#resultCard');
       if (card) card.classList.toggle('down', isDown);
       ['#xLeft','#xRight'].forEach(sel=>{
@@ -454,7 +494,7 @@
       const pct = (multiplier - 1) * 100;
 
       $('#pPct').textContent = `${profitUSD>=0?'+':''}${nf2.format(pct)}%`;
-      $('#pUsd').textContent = `${profitUSD>=0?'+':''}${nfUSD2.format(profitUSD)}`; // 2 casas decimais no $USD (adicionado)
+      $('#pUsd').textContent = `${profitUSD>=0?'+':''}${nfUSD2.format(profitUSD)}`;
       if (state.solPrice){
         const sol = profitUSD / state.solPrice;
         $('#pSol').textContent = `${profitUSD>=0?'+':''}${nf2.format(sol)} SOL`;
@@ -462,7 +502,6 @@
         $('#pSol').textContent = '—';
       }
 
-      // aplica estilos de prejuízo/vermelho quando apropriado (adicionado)
       const isLoss = profitUSD < 0;
       const isDown = multiplier < 1;
       setLossStyles({ isLoss, isDown });
@@ -505,3 +544,4 @@
   </script>
 </body>
 </html>
+
