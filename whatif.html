@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>What If • FLASHSCREENER</title>
-  <link rel="icon" href="favicon.png" type="image/png">
+  <title>What If • FlashScreener</title>
+  <link rel="icon" href="../favicon.png" type="image/png">
   <link rel="shortcut icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root{
       --bg1:#000000;
@@ -24,6 +23,8 @@
       --placeholder:#a9a6cf88;
       --shadow: 0 20px 40px rgba(0,0,0,.35);
       --radius: 22px;
+      --red:#ff5757; /* adicionado: cor para prejuízo */
+      overscroll-behavior: none;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -36,13 +37,15 @@
     }
     .brand{
       position:fixed; left:20px; top:20px;
-      font-weight:800; letter-spacing:1px; font-size:22px;
+      font-weight:695; letter-spacing:0.1px; font-size:22px;
       color:#3e27b2; text-decoration:none; z-index:10;
     }
     .brand span{color:#3e27b2}
     .brand:focus-visible{outline:2px solid var(--purple); outline-offset:3px; border-radius:6px}
     .brand:hover{filter:brightness(1.2)}
-    main{flex:1; width:min(1280px, 96vw); margin:90px auto 40px; position:relative}
+    /* AQUI: respiro antes do footer para criar rolagem */
+    main{flex:1; width:min(1280px, 96vw); margin:90px auto 120px; position:relative}
+
     .grid{
       display:grid;
       grid-template-columns: 1fr minmax(420px, 520px) 1fr;
@@ -57,13 +60,29 @@
       background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
     }
     .search input::placeholder{color:var(--placeholder)}
-    .btn-wrap{grid-column:2; grid-row:2; display:flex; align-items:center; justify-content:center}
+
+    .btn-wrap{
+      grid-column:2; grid-row:2;
+      display:flex; align-items:center; justify-content:center;
+      flex-direction:column;
+    }
     .btn{
       display:inline-flex; align-items:center; justify-content:center; height:60px; min-width:180px; padding:0 26px; border-radius:999px;
       background:var(--purple); color:#fff; font-size:20px; font-weight:800; letter-spacing:.5px; border:none; cursor:pointer; box-shadow:var(--shadow);
       transition:transform .08s ease, background .2s ease
     }
     .btn:hover{background:var(--purple-2)}
+    .under-btn-note{
+      margin-top:10px;
+      font-family:'Open Sans', sans-serif;
+      font-style:italic;
+      font-size:13px;
+      color:#3a25a4;
+      letter-spacing:.2px;
+      opacity:.95;
+      user-select:none;
+    }
+
     .card{
       background:linear-gradient(180deg, var(--card), var(--card-2)); border-radius:var(--radius); box-shadow:var(--shadow);
       padding:22px; border:1px solid var(--stroke); display:flex; gap:18px; align-items:center
@@ -124,6 +143,7 @@
     }
     .profits .title{font-size:28px; font-weight:900; margin-bottom:10px}
     .profits .line{font-size:28px; font-weight:900; color:var(--green)}
+
     @media (max-width:1180px){
       .grid{
         grid-template-columns:1fr;
@@ -160,8 +180,8 @@
       width: 100%;
       background: #060611;
       color: #ccc;
-      padding: 7px 20px;
-      font-size: 15px;
+      padding: 5px 20px;
+      font-size: 13px;
       font-weight: normal;
       font-style: normal;
       border-top: 0.5px solid #333;
@@ -182,6 +202,11 @@
       font-size: 11px;
       font-style: italic;
     }
+
+    /* adicionado: classe para pintar números em vermelho quando houver prejuízo */
+    .neg{ color: var(--red) !important; }
+    /* adicionado: quando o resultado estiver em queda, pinta multiplicadores em vermelho */
+    .down .xleft, .down .xright { color: var(--red) !important; }
   </style>
 </head>
 <body>
@@ -194,6 +219,7 @@
       <div class="search" style="grid-column:3">
         <input id="q2" placeholder="Token name, CA..." autocomplete="off"/>
       </div>
+
       <section class="card left-card" id="card1">
         <img class="token-img" id="img1" src="whatif.png" alt="token1"/>
         <div class="token-info">
@@ -202,7 +228,12 @@
           <div class="muted" id="cap1">MKT CAP:</div>
         </div>
       </section>
-      <div class="btn-wrap"><button id="go" class="btn">WHAT IF</button></div>
+
+      <div class="btn-wrap">
+        <button id="go" class="btn">WHAT IF</button>
+        <div class="under-btn-note">flashscreener.com</div>
+      </div>
+
       <section class="card right-card" id="card2">
         <img class="token-img" id="img2" src="whatif.png" alt="token2"/>
         <div class="token-info">
@@ -211,11 +242,13 @@
           <div class="muted" id="cap2">MKT CAP:</div>
         </div>
       </section>
+
       <section class="bags">
         <div class="title">YOUR BAGS</div>
-        <input id="bags" placeholder="Token amount" inputmode="decimal" />
+        <input id="bags" placeholder="69,420..." inputmode="decimal" />
         <div class="hint">Enter the amount of <span id="bagsTicker">token</span> you hold.</div>
       </section>
+
       <section class="result">
         <div class="result-card" id="resultCard">
           <div class="result-sym" id="resultTicker">$ticker</div>
@@ -227,6 +260,7 @@
           <div class="mega-mult" id="megaX">x0</div>
         </div>
       </section>
+
       <section class="profits">
         <div class="title">YOUR PROFITS</div>
         <div class="line" id="pPct">+0%</div>
@@ -236,6 +270,7 @@
       </section>
     </div>
   </main>
+
   <footer>
     <div class="left">
       <a href="https://x.com/flashscreener" target="_blank">X | Twitter</a>
@@ -243,9 +278,11 @@
     </div>
     <div class="right">Market data provided by CoinGecko</div>
   </footer>
+
   <script>
     const $ = (q)=>document.querySelector(q);
     const nfUSD = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:6 });
+    const nfUSD2 = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2 }); // adicionado: USD com 2 casas
     const nf2 = new Intl.NumberFormat('en-US', { maximumFractionDigits:2 });
     const shortUSD = (n)=>{
       if (n === null || n === undefined || !isFinite(n)) return '—';
@@ -363,6 +400,22 @@
         $('#img2').src = t.image || 'whatif.png';
       }
     }
+
+    function setLossStyles({ isLoss, isDown }){
+      // pinta/limpa vermelho nos números de lucro
+      ['#pPct','#pUsd','#pSol'].forEach(sel=>{
+        const el = $(sel);
+        if (el) el.classList.toggle('neg', isLoss);
+      });
+      // pinta multiplicadores em vermelho quando o alvo é menor que o atual (queda)
+      const card = $('#resultCard');
+      if (card) card.classList.toggle('down', isDown);
+      ['#xLeft','#xRight'].forEach(sel=>{
+        const el = $(sel);
+        if (el) el.classList.toggle('neg', isDown);
+      });
+    }
+
     function compute(){
       const t1 = state.t1, t2 = state.t2;
       if (!t1 || !t2){
@@ -377,6 +430,7 @@
       const targetPrice = t1.price * multiplier;
       $('#resultPrice').textContent = `PRICE ${nfUSD.format(targetPrice)}`;
       $('#resultCap').textContent   = `MKT CAP: ${shortUSD(t2.marketCap)}`;
+
       const mega = $('#megaX');
       const card = $('#resultCard');
       if (multiplier > 100){
@@ -392,22 +446,32 @@
         mega.style.display = 'none';
         card.classList.remove('tall');
       }
+
       const qty = parseFloat(($('#bags').value||'').replace(',', '.')) || 0;
       const currentVal = qty * (t1.price||0);
       const targetVal  = qty * (targetPrice||0);
       const profitUSD  = targetVal - currentVal;
       const pct = (multiplier - 1) * 100;
+
       $('#pPct').textContent = `${profitUSD>=0?'+':''}${nf2.format(pct)}%`;
-      $('#pUsd').textContent = `${profitUSD>=0?'+':''}${nfUSD.format(profitUSD)}`;
+      $('#pUsd').textContent = `${profitUSD>=0?'+':''}${nfUSD2.format(profitUSD)}`; // 2 casas decimais no $USD (adicionado)
       if (state.solPrice){
         const sol = profitUSD / state.solPrice;
         $('#pSol').textContent = `${profitUSD>=0?'+':''}${nf2.format(sol)} SOL`;
       } else {
         $('#pSol').textContent = '—';
       }
+
+      // aplica estilos de prejuízo/vermelho quando apropriado (adicionado)
+      const isLoss = profitUSD < 0;
+      const isDown = multiplier < 1;
+      setLossStyles({ isLoss, isDown });
+
       $('#hint').textContent = '';
     }
+
     (async ()=>{ state.solPrice = await getSolPriceUSD(); })();
+
     async function handle(side){
       const input = side===1? $('#q1').value : $('#q2').value;
       try{
@@ -418,14 +482,15 @@
       }catch(e){
         const msg = 'Ops. Try again.';
         if (side===1){
-          $('#title1').textContent = msg; $('#price1').textContent='PRICE —'; $('#cap1').textContent='MKT CAP: —';
+          $('#title1').textContent = msg; $('#price1').textContent='PRICE'; $('#cap1').textContent='MKT CAP:';
           $('#img1').src = 'whatif.png';
         } else {
-          $('#title2').textContent = msg; $('#price2').textContent='PRICE —'; $('#cap2').textContent='MKT CAP: —';
+          $('#title2').textContent = msg; $('#price2').textContent='PRICE'; $('#cap2').textContent='MKT CAP:';
           $('#img2').src = 'whatif.png';
         }
       }
     }
+
     for (const sel of ['#q1','#q2','#bags']){
       document.querySelector(sel).addEventListener('keydown', (e)=>{ if (e.key==='Enter') document.querySelector('#go').click(); });
     }
