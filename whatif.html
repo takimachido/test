@@ -23,7 +23,7 @@
       --placeholder:#a9a6cf88;
       --shadow: 0 20px 40px rgba(0,0,0,.35);
       --radius: 22px;
-      --red:#ff5757; /* adicionado: cor para prejuízo */
+      --red:#ff5757;
       overscroll-behavior: none;
     }
     *{box-sizing:border-box}
@@ -43,7 +43,6 @@
     .brand span{color:#3e27b2}
     .brand:focus-visible{outline:2px solid var(--purple); outline-offset:3px; border-radius:6px}
     .brand:hover{filter:brightness(1.2)}
-    /* AQUI: respiro antes do footer para criar rolagem */
     main{flex:1; width:min(1280px, 96vw); margin:90px auto 120px; position:relative}
 
     .grid{
@@ -66,10 +65,9 @@
       display:flex; align-items:center; justify-content:center;
       flex-direction:column;
     }
-    /* ===== efeito hover igual aos botões da home ===== */
     .btn{
-      position:relative;           /* para o brilho (::before) */
-      overflow:hidden;             /* esconde o brilho fora do botão */
+      position:relative;          
+      overflow:hidden;    
       display:inline-flex; align-items:center; justify-content:center;
       height:60px; min-width:180px; padding:0 26px; border-radius:999px;
       background:var(--purple); color:#fff; font-size:20px; font-weight:800; letter-spacing:.5px;
@@ -112,7 +110,6 @@
         0 12px 28px rgba(123,77,255,.35),
         0 0 0 1px rgba(255,255,255,.06) inset;
     }
-    /* ===== /efeito hover ===== */
 
     .under-btn-note{
       margin-top:10px;
@@ -245,9 +242,7 @@
       font-style: italic;
     }
 
-    /* adicionado: classe para pintar números em vermelho quando houver prejuízo */
     .neg{ color: var(--red) !important; }
-    /* adicionado: quando o resultado estiver em queda, pinta multiplicadores em vermelho */
     .down .xleft, .down .xright { color: var(--red) !important; }
   </style>
 </head>
@@ -288,7 +283,7 @@
       <section class="bags">
         <div class="title">YOUR BAGS</div>
         <input id="bags" placeholder="69,420..." inputmode="decimal" />
-        <div class="hint">Enter the amount of <span id="bagsTicker">token</span> you hold.</div>
+        <div class="hint">Enter the amount of <span id="bagsTicker">token</span> you hold.(1B max)</div>
       </section>
 
       <section class="result">
@@ -544,4 +539,3 @@
   </script>
 </body>
 </html>
-
