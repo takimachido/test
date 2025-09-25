@@ -173,20 +173,33 @@
     .neg{ color: var(--red) !important; }
     .down .xleft, .down .xright { color: var(--red) !important; }
 
-    /* ====== MOBILE AJUSTES ====== */
-    @media (max-width: 768px){
-      :root{ --mobile-card-w: 560px; }
+@media (max-width: 768px){
+  :root{ --mobile-card-w: 560px; }
 
-      /* 1) Logo fixa sem sobrepor conteúdo (sticky ocupa espaço no fluxo) */
-      .brand{
-        position: sticky;
-        top: calc(12px + env(safe-area-inset-top));
-        left: auto;
-        display: block;
-        margin-left: calc(12px + env(safe-area-inset-left));
-        font-size: 18px;
-        z-index: 5;
-      }
+  /* 1) Logo fixa sem sobrepor conteúdo (sticky ocupa espaço no fluxo) */
+  .brand{
+    position: sticky;
+    top: calc(12px + env(safe-area-inset-top));
+    left: auto;
+    display: block;
+    margin-left: calc(12px + env(safe-area-inset-left));
+    font-size: 18px;
+    z-index: 5;
+  }  /* ← fecha a regra da .brand */
+
+  .result-card{
+    column-gap: 22px;   /* distância lateral entre (x0) e o ícone */
+    row-gap: 4px;       /* itens mais juntos na vertical */
+    padding: 12px 14px; /* card mais “baixo” */
+  }
+
+  .pfp{ width: 64px; height: 64px; }
+
+  .big-price{ font-size: 22px; margin-top: 2px; }
+  .cap{ font-size: 13px; margin-top: 0; }
+  .mega-mult{ font-size: 26px; margin-top: 2px; }
+
+}
 
       main{
         width: min(720px, 94vw);
