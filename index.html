@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- Mobile-first + notch safe areas -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>FlashScreener</title>
 
@@ -33,7 +34,7 @@
     body {
       font-family: 'Open Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       background: linear-gradient(135deg, #000000, #1c1179);
-      background-attachment: scroll;
+      background-attachment: scroll; /* mobile */
       color: #ffffff;
       text-align: center;
       display: flex;
@@ -42,7 +43,6 @@
       min-height: 100dvh;
       padding-top: calc(clamp(56px, 10vw, 90px) + env(safe-area-inset-top));
     }
-
     @media (min-width: 1024px){
       body{ background-attachment: fixed; }
     }
@@ -110,6 +110,7 @@
       padding: 0 var(--space-sm);
     }
 
+    /* GRID: 1 col (mobile), 2 cols (md), 3 cols (desktop) */
     .buttons {
       width: var(--container);
       margin: clamp(8px, 2vw, 12px) auto 0;
@@ -123,7 +124,12 @@
       .buttons{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (min-width: 1024px){
-      .buttons{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .buttons{ 
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: start;           /* garante topo alinhado */
+        margin-top: 28px;
+        margin-bottom: 9vh;           /* empurra o footer para fora do “primeiro olhar” */
+      }
     }
 
     .btn {
@@ -137,7 +143,7 @@
       padding: clamp(20px, 4vw, 35px) clamp(22px, 4.5vw, 45px);
       border-radius: var(--radius);
       cursor: pointer;
-      transition: transform .3s ease, background .3s ease, box-shadow .3s ease;
+      transition: transform .3s ease, background .3s ease, box-shadow .3s ease, filter .2s ease;
       text-decoration: none;
       display: flex;
       flex-direction: column;
@@ -158,7 +164,6 @@
       gap: clamp(8px, 2vw, 13px);
       flex-wrap: nowrap;
     }
-
     .btn .icons img {
       width: clamp(38px, 7vw, 65px);
       height: clamp(38px, 7vw, 65px);
@@ -166,26 +171,25 @@
       border-radius: 12px;
     }
 
-    .btn-whatif {
-      line-height: 1.35;
-    }
+    /* WHAT IF */
+    .btn-whatif { line-height: 1.35; }
     .btn-whatif .line-1 { display: block; font-size: clamp(22px, 6.5vw, 43px); font-weight: 800; }
     .btn-whatif .line-2 { display: block; font-size: clamp(12px, 3.5vw, 16px); font-style: italic; opacity: 0.75; font-weight: 600; letter-spacing: 0.02em; }
 
-    .btn-charts {
-      text-transform: none;
-      opacity: 0.95;
-      gap: 6px;
-    }
+    /* CHARTS (soon) */
+    .btn-charts { text-transform: none; gap: 6px; }
     .btn-charts .line-1 { font-size: clamp(22px, 6vw, 42px); font-weight: 800; }
     .btn-charts .line-2 { font-size: clamp(12px, 3.5vw, 16px); font-style: italic; opacity: 0.75; font-weight: 600; letter-spacing: 0.02em; }
-    .is-disabled { pointer-events: none; filter: grayscale(0.05); opacity: 0.85; }
+    /* Não bloqueia pointer-events para manter hover; sem href já não navega */
+    .is-disabled { filter: grayscale(0.05); opacity: 0.95; }
+    .btn-charts:hover { filter: none; }  /* restaura hover visual */
 
+    /* Botão do meio maior e CENTRALIZADO no desktop (sem deslocar) */
     @media (min-width: 1024px){
       .btn-install {
         min-width: 260px;
         height: 130px;
-        margin-top: -10px;
+        margin-top: 0;              /* remove o “drop” do meio */
         padding: 42px 54px;
       }
       .btn-install .icons img { width: 72px; height: 72px; }
@@ -201,6 +205,10 @@
       font-weight: 400;
       border-top: 0.5px solid #333;
       margin-top: auto;
+    }
+    /* Desktop: mais fino */
+    @media (min-width: 1024px){
+      footer{ padding: 8px 0; }
     }
     footer a {
       color: #9b9b9b;
@@ -231,11 +239,13 @@
   </header>
 
   <main class="buttons">
+    <!-- Esquerda: CHARTS (soon) -->
     <a class="btn btn-charts is-disabled" aria-disabled="true" title="Charts • soon">
       <span class="line-1">CHARTS</span>
       <span class="line-2">Soon</span>
     </a>
 
+    <!-- Meio: Install Extension (maior no desktop) -->
     <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext"
        class="btn btn-install" target="_blank" rel="noopener">
       Install Extension
@@ -246,6 +256,7 @@
       </div>
     </a>
 
+    <!-- Direita: WHAT IF -->
     <a href="/whatif/" class="btn btn-whatif">
       <span class="line-1">WHAT IF</span>
       <span class="line-2">Compare Marketcaps</span>
@@ -259,6 +270,7 @@
   </footer>
 
   <script>
+    // Logo → home
     document.getElementById('logoLink').addEventListener('click', function (e) {
       e.preventDefault();
       window.location.href = 'https://flashscreener.com/';
