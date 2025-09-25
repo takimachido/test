@@ -43,17 +43,19 @@
     .brand span{color:#3e27b2}
     .brand:focus-visible{outline:2px solid var(--purple); outline-offset:3px; border-radius:6px}
     .brand:hover{filter:brightness(1.2)}
+
     main{flex:1; width:min(1280px, 96vw); margin:90px auto 120px; position:relative}
 
+    /* ====== DESKTOP / EXISTENTE ====== */
     .grid{
       display:grid;
       grid-template-columns: 1fr minmax(420px, 520px) 1fr;
       grid-template-rows: auto auto 60px auto;
       gap:12px;
     }
-    .search{
-      grid-row:1; height:60px; display:flex; align-items:center; justify-content:center; margin-bottom:-6px;
-    }
+    .search{ grid-row:1; height:60px; display:flex; align-items:center; justify-content:center; margin-bottom:-6px; }
+    .search-1{ grid-column:1; }   /* mantém desktop como antes */
+    .search-2{ grid-column:3; }
     .search input{
       width:420px; height:52px; border-radius:999px; border:none; outline:none; padding:0 22px; font-size:18px; color:#fff;
       background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
@@ -72,11 +74,7 @@
       height:60px; min-width:180px; padding:0 26px; border-radius:999px;
       background:var(--purple); color:#fff; font-size:20px; font-weight:800; letter-spacing:.5px;
       border:none; cursor:pointer; box-shadow:var(--shadow);
-      transition:
-        transform .15s cubic-bezier(.2,.7,.2,1),
-        box-shadow .2s ease,
-        background .2s ease,
-        filter .2s ease;
+      transition: transform .15s cubic-bezier(.2,.7,.2,1), box-shadow .2s ease, background .2s ease, filter .2s ease;
     }
     .btn::before{
       content:"";
@@ -84,42 +82,20 @@
       width:30%; height:200%;
       transform:skewX(-20deg) translateX(-120%);
       background:linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
-      transition:transform .65s ease;
-      pointer-events:none;
+      transition:transform .65s ease; pointer-events:none;
     }
     .btn:hover{
       background:var(--purple-2);
       transform:translateY(-2px) scale(1.02);
-      box-shadow:
-        0 14px 34px rgba(123,77,255,.40),
-        0 0 0 1px rgba(255,255,255,.06) inset;
+      box-shadow: 0 14px 34px rgba(123,77,255,.40), 0 0 0 1px rgba(255,255,255,.06) inset;
     }
-    .btn:hover::before{
-      transform:skewX(-20deg) translateX(360%);
-    }
-    .btn:active{
-      transform:translateY(0) scale(.99);
-      box-shadow:
-        0 8px 18px rgba(123,77,255,.35),
-        0 0 0 1px rgba(255,255,255,.06) inset;
-    }
+    .btn:hover::before{ transform:skewX(-20deg) translateX(360%); }
+    .btn:active{ transform:translateY(0) scale(.99); box-shadow: 0 8px 18px rgba(123,77,255,.35), 0 0 0 1px rgba(255,255,255,.06) inset; }
     .btn:focus-visible{
-      outline:none;
-      box-shadow:
-        0 0 0 3px rgba(124,77,255,.55),
-        0 12px 28px rgba(123,77,255,.35),
-        0 0 0 1px rgba(255,255,255,.06) inset;
+      outline:none; box-shadow: 0 0 0 3px rgba(124,77,255,.55), 0 12px 28px rgba(123,77,255,.35), 0 0 0 1px rgba(255,255,255,.06) inset;
     }
-
     .under-btn-note{
-      margin-top:10px;
-      font-family:'Open Sans', sans-serif;
-      font-style:italic;
-      font-size:13px;
-      color:#3a25a4;
-      letter-spacing:.2px;
-      opacity:.95;
-      user-select:none;
+      margin-top:10px; font-family:'Open Sans', sans-serif; font-style:italic; font-size:13px; color:#3a25a4; letter-spacing:.2px; opacity:.95; user-select:none;
     }
 
     .card{
@@ -133,6 +109,7 @@
     .token-title{font-size:24px; font-weight:700}
     .token-price{font-size:28px; font-weight:800}
     .muted{color:var(--muted); font-weight:600}
+
     .bags{grid-column:1; grid-row:4}
     .bags .title{font-size:28px; font-weight:800; margin-bottom:12px}
     .bags input{width:280px; height:50px; border-radius:14px; border:1px solid var(--stroke); background:rgba(255,255,255,.04);
@@ -140,24 +117,12 @@
     .bags input::placeholder{color:var(--placeholder)}
     .hint{font-size:12px; color:#c7c3e3a6; margin-top:6px}
     .err{color:#ff7d7d; font-weight:700}
-    .result{
-      grid-column:2; grid-row:4;
-      display:flex; justify-content:center;
-    }
+
+    .result{ grid-column:2; grid-row:4; display:flex; justify-content:center; }
     .result-card{
-      position:relative;
-      background:linear-gradient(180deg, var(--card), var(--card-2));
-      border:1px solid var(--stroke);
-      border-radius:26px;
-      padding:20px;
-      width:100%;
-      max-width:520px;
-      height:260px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      box-shadow:var(--shadow)
+      position:relative; background:linear-gradient(180deg, var(--card), var(--card-2));
+      border:1px solid var(--stroke); border-radius:26px; padding:20px; width:100%; max-width:520px; height:260px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:var(--shadow)
     }
     .result-card.tall{ height:280px; }
     .result-sym{position:absolute; top:4px; font-size:28px; font-weight:800}
@@ -167,23 +132,13 @@
     .xright{right:18px}
     .big-price{font-size:34px; font-weight:900}
     .cap{margin-top:6px; font-size:18px}
-    .mega-mult{
-      display:none;
-      margin-top:6px;
-      font-size:40px;
-      font-weight:900;
-      color:var(--green);
-      text-align:center;
-      line-height:1.1;
-    }
-    .profits{
-      grid-column:3; grid-row:4;
-      display:flex; flex-direction:column; align-items:flex-end;
-    }
+    .mega-mult{ display:none; margin-top:6px; font-size:40px; font-weight:900; color:var(--green); text-align:center; line-height:1.1; }
+
+    .profits{ grid-column:3; grid-row:4; display:flex; flex-direction:column; align-items:flex-end; }
     .profits .title{font-size:28px; font-weight:900; margin-bottom:10px}
     .profits .line{font-size:28px; font-weight:900; color:var(--green)}
 
-    /* EXISTENTE: empilha até 1180px */
+    /* ====== EMPILHAMENTO GERAL ATÉ 1180px (existente) ====== */
     @media (max-width:1180px){
       .grid{
         grid-template-columns:1fr;
@@ -200,56 +155,25 @@
       .result-card{width:100%}
       .search input{width:100%}
     }
-    .bags{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
-    }
-    .bags input{
-      display:block;
-      margin:0 auto;
-    }
-    .profits{
-      transform: translateX(-55px);
-    }
-    @media (max-width:1180px){
-      .profits{ transform:none; }
-    }
+    .bags{ display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .bags input{ display:block; margin:0 auto; }
+    .profits{ transform: translateX(-55px); }
+    @media (max-width:1180px){ .profits{ transform:none; } }
 
     footer {
-      width: 100%;
-      background: #060611;
-      color: #ccc;
-      padding: 5px 20px;
-      font-size: 13px;
-      font-weight: normal;
-      font-style: normal;
-      border-top: 0.5px solid #333;
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      width: 100%; background: #060611; color: #ccc; padding: 5px 20px; font-size: 13px;
+      font-weight: normal; font-style: normal; border-top: 0.5px solid #333; margin-top: auto;
+      display: flex; justify-content: space-between; align-items: center;
     }
     footer .left { display: flex; gap: 16px; }
-    footer .left a {
-      color: #595959;
-      text-decoration: none;
-      font-weight: normal;
-    }
+    footer .left a { color: #595959; text-decoration: none; font-weight: normal; }
     footer .left a:hover { color: #b497ff; }
-    footer .right {
-      color: #777;
-      font-size: 11px;
-      font-style: italic;
-    }
+    footer .right { color: #777; font-size: 11px; font-style: italic; }
 
     .neg{ color: var(--red) !important; }
     .down .xleft, .down .xright { color: var(--red) !important; }
 
-    /* -------------------- */
-    /*      MOBILE ONLY     */
-    /* -------------------- */
+    /* ====== MOBILE: REORDENA, CENTRALIZA E AUMENTA O BOTÃO ====== */
     @media (max-width: 768px){
       .brand{
         top: calc(12px + env(safe-area-inset-top));
@@ -260,29 +184,58 @@
         width: min(720px, 94vw);
         margin: 76px auto 90px;
       }
-      .search{ height:auto; margin-bottom: 2px; }
+
+      /* ordem pedida: search1 → card1 → search2 → card2 → btn → result → bags → profits */
+      .grid{
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "search1"
+          "left"
+          "search2"
+          "right"
+          "btn"
+          "result"
+          "bags"
+          "profits";
+        justify-items: center;   /* centraliza tudo na coluna */
+        gap: 16px;
+      }
+      .search{ height:auto; margin-bottom: 0; width: 100%; }
+      .search-1{ grid-area: search1; }
+      .search-2{ grid-area: search2; }
+      .left-card{ grid-area: left; }
+      .right-card{ grid-area: right; }
+      .btn-wrap{ grid-area: btn; }
+      .result{ grid-area: result; }
+      .bags{ grid-area: bags; }
+      .profits{ grid-area: profits; }
+
       .search input{
-        height: 46px; font-size: 16px; padding: 0 16px; border-radius: 14px;
+        width: 100%;
+        max-width: 560px;
+        height: 46px;
+        font-size: 16px;
+        padding: 0 16px;
+        border-radius: 14px;
       }
 
-      .card{ padding:16px; gap:12px; }
+      .card{
+        width: 100%;
+        max-width: 560px;
+        padding:16px; gap:12px;
+      }
       .token-img{ width:64px; height:64px; border-radius:10px; }
       .token-title{ font-size:18px; }
       .token-price{ font-size:20px; }
       .muted{ font-size:13px; }
 
-      .btn-wrap{ margin-top: 4px; }
-      .btn{ height:54px; min-width:160px; padding:0 22px; font-size:18px; }
-
+      .btn{ height:62px; min-width:220px; padding:0 28px; font-size:19px; border-radius:20px; }
       .under-btn-note{ margin-top:8px; font-size:12px; }
 
       .result-card{
-        padding:16px;
-        max-width:none;
-        height:auto;            /* deixa crescer conforme conteúdo */
+        padding:16px; max-width:560px; height:auto;
       }
-      .result-card.tall{ height:auto; } /* ignora altura fixa quando “mega” */
-
+      .result-card.tall{ height:auto; }
       .result-sym{ position:static; margin-bottom:6px; font-size:20px; }
       .pfp{ width:70px; height:70px; margin:8px auto; }
       .xleft,.xright{ position:static; font-size:28px; margin:6px 8px; }
@@ -290,11 +243,11 @@
       .cap{ font-size:14px; }
       .mega-mult{ font-size:30px; margin-top:4px; }
 
-      .bags{ align-items:stretch; }
-      .bags .title{ font-size:22px; }
+      .bags{ align-items:stretch; width:100%; max-width:560px; }
+      .bags .title{ font-size:22px; text-align:left; }
       .bags input{ width:100%; height:46px; font-size:18px; }
 
-      .profits{ align-items:stretch; }
+      .profits{ align-items:stretch; width:100%; max-width:560px; }
       .profits .title{ font-size:22px; }
       .profits .line{ font-size:22px; }
 
@@ -311,7 +264,7 @@
     @media (max-width: 420px){
       .token-title{ font-size:16px; }
       .token-price{ font-size:18px; }
-      .btn{ height:50px; font-size:16px; }
+      .btn{ height:56px; font-size:17px; }
       .xleft,.xright{ font-size:24px; }
       .big-price{ font-size:20px; }
     }
@@ -321,10 +274,10 @@
   <a href="https://flashscreener.com/" rel="home" class="brand" aria-label="Voltar para a página inicial">FLASH<span>SCREENER</span></a>
   <main>
     <div class="grid">
-      <div class="search" style="grid-column:1">
+      <div class="search search-1">
         <input id="q1" placeholder="Token name, CA..." autocomplete="off" autocapitalize="off" spellcheck="false" />
       </div>
-      <div class="search" style="grid-column:3">
+      <div class="search search-2">
         <input id="q2" placeholder="Token name, CA..." autocomplete="off" autocapitalize="off" spellcheck="false" />
       </div>
 
@@ -351,12 +304,6 @@
         </div>
       </section>
 
-      <section class="bags">
-        <div class="title">YOUR BAGS</div>
-        <input id="bags" placeholder="69,420..." inputmode="decimal" />
-        <div class="hint">Enter the amount of <span id="bagsTicker">token</span> you hold.(1B max)</div>
-      </section>
-
       <section class="result">
         <div class="result-card" id="resultCard">
           <div class="result-sym" id="resultTicker">$ticker</div>
@@ -367,6 +314,12 @@
           <div class="cap muted" id="resultCap">MKT CAP:</div>
           <div class="mega-mult" id="megaX">x0</div>
         </div>
+      </section>
+
+      <section class="bags">
+        <div class="title">YOUR BAGS</div>
+        <input id="bags" placeholder="69,420..." inputmode="decimal" />
+        <div class="hint">Enter the amount of <span id="bagsTicker">token</span> you hold.(1B max)</div>
       </section>
 
       <section class="profits">
@@ -405,19 +358,11 @@
     const looksLikeSol = (s)=>/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(s.trim()) && !s.startsWith('0x');
     const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
     const GECKOT_BASE   = 'https://api.geckoterminal.com/api/v2';
-    const EVM_PLATFORMS = [
-      'ethereum','binance-smart-chain','polygon-pos','arbitrum-one','optimism',
-      'base','avalanche','fantom','cronos','gnosis','aurora','celo',
-      'harmony-shard-0','zksync','blast','linea'
-    ];
+    const EVM_PLATFORMS = ['ethereum','binance-smart-chain','polygon-pos','arbitrum-one','optimism','base','avalanche','fantom','cronos','gnosis','aurora','celo','harmony-shard-0','zksync','blast','linea'];
     async function fetchJSON(url, opts={}){
-      const ctrl = new AbortController();
-      const id = setTimeout(()=>ctrl.abort(), opts.timeout || 12000);
-      try{
-        const res = await fetch(url, { signal: ctrl.signal, headers: { 'Accept':'application/json' } });
-        if (!res.ok) throw new Error('HTTP '+res.status);
-        return await res.json();
-      } finally{ clearTimeout(id); }
+      const ctrl = new AbortController(); const id = setTimeout(()=>ctrl.abort(), opts.timeout || 12000);
+      try{ const res = await fetch(url, { signal: ctrl.signal, headers: { 'Accept':'application/json' } }); if (!res.ok) throw new Error('HTTP '+res.status); return await res.json(); }
+      finally{ clearTimeout(id); }
     }
     async function fromCoinGeckoByContract(address){
       let lastErr;
@@ -427,38 +372,17 @@
           const url = `${COINGECKO_BASE}/coins/${chain}/contract/${address}?${qs}`;
           const j = await fetchJSON(url);
           const md = j.market_data || {};
-          return {
-            provider: 'coingecko',
-            chain,
-            address,
-            id: j.id,
-            name: j.name,
-            symbol: (j.symbol||'').toUpperCase(),
-            image: j.image?.large || j.image?.thumb || '',
-            price: Number(md.current_price?.usd) || null,
-            marketCap: Number(md.market_cap?.usd) || null
-          };
+          return { provider:'coingecko', chain, address, id:j.id, name:j.name, symbol:(j.symbol||'').toUpperCase(), image:j.image?.large || j.image?.thumb || '', price:Number(md.current_price?.usd) || null, marketCap:Number(md.market_cap?.usd) || null };
         }catch(e){ lastErr = e; }
       }
       throw lastErr || new Error('not found');
     }
     async function fromCoinGeckoByName(q){
       const s = await fetchJSON(`${COINGECKO_BASE}/search?query=${encodeURIComponent(q)}`);
-      const hit = (s.coins||[])[0];
-      if (!hit) throw new Error('Sem resultados');
+      const hit = (s.coins||[])[0]; if (!hit) throw new Error('Sem resultados');
       const j = await fetchJSON(`${COINGECKO_BASE}/coins/${hit.id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`);
       const md = j.market_data || {};
-      return {
-        provider: 'coingecko',
-        chain: j.asset_platform_id || 'coingecko',
-        address: j.contract_address || '',
-        id: j.id,
-        name: j.name,
-        symbol: (j.symbol||'').toUpperCase(),
-        image: j.image?.large || j.image?.thumb || '',
-        price: Number(md.current_price?.usd) || null,
-        marketCap: Number(md.market_cap?.usd) || null
-      };
+      return { provider:'coingecko', chain:j.asset_platform_id || 'coingecko', address:j.contract_address || '', id:j.id, name:j.name, symbol:(j.symbol||'').toUpperCase(), image:j.image?.large || j.image?.thumb || '', price:Number(md.current_price?.usd) || null, marketCap:Number(md.market_cap?.usd) || null };
     }
     async function fromGeckoTerminalSol(address){
       const url = `${GECKOT_BASE}/networks/solana/tokens/${address}`;
@@ -466,23 +390,11 @@
       const a = j?.data?.attributes || {};
       const price = Number(a.price_usd);
       const mc = a.market_cap_usd != null ? Number(a.market_cap_usd) : (a.fdv_usd != null ? Number(a.fdv_usd) : null);
-      return {
-        provider:'geckoterminal', chain:'solana', address,
-        id: a.address || address,
-        name: a.name || 'Unknown',
-        symbol: (a.symbol||'').toUpperCase(),
-        image: a.image_url || '',
-        price: isFinite(price)? price : null,
-        marketCap: isFinite(mc)? mc : null
-      };
+      return { provider:'geckoterminal', chain:'solana', address, id:a.address || address, name:a.name || 'Unknown', symbol:(a.symbol||'').toUpperCase(), image:a.image_url || '', price:isFinite(price)? price : null, marketCap:isFinite(mc)? mc : null };
     }
     async function getSolPriceUSD(){
-      try{
-        const j = await fetchJSON(`${COINGECKO_BASE}/simple/price?ids=solana&vs_currencies=usd`);
-        return Number(j.solana?.usd) || null;
-      }catch{
-        return null;
-      }
+      try{ const j = await fetchJSON(`${COINGECKO_BASE}/simple/price?ids=solana&vs_currencies=usd`); return Number(j.solana?.usd) || null; }
+      catch{ return null; }
     }
     async function resolveToken(input){
       const q = (input||'').trim();
@@ -510,47 +422,30 @@
     }
 
     function setLossStyles({ isLoss, isDown }){
-      ['#pPct','#pUsd','#pSol'].forEach(sel=>{
-        const el = $(sel);
-        if (el) el.classList.toggle('neg', isLoss);
-      });
-      const card = $('#resultCard');
-      if (card) card.classList.toggle('down', isDown);
-      ['#xLeft','#xRight'].forEach(sel=>{
-        const el = $(sel);
-        if (el) el.classList.toggle('neg', isDown);
-      });
+      ['#pPct','#pUsd','#pSol'].forEach(sel=>$(sel)?.classList.toggle('neg', isLoss));
+      const card = $('#resultCard'); if (card) card.classList.toggle('down', isDown);
+      ['#xLeft','#xRight'].forEach(sel=>$(sel)?.classList.toggle('neg', isDown));
     }
 
     function compute(){
       const t1 = state.t1, t2 = state.t2;
-      if (!t1 || !t2){
-        $('#hint').innerHTML = '<span class="err">Insert both CAs and click WHAT IF.</span>';
-        return;
-      }
-      if (!(t1.price>0 && t1.marketCap>0 && t2.marketCap>0)){
-        $('#hint').innerHTML = '<span class="err">Missing data (preço/market cap). Try another CA.</span>';
-        return;
-      }
+      if (!t1 || !t2){ $('#hint').innerHTML = '<span class="err">Insert both CAs and click WHAT IF.</span>'; return; }
+      if (!(t1.price>0 && t1.marketCap>0 && t2.marketCap>0)){ $('#hint').innerHTML = '<span class="err">Missing data (preço/market cap). Try another CA.</span>'; return; }
+
       const multiplier = t2.marketCap / t1.marketCap;
       const targetPrice = t1.price * multiplier;
       $('#resultPrice').textContent = `PRICE ${nfUSD.format(targetPrice)}`;
       $('#resultCap').textContent   = `MKT CAP: ${shortUSD(t2.marketCap)}`;
 
-      const mega = $('#megaX');
-      const card = $('#resultCard');
+      const mega = $('#megaX'); const card = $('#resultCard');
       if (multiplier > 100){
-        $('#xLeft').textContent = '🤑';
-        $('#xRight').textContent = '🤑';
+        $('#xLeft').textContent = '🤑'; $('#xRight').textContent = '🤑';
         mega.textContent = `x${nf2.format(multiplier)}`;
-        mega.style.display = 'block';
-        card.classList.add('tall');
+        mega.style.display = 'block'; card.classList.add('tall');
       }else{
         const mtxt = `x${nf2.format(multiplier)}`;
-        $('#xLeft').textContent  = mtxt;
-        $('#xRight').textContent = mtxt;
-        mega.style.display = 'none';
-        card.classList.remove('tall');
+        $('#xLeft').textContent = mtxt; $('#xRight').textContent = mtxt;
+        mega.style.display = 'none'; card.classList.remove('tall');
       }
 
       const qty = parseFloat(($('#bags').value||'').replace(',', '.')) || 0;
@@ -568,10 +463,7 @@
         $('#pSol').textContent = '—';
       }
 
-      const isLoss = profitUSD < 0;
-      const isDown = multiplier < 1;
-      setLossStyles({ isLoss, isDown });
-
+      setLossStyles({ isLoss: profitUSD < 0, isDown: multiplier < 1 });
       $('#hint').textContent = '';
     }
 
@@ -587,11 +479,9 @@
       }catch(e){
         const msg = 'Ops. Try again.';
         if (side===1){
-          $('#title1').textContent = msg; $('#price1').textContent='PRICE'; $('#cap1').textContent='MKT CAP:';
-          $('#img1').src = 'whatif.png';
+          $('#title1').textContent = msg; $('#price1').textContent='PRICE'; $('#cap1').textContent='MKT CAP:'; $('#img1').src = 'whatif.png';
         } else {
-          $('#title2').textContent = msg; $('#price2').textContent='PRICE'; $('#cap2').textContent='MKT CAP:';
-          $('#img2').src = 'whatif.png';
+          $('#title2').textContent = msg; $('#price2').textContent='PRICE'; $('#cap2').textContent='MKT CAP:'; $('#img2').src = 'whatif.png';
         }
       }
     }
