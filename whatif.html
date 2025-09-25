@@ -4,9 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>What If • FlashScreener</title>
+
+  <!-- Favicons -->
   <link rel="icon" href="../favicon.png" type="image/png">
   <link rel="shortcut icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="favicon.png">
+
   <style>
     :root{
       --bg1:#000000;
@@ -24,65 +27,114 @@
       --shadow: 0 20px 40px rgba(0,0,0,.35);
       --radius: 22px;
       --red:#ff5757;
-      overscroll-behavior: none;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+
+    *{ box-sizing: border-box; }
+    html, body { height: 100%; }
+    html, body { overscroll-behavior: none; }
+
     body{
-      margin:0; font-family:'Inter',sans-serif; color:var(--text);
-      background: radial-gradient(1200px 800px at 15% 5%, #140d37 0%, transparent 60%),
-                  radial-gradient(1000px 700px at 85% 40%, #1e0d63 0%, transparent 60%),
-                  linear-gradient(135deg, var(--bg1), var(--bg2));
-      display:flex; flex-direction:column; min-height:100vh;
+      margin:0;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 15% 5%, #140d37 0%, transparent 60%),
+        radial-gradient(1000px 700px at 85% 40%, #1e0d63 0%, transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
     }
+
+    /* ===== Brand (desktop base) ===== */
     .brand{
-      position:fixed; left:20px; top:20px;
-      font-weight:695; letter-spacing:0.1px; font-size:22px;
-      color:#3e27b2; text-decoration:none; z-index:10;
+      position:fixed;
+      left:20px;
+      top:20px;
+      font-weight:695;
+      letter-spacing:0.1px;
+      font-size:22px;
+      color:#3e27b2;
+      text-decoration:none;
+      z-index:10;
     }
-    .brand span{color:#3e27b2}
-    .brand:focus-visible{outline:2px solid var(--purple); outline-offset:3px; border-radius:6px}
-    .brand:hover{filter:brightness(1.2)}
+    .brand span{ color:#3e27b2; }
+    .brand:focus-visible{ outline:2px solid var(--purple); outline-offset:3px; border-radius:6px; }
+    .brand:hover{ filter:brightness(1.2); }
 
-    main{flex:1; width:min(1280px, 96vw); margin:90px auto 120px; position:relative}
+    main{ flex:1; width:min(1280px, 96vw); margin:90px auto 120px; position:relative; }
 
-    /* ====== DESKTOP / EXISTENTE ====== */
+    /* ===== DESKTOP GRID (base) ===== */
     .grid{
       display:grid;
       grid-template-columns: 1fr minmax(420px, 520px) 1fr;
       grid-template-rows: auto auto 60px auto;
       gap:12px;
     }
-    .search{ grid-row:1; height:60px; display:flex; align-items:center; justify-content:center; margin-bottom:-6px; }
+
+    .search{
+      grid-row:1;
+      height:60px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:-6px;
+    }
     .search-1{ grid-column:1; }
     .search-2{ grid-column:3; }
+
     .search input{
-      width:420px; height:52px; border-radius:999px; border:none; outline:none; padding:0 22px; font-size:18px; color:#fff;
-      background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
+      width:420px;
+      height:52px;
+      border-radius:999px;
+      border:none;
+      outline:none;
+      padding:0 22px;
+      font-size:18px;
+      color:#fff;
+      background: rgba(255,255,255,.06);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
     }
-    .search input::placeholder{color:var(--placeholder)}
+    .search input::placeholder{ color:var(--placeholder); }
 
     .btn-wrap{
-      grid-column:2; grid-row:2;
-      display:flex; align-items:center; justify-content:center;
+      grid-column:2;
+      grid-row:2;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       flex-direction:column;
     }
     .btn{
-      position:relative;          
-      overflow:hidden;    
-      display:inline-flex; align-items:center; justify-content:center;
-      height:60px; min-width:180px; padding:0 26px; border-radius:999px;
-      background:var(--purple); color:#fff; font-size:20px; font-weight:800; letter-spacing:.5px;
-      border:none; cursor:pointer; box-shadow:var(--shadow);
-      transition: transform .15s cubic-bezier(.2,.7,.2,1), box-shadow .2s ease, background .2s ease, filter .2s ease;
+      position:relative;
+      overflow:hidden;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height:60px;
+      min-width:180px;
+      padding:0 26px;
+      border-radius:999px;
+      background:var(--purple);
+      color:#fff;
+      font-size:20px;
+      font-weight:800;
+      letter-spacing:.5px;
+      border:none;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+      transition: transform .15s cubic-bezier(.2,.7,.2,1),
+                  box-shadow .2s ease, background .2s ease, filter .2s ease;
     }
     .btn::before{
       content:"";
-      position:absolute; top:-50%; left:-30%;
+      position:absolute;
+      top:-50%; left:-30%;
       width:30%; height:200%;
       transform:skewX(-20deg) translateX(-120%);
       background:linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
-      transition:transform .65s ease; pointer-events:none;
+      transition:transform .65s ease;
+      pointer-events:none;
     }
     .btn:hover{
       background:var(--purple-2);
@@ -92,121 +144,143 @@
     .btn:hover::before{ transform:skewX(-20deg) translateX(360%); }
     .btn:active{ transform:translateY(0) scale(.99); box-shadow: 0 8px 18px rgba(123,77,255,.35), 0 0 0 1px rgba(255,255,255,.06) inset; }
     .btn:focus-visible{
-      outline:none; box-shadow: 0 0 0 3px rgba(124,77,255,.55), 0 12px 28px rgba(123,77,255,.35), 0 0 0 1px rgba(255,255,255,.06) inset;
+      outline:none;
+      box-shadow: 0 0 0 3px rgba(124,77,255,.55),
+                  0 12px 28px rgba(123,77,255,.35),
+                  0 0 0 1px rgba(255,255,255,.06) inset;
     }
+
     .under-btn-note{
-      margin-top:10px; font-family:'Open Sans', sans-serif; font-style:italic; font-size:13px; color:#3a25a4; letter-spacing:.2px; opacity:.95; user-select:none;
+      margin-top:10px;
+      font-family:'Open Sans', sans-serif;
+      font-style:italic;
+      font-size:13px;
+      color:#3a25a4;
+      letter-spacing:.2px;
+      opacity:.95;
+      user-select:none;
     }
 
     .card{
-      background:linear-gradient(180deg, var(--card), var(--card-2)); border-radius:var(--radius); box-shadow:var(--shadow);
-      padding:22px; border:1px solid var(--stroke); display:flex; gap:18px; align-items:center
+      background:linear-gradient(180deg, var(--card), var(--card-2));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      border:1px solid var(--stroke);
+      display:flex;
+      gap:18px;
+      align-items:center;
     }
-    .left-card{grid-column:1; grid-row:2}
-    .right-card{grid-column:3; grid-row:2}
-    .token-img{width:84px; height:84px; border-radius:12px; background:#fff; object-fit:cover}
-    .token-info{display:flex; flex-direction:column; gap:8px}
-    .token-title{font-size:24px; font-weight:700}
-    .token-price{font-size:28px; font-weight:800}
-    .muted{color:var(--muted); font-weight:600}
+    .left-card{ grid-column:1; grid-row:2; }
+    .right-card{ grid-column:3; grid-row:2; }
 
-    .bags{grid-column:1; grid-row:4}
-    .bags .title{font-size:28px; font-weight:800; margin-bottom:12px}
-    .bags input{width:280px; height:50px; border-radius:14px; border:1px solid var(--stroke); background:rgba(255,255,255,.04);
-      color:#fff; font-size:20px; padding:0 16px; outline:none}
-    .bags input::placeholder{color:var(--placeholder)}
-    .hint{font-size:12px; color:#c7c3e3a6; margin-top:6px}
-    .err{color:#ff7d7d; font-weight:700}
+    .token-img{ width:84px; height:84px; border-radius:12px; background:#fff; object-fit:cover; }
+    .token-info{ display:flex; flex-direction:column; gap:8px; }
+    .token-title{ font-size:24px; font-weight:700; }
+    .token-price{ font-size:28px; font-weight:800; }
+    .muted{ color:var(--muted); font-weight:600; }
+
+    .bags{ grid-column:1; grid-row:4; display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .bags .title{ font-size:28px; font-weight:800; margin-bottom:12px; }
+    .bags input{
+      width:280px; height:50px; border-radius:14px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04);
+      color:#fff; font-size:20px; padding:0 16px; outline:none;
+      display:block; margin:0 auto;
+    }
+    .bags input::placeholder{ color:var(--placeholder); }
+    .hint{ font-size:12px; color:#c7c3e3a6; margin-top:6px; }
+    .err{ color:#ff7d7d; font-weight:700; }
 
     .result{ grid-column:2; grid-row:4; display:flex; justify-content:center; }
     .result-card{
-      position:relative; background:linear-gradient(180deg, var(--card), var(--card-2));
-      border:1px solid var(--stroke); border-radius:26px; padding:20px; width:100%; max-width:520px; height:260px;
-      display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:var(--shadow)
+      position:relative;
+      background:linear-gradient(180deg, var(--card), var(--card-2));
+      border:1px solid var(--stroke);
+      border-radius:26px;
+      padding:20px;
+      width:100%;
+      max-width:520px;
+      height:260px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      box-shadow:var(--shadow);
     }
     .result-card.tall{ height:280px; }
-    .result-sym{position:absolute; top:4px; font-size:28px; font-weight:800}
-    .pfp{width:90px; height:90px; border-radius:12px; background:#fff; margin:10px auto; object-fit:cover}
-    .xleft,.xright{position:absolute; top:90px; font-size:40px; font-weight:900; color:var(--green)}
-    .xleft{left:18px}
-    .xright{right:18px}
-    .big-price{font-size:34px; font-weight:900}
-    .cap{margin-top:6px; font-size:18px}
+    .result-sym{ position:absolute; top:4px; font-size:28px; font-weight:800; }
+    .pfp{ width:90px; height:90px; border-radius:12px; background:#fff; margin:10px auto; object-fit:cover; }
+    .xleft,.xright{ position:absolute; top:90px; font-size:40px; font-weight:900; color:var(--green); }
+    .xleft{ left:18px; }
+    .xright{ right:18px; }
+    .big-price{ font-size:34px; font-weight:900; }
+    .cap{ margin-top:6px; font-size:18px; }
     .mega-mult{ display:none; margin-top:6px; font-size:40px; font-weight:900; color:var(--green); text-align:center; line-height:1.1; }
 
-    .profits{ grid-column:3; grid-row:4; display:flex; flex-direction:column; align-items:flex-end; }
-    .profits .title{font-size:28px; font-weight:900; margin-bottom:10px}
-    .profits .line{font-size:28px; font-weight:900; color:var(--green)}
+    .profits{ grid-column:3; grid-row:4; display:flex; flex-direction:column; align-items:flex-end; transform: translateX(-55px); }
+    .profits .title{ font-size:28px; font-weight:900; margin-bottom:10px; }
+    .profits .line{ font-size:28px; font-weight:900; color:var(--green); }
 
-    /* ====== EMPILHAMENTO GERAL ATÉ 1180px (existente) ====== */
+    /* ===== Stack geral até 1180px ===== */
     @media (max-width:1180px){
       .grid{
         grid-template-columns:1fr;
         grid-template-rows:auto auto auto auto auto auto;
         gap:14px;
       }
-      .left-card,.right-card,.btn-wrap,.result,.bags,.profits{grid-column:1}
-      .left-card{grid-row:2}
-      .btn-wrap{grid-row:3}
-      .right-card{grid-row:4}
-      .result{grid-row:5}
-      .bags{grid-row:6}
-      .profits{grid-row:7; align-items:flex-start}
-      .result-card{width:100%}
-      .search input{width:100%}
+      .left-card,.right-card,.btn-wrap,.result,.bags,.profits{ grid-column:1; }
+      .left-card{ grid-row:2; }
+      .btn-wrap{ grid-row:3; }
+      .right-card{ grid-row:4; }
+      .result{ grid-row:5; }
+      .bags{ grid-row:6; }
+      .profits{ grid-row:7; align-items:flex-start; transform:none; }
+      .result-card{ width:100%; }
+      .search input{ width:100%; }
     }
-    .bags{ display:flex; flex-direction:column; align-items:center; text-align:center; }
-    .bags input{ display:block; margin:0 auto; }
-    .profits{ transform: translateX(-55px); }
-    @media (max-width:1180px){ .profits{ transform:none; } }
 
-    footer {
-      width: 100%; background: #060611; color: #ccc; padding: 5px 20px; font-size: 13px;
-      font-weight: normal; font-style: normal; border-top: 0.5px solid #333; margin-top: auto;
-      display: flex; justify-content: space-between; align-items: center;
+    footer{
+      width:100%;
+      background:#060611;
+      color:#ccc;
+      padding:5px 20px;
+      font-size:13px;
+      font-weight:normal;
+      font-style:normal;
+      border-top:0.5px solid #333;
+      margin-top:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
     }
-    footer .left { display: flex; gap: 16px; }
-    footer .left a { color: #595959; text-decoration: none; font-weight: normal; }
-    footer .left a:hover { color: #b497ff; }
-    footer .right { color: #777; font-size: 11px; font-style: italic; }
+    footer .left{ display:flex; gap:16px; }
+    footer .left a{ color:#595959; text-decoration:none; font-weight:normal; }
+    footer .left a:hover{ color:#b497ff; }
+    footer .right{ color:#777; font-size:11px; font-style:italic; }
 
     .neg{ color: var(--red) !important; }
     .down .xleft, .down .xright { color: var(--red) !important; }
 
-@media (max-width: 768px){
-  :root{ --mobile-card-w: 560px; }
+    /* ======= MOBILE (≤768px): apenas overrides pedidos ======= */
+    @media (max-width:768px){
+      :root{ --mobile-card-w: 560px; }
 
-  /* 1) Logo fixa sem sobrepor conteúdo (sticky ocupa espaço no fluxo) */
-  .brand{
-    position: sticky;
-    top: calc(12px + env(safe-area-inset-top));
-    left: auto;
-    display: block;
-    margin-left: calc(12px + env(safe-area-inset-left));
-    font-size: 18px;
-    z-index: 5;
-  }  /* ← fecha a regra da .brand */
-
-  .result-card{
-    column-gap: 22px;   /* distância lateral entre (x0) e o ícone */
-    row-gap: 4px;       /* itens mais juntos na vertical */
-    padding: 12px 14px; /* card mais “baixo” */
-  }
-
-  .pfp{ width: 64px; height: 64px; }
-
-  .big-price{ font-size: 22px; margin-top: 2px; }
-  .cap{ font-size: 13px; margin-top: 0; }
-  .mega-mult{ font-size: 26px; margin-top: 2px; }
-
-}
-
-      main{
-        width: min(720px, 94vw);
-        margin: 76px auto 90px;
+      /* Logo sticky sem sobrepor o conteúdo */
+      .brand{
+        position: sticky;
+        top: calc(12px + env(safe-area-inset-top));
+        left: auto;
+        display: block;
+        margin-left: calc(12px + env(safe-area-inset-left));
+        font-size: 18px;
+        z-index: 5;
       }
 
-      /* ordem: search1 → card1 → search2 → card2 → btn → result → bags → profits */
+      main{ width:min(720px, 94vw); margin:76px auto 90px; }
+
+      /* Ordem: search1 → card1 → search2 → card2 → btn → result → bags → profits */
       .grid{
         grid-template-columns: 1fr;
         grid-template-areas:
@@ -218,33 +292,29 @@
           "result"
           "bags"
           "profits";
-        justify-items: center;
-        gap: 16px;
+        justify-items:center;
+        gap:16px;
       }
-      .search{ height:auto; margin-bottom: 0; width: 100%; }
-      .search-1{ grid-area: search1; }
-      .search-2{ grid-area: search2; }
-      .left-card{ grid-area: left; }
-      .right-card{ grid-area: right; }
-      .btn-wrap{ grid-area: btn; }
-      .result{ grid-area: result; width:100%; display:flex; justify-content:center; }
-      .bags{ grid-area: bags; }
-      .profits{ grid-area: profits; }
+      .search{ height:auto; margin-bottom:0; width:100%; }
+      .search-1{ grid-area:search1; }
+      .search-2{ grid-area:search2; }
+      .left-card{ grid-area:left; }
+      .right-card{ grid-area:right; }
+      .btn-wrap{ grid-area:btn; }
+      .result{ grid-area:result; width:100%; display:flex; justify-content:center; }
+      .bags{ grid-area:bags; }
+      .profits{ grid-area:profits; }
 
       .search input{
-        width: 100%;
-        max-width: var(--mobile-card-w);
-        height: 46px;
-        font-size: 16px;
-        padding: 0 16px;
-        border-radius: 14px;
+        width:100%;
+        max-width:var(--mobile-card-w);
+        height:46px;
+        font-size:16px;
+        padding:0 16px;
+        border-radius:14px;
       }
 
-      .card{
-        width: 100%;
-        max-width: var(--mobile-card-w);
-        padding:16px; gap:12px;
-      }
+      .card{ width:100%; max-width:var(--mobile-card-w); padding:16px; gap:12px; }
       .token-img{ width:64px; height:64px; border-radius:10px; }
       .token-title{ font-size:18px; }
       .token-price{ font-size:20px; }
@@ -253,62 +323,47 @@
       .btn{ height:62px; min-width:220px; padding:0 28px; font-size:19px; border-radius:20px; }
       .under-btn-note{ margin-top:8px; font-size:12px; }
 
-      /* 2) Resultado do mesmo tamanho + números verdes aos lados do ícone */
+      /* Resultado do mesmo tamanho + multiplicadores verdes nas laterais do ícone */
       .result-card{
-        width: 100%;
-        max-width: var(--mobile-card-w);
+        width:100%;
+        max-width:var(--mobile-card-w);
         padding:16px;
         height:auto;
-
-        /* grid para posicionar ícone e multiplicadores lado a lado */
-        display: grid;
+        display:grid;
         grid-template-columns: 1fr auto 1fr;
         grid-template-rows: auto auto auto auto auto;
-        row-gap: 6px;
-        justify-items: center;
+        row-gap:6px;
+        justify-items:center;
+        column-gap:22px;
       }
       .result-card.tall{ height:auto; }
-
-      .result-sym{
-        position: static;
-        grid-column: 1 / -1; grid-row: 1;
-        font-size: 20px; margin-bottom: 2px;
-      }
-      .pfp{
-        grid-column: 2; grid-row: 2;
-        width:70px; height:70px; margin: 8px auto;
-      }
+      .result-sym{ position:static; grid-column:1 / -1; grid-row:1; font-size:20px; margin-bottom:2px; }
+      .pfp{ grid-column:2; grid-row:2; width:70px; height:70px; margin:8px auto; }
       .xleft,.xright{
-        position: static !important; left:auto; right:auto; top:auto;
-        font-size: 28px; margin: 0;
-        align-self: center;
+        position:static !important;
+        left:auto; right:auto; top:auto;
+        font-size:28px; margin:0; align-self:center; color:var(--green);
       }
-      .xleft{ grid-column: 1; grid-row: 2; justify-self: end; }
-      .xright{ grid-column: 3; grid-row: 2; justify-self: start; }
+      .xleft{ grid-column:1; grid-row:2; justify-self:end; }
+      .xright{ grid-column:3; grid-row:2; justify-self:start; }
+      .big-price{ grid-column:1 / -1; grid-row:3; font-size:24px; margin-top:4px; text-align:center; }
+      .cap{ grid-column:1 / -1; grid-row:4; font-size:14px; }
+      .mega-mult{ grid-column:1 / -1; grid-row:5; font-size:30px; margin-top:4px; }
 
-      .big-price{ grid-column: 1 / -1; grid-row: 3; font-size:24px; margin-top:4px; text-align:center; }
-      .cap{ grid-column: 1 / -1; grid-row: 4; font-size:14px; }
-      .mega-mult{ grid-column: 1 / -1; grid-row: 5; font-size:30px; margin-top:4px; }
-
-      .bags{ align-items:stretch; width:100%; max-width: var(--mobile-card-w); }
+      .bags{ align-items:stretch; width:100%; max-width:var(--mobile-card-w); }
       .bags .title{ font-size:22px; text-align:left; }
       .bags input{ width:100%; height:46px; font-size:18px; }
 
-      .profits{ align-items:stretch; width:100%; max-width: var(--mobile-card-w); }
+      .profits{ align-items:stretch; width:100%; max-width:var(--mobile-card-w); }
       .profits .title{ font-size:22px; }
       .profits .line{ font-size:22px; }
 
-      footer{
-        padding: 8px 12px;
-        font-size: 12px;
-        flex-direction: column;
-        gap: 6px;
-      }
-      footer .right{ font-size: 10px; }
+      footer{ padding:8px 12px; font-size:12px; flex-direction:column; gap:6px; }
+      footer .right{ font-size:10px; }
     }
 
     /* Telas muito estreitas */
-    @media (max-width: 420px){
+    @media (max-width:420px){
       .token-title{ font-size:16px; }
       .token-price{ font-size:18px; }
       .btn{ height:56px; font-size:17px; }
@@ -317,13 +372,18 @@
     }
   </style>
 </head>
+
 <body>
-  <a href="https://flashscreener.com/" rel="home" class="brand" aria-label="Voltar para a página inicial">FLASH<span>SCREENER</span></a>
+  <a href="https://flashscreener.com/" rel="home" class="brand" aria-label="Voltar para a página inicial">
+    FLASH<span>SCREENER</span>
+  </a>
+
   <main>
     <div class="grid">
       <div class="search search-1">
         <input id="q1" placeholder="Token name, CA..." autocomplete="off" autocapitalize="off" spellcheck="false" />
       </div>
+
       <div class="search search-2">
         <input id="q2" placeholder="Token name, CA..." autocomplete="off" autocapitalize="off" spellcheck="false" />
       </div>
@@ -332,7 +392,7 @@
         <img class="token-img" id="img1" src="whatif.png" alt="token1"/>
         <div class="token-info">
           <div class="token-title" id="title1">Token ($ticker)</div>
-          <div class="token-price" id="price1">PRICE </div>
+          <div class="token-price" id="price1">PRICE</div>
           <div class="muted" id="cap1">MKT CAP:</div>
         </div>
       </section>
@@ -346,7 +406,7 @@
         <img class="token-img" id="img2" src="whatif.png" alt="token2"/>
         <div class="token-info">
           <div class="token-title" id="title2">Token ($ticker)</div>
-          <div class="token-price" id="price2">PRICE </div>
+          <div class="token-price" id="price2">PRICE</div>
           <div class="muted" id="cap2">MKT CAP:</div>
         </div>
       </section>
@@ -366,13 +426,13 @@
       <section class="bags">
         <div class="title">YOUR BAGS</div>
         <input id="bags" placeholder="69,420..." inputmode="decimal" />
-        <div class="hint">Enter the amount of <span id="bagsTicker">token</span> you hold.(1B max)</div>
+        <div class="hint">Enter the amount of <span id="bagsTicker">token</span> you hold. (1B max)</div>
       </section>
 
       <section class="profits">
         <div class="title">YOUR PROFITS</div>
         <div class="line" id="pPct">+0%</div>
-        <div class="line" id="pUsd">+$0</div>
+        <div class="line" id="pUsd">+$0.00</div>
         <div class="line" id="pSol">+0 SOL</div>
         <div class="hint" id="hint"></div>
       </section>
@@ -389,9 +449,11 @@
 
   <script>
     const $ = (q)=>document.querySelector(q);
-    const nfUSD = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:6 });
+
+    const nfUSD  = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:6 });
     const nfUSD2 = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2 });
-    const nf2 = new Intl.NumberFormat('en-US', { maximumFractionDigits:2 });
+    const nf2    = new Intl.NumberFormat('en-US', { maximumFractionDigits:2 });
+
     const shortUSD = (n)=>{
       if (n === null || n === undefined || !isFinite(n)) return '—';
       const abs = Math.abs(n);
@@ -401,108 +463,175 @@
       if (abs >= 1e3)  return '$' + nf2.format(n/1e3)  + 'K';
       return nfUSD.format(n);
     };
+
     const looksLikeEVM = (s)=>/^0x[a-fA-F0-9]{40}$/.test(s.trim());
     const looksLikeSol = (s)=>/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(s.trim()) && !s.startsWith('0x');
+
     const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
-    const GECKOT_BASE   = 'https://api.geckoterminal.com/api/v2';
-    const EVM_PLATFORMS = ['ethereum','binance-smart-chain','polygon-pos','arbitrum-one','optimism','base','avalanche','fantom','cronos','gnosis','aurora','celo','harmony-shard-0','zksync','blast','linea'];
+    const GECKOT_BASE    = 'https://api.geckoterminal.com/api/v2';
+
+    const EVM_PLATFORMS = [
+      'ethereum','binance-smart-chain','polygon-pos','arbitrum-one','optimism','base',
+      'avalanche','fantom','cronos','gnosis','aurora','celo','harmony-shard-0','zksync','blast','linea'
+    ];
+
     async function fetchJSON(url, opts={}){
-      const ctrl = new AbortController(); const id = setTimeout(()=>ctrl.abort(), opts.timeout || 12000);
-      try{ const res = await fetch(url, { signal: ctrl.signal, headers: { 'Accept':'application/json' } }); if (!res.ok) throw new Error('HTTP '+res.status); return await res.json(); }
-      finally{ clearTimeout(id); }
+      const ctrl = new AbortController();
+      const id = setTimeout(()=>ctrl.abort(), opts.timeout || 12000);
+      try{
+        const res = await fetch(url, { signal: ctrl.signal, headers: { 'Accept':'application/json' } });
+        if (!res.ok) throw new Error('HTTP '+res.status);
+        return await res.json();
+      } finally {
+        clearTimeout(id);
+      }
     }
+
     async function fromCoinGeckoByContract(address){
       let lastErr;
       for (const chain of EVM_PLATFORMS){
         try{
-          const qs = 'localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&parkline=false';
+          const qs  = 'localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false';
           const url = `${COINGECKO_BASE}/coins/${chain}/contract/${address}?${qs}`;
-          const j = await fetchJSON(url);
-          const md = j.market_data || {};
-          return { provider:'coingecko', chain, address, id:j.id, name:j.name, symbol:(j.symbol||'').toUpperCase(), image:j.image?.large || j.image?.thumb || '', price:Number(md.current_price?.usd) || null, marketCap:Number(md.market_cap?.usd) || null };
+          const j   = await fetchJSON(url);
+          const md  = j.market_data || {};
+          return {
+            provider:'coingecko',
+            chain, address, id:j.id,
+            name:j.name,
+            symbol:(j.symbol||'').toUpperCase(),
+            image:j.image?.large || j.image?.thumb || '',
+            price:Number(md.current_price?.usd) || null,
+            marketCap:Number(md.market_cap?.usd) || null
+          };
         }catch(e){ lastErr = e; }
       }
       throw lastErr || new Error('not found');
     }
+
     async function fromCoinGeckoByName(q){
-      const s = await fetchJSON(`${COINGECKO_BASE}/search?query=${encodeURIComponent(q)}`);
-      const hit = (s.coins||[])[0]; if (!hit) throw new Error('Sem resultados');
-      const j = await fetchJSON(`${COINGECKO_BASE}/coins/${hit.id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`);
+      const s   = await fetchJSON(`${COINGECKO_BASE}/search?query=${encodeURIComponent(q)}`);
+      const hit = (s.coins||[])[0];
+      if (!hit) throw new Error('No results');
+      const j  = await fetchJSON(`${COINGECKO_BASE}/coins/${hit.id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`);
       const md = j.market_data || {};
-      return { provider:'coingecko', chain:j.asset_platform_id || 'coingecko', address:j.contract_address || '', id:j.id, name:j.name, symbol:(j.symbol||'').toUpperCase(), image:j.image?.large || j.image?.thumb || '', price:Number(md.current_price?.usd) || null, marketCap:Number(md.market_cap?.usd) || null };
+      return {
+        provider:'coingecko',
+        chain:j.asset_platform_id || 'coingecko',
+        address:j.contract_address || '',
+        id:j.id,
+        name:j.name,
+        symbol:(j.symbol||'').toUpperCase(),
+        image:j.image?.large || j.image?.thumb || '',
+        price:Number(md.current_price?.usd) || null,
+        marketCap:Number(md.market_cap?.usd) || null
+      };
     }
+
     async function fromGeckoTerminalSol(address){
       const url = `${GECKOT_BASE}/networks/solana/tokens/${address}`;
-      const j = await fetchJSON(url);
-      const a = j?.data?.attributes || {};
+      const j   = await fetchJSON(url);
+      const a   = j?.data?.attributes || {};
       const price = Number(a.price_usd);
-      const mc = a.market_cap_usd != null ? Number(a.market_cap_usd) : (a.fdv_usd != null ? Number(a.fdv_usd) : null);
-      return { provider:'geckoterminal', chain:'solana', address, id:a.address || address, name:a.name || 'Unknown', symbol:(a.symbol||'').toUpperCase(), image:a.image_url || '', price:isFinite(price)? price : null, marketCap:isFinite(mc)? mc : null };
+      const mc    = a.market_cap_usd != null ? Number(a.market_cap_usd)
+                    : (a.fdv_usd != null ? Number(a.fdv_usd) : null);
+      return {
+        provider:'geckoterminal',
+        chain:'solana',
+        address,
+        id:a.address || address,
+        name:a.name || 'Unknown',
+        symbol:(a.symbol||'').toUpperCase(),
+        image:a.image_url || '',
+        price:isFinite(price) ? price : null,
+        marketCap:isFinite(mc) ? mc : null
+      };
     }
+
     async function getSolPriceUSD(){
-      try{ const j = await fetchJSON(`${COINGECKO_BASE}/simple/price?ids=solana&vs_currencies=usd`); return Number(j.solana?.usd) || null; }
-      catch{ return null; }
+      try{
+        const j = await fetchJSON(`${COINGECKO_BASE}/simple/price?ids=solana&vs_currencies=usd`);
+        return Number(j.solana?.usd) || null;
+      }catch{ return null; }
     }
+
     async function resolveToken(input){
       const q = (input||'').trim();
-      if (!q) throw new Error('Vazio');
+      if (!q) throw new Error('Empty');
       if (looksLikeEVM(q)) return await fromCoinGeckoByContract(q);
       if (looksLikeSol(q)) return await fromGeckoTerminalSol(q);
       return await fromCoinGeckoByName(q);
     }
+
     const state = { t1:null, t2:null, solPrice:null };
+
     function paintToken(side, t){
       if (side === 1){
         $('#title1').textContent = `${t.name} ($${t.symbol||'?'})`;
         $('#price1').textContent = t.price!=null ? `PRICE ${nfUSD.format(t.price)}` : 'PRICE —';
-        $('#cap1').textContent = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
-        $('#img1').src = t.image || 'whatif.png';
-        $('#bagsTicker').textContent = `$${t.symbol||'token'}`;
+        $('#cap1').textContent   = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
+        $('#img1').src           = t.image || 'whatif.png';
+        $('#bagsTicker').textContent  = `${t.symbol||'token'}`;
         $('#resultTicker').textContent = `$${t.symbol||'ticker'}`;
         $('#resultImg').src = t.image || 'whatif.png';
       } else {
         $('#title2').textContent = `${t.name} ($${t.symbol||'?'})`;
         $('#price2').textContent = t.price!=null ? `PRICE ${nfUSD.format(t.price)}` : 'PRICE —';
-        $('#cap2').textContent = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
-        $('#img2').src = t.image || 'whatif.png';
+        $('#cap2').textContent   = `MKT CAP: ${t.marketCap!=null ? shortUSD(t.marketCap) : '—'}`;
+        $('#img2').src           = t.image || 'whatif.png';
       }
     }
 
     function setLossStyles({ isLoss, isDown }){
       ['#pPct','#pUsd','#pSol'].forEach(sel=>$(sel)?.classList.toggle('neg', isLoss));
-      const card = $('#resultCard'); if (card) card.classList.toggle('down', isDown);
+      const card = $('#resultCard');
+      if (card) card.classList.toggle('down', isDown);
       ['#xLeft','#xRight'].forEach(sel=>$(sel)?.classList.toggle('neg', isDown));
     }
 
     function compute(){
       const t1 = state.t1, t2 = state.t2;
-      if (!t1 || !t2){ $('#hint').innerHTML = '<span class="err">Insert both CAs and click WHAT IF.</span>'; return; }
-      if (!(t1.price>0 && t1.marketCap>0 && t2.marketCap>0)){ $('#hint').innerHTML = '<span class="err">Missing data (preço/market cap). Try another CA.</span>'; return; }
+      if (!t1 || !t2){
+        $('#hint').innerHTML = '<span class="err">Insert both CAs and click WHAT IF.</span>';
+        return;
+      }
+      if (!(t1.price>0 && t1.marketCap>0 && t2.marketCap>0)){
+        $('#hint').innerHTML = '<span class="err">Missing data (price/market cap). Try another CA.</span>';
+        return;
+      }
 
-      const multiplier = t2.marketCap / t1.marketCap;
+      const multiplier  = t2.marketCap / t1.marketCap;
       const targetPrice = t1.price * multiplier;
+
       $('#resultPrice').textContent = `PRICE ${nfUSD.format(targetPrice)}`;
       $('#resultCap').textContent   = `MKT CAP: ${shortUSD(t2.marketCap)}`;
 
-      const mega = $('#megaX'); const card = $('#resultCard');
+      const mega = $('#megaX');
+      const card = $('#resultCard');
+
       if (multiplier > 100){
-        $('#xLeft').textContent = '🤑'; $('#xRight').textContent = '🤑';
+        $('#xLeft').textContent  = '🤑';
+        $('#xRight').textContent = '🤑';
         mega.textContent = `x${nf2.format(multiplier)}`;
-        mega.style.display = 'block'; card.classList.add('tall');
-      }else{
+        mega.style.display = 'block';
+        card.classList.add('tall');
+      } else {
         const mtxt = `x${nf2.format(multiplier)}`;
-        $('#xLeft').textContent = mtxt; $('#xRight').textContent = mtxt;
-        mega.style.display = 'none'; card.classList.remove('tall');
+        $('#xLeft').textContent  = mtxt;
+        $('#xRight').textContent = mtxt;
+        mega.style.display = 'none';
+        card.classList.remove('tall');
       }
 
       const qty = parseFloat(($('#bags').value||'').replace(',', '.')) || 0;
       const currentVal = qty * (t1.price||0);
       const targetVal  = qty * (targetPrice||0);
       const profitUSD  = targetVal - currentVal;
-      const pct = (multiplier - 1) * 100;
+      const pct        = (multiplier - 1) * 100;
 
       $('#pPct').textContent = `${profitUSD>=0?'+':''}${nf2.format(pct)}%`;
       $('#pUsd').textContent = `${profitUSD>=0?'+':''}${nfUSD2.format(profitUSD)}`;
+
       if (state.solPrice){
         const sol = profitUSD / state.solPrice;
         $('#pSol').textContent = `${profitUSD>=0?'+':''}${nf2.format(sol)} SOL`;
@@ -526,24 +655,35 @@
       }catch(e){
         const msg = 'Ops. Try again.';
         if (side===1){
-          $('#title1').textContent = msg; $('#price1').textContent='PRICE'; $('#cap1').textContent='MKT CAP:'; $('#img1').src = 'whatif.png';
+          $('#title1').textContent=''+msg;
+          $('#price1').textContent='PRICE';
+          $('#cap1').textContent='MKT CAP:';
+          $('#img1').src = 'whatif.png';
         } else {
-          $('#title2').textContent = msg; $('#price2').textContent='PRICE'; $('#cap2').textContent='MKT CAP:'; $('#img2').src = 'whatif.png';
+          $('#title2').textContent=''+msg;
+          $('#price2').textContent='PRICE';
+          $('#cap2').textContent='MKT CAP:';
+          $('#img2').src = 'whatif.png';
         }
       }
     }
 
-    for (const sel of ['#q1','#q2','#bags']){
-      document.querySelector(sel).addEventListener('keydown', (e)=>{ if (e.key==='Enter') document.querySelector('#go').click(); });
-    }
+    ['#q1','#q2','#bags'].forEach(sel=>{
+      document.querySelector(sel).addEventListener('keydown', (e)=>{
+        if (e.key==='Enter') document.querySelector('#go').click();
+      });
+    });
+
     document.querySelector('#go').addEventListener('click', async ()=>{
       if (!state.t1) await handle(1);
       if (!state.t2) await handle(2);
       compute();
     });
+
     document.querySelector('#q1').addEventListener('blur', ()=>handle(1));
     document.querySelector('#q2').addEventListener('blur', ()=>handle(2));
     document.querySelector('#bags').addEventListener('input', ()=>{ if (state.t1 && state.t2) compute(); });
   </script>
 </body>
 </html>
+
