@@ -20,6 +20,15 @@
       --radius: 16px;
       --container: min(1100px, 92vw);
       --shadow: 0 12px 30px rgba(0,0,0,.35);
+
+      /* Espaço padrão (mobile/tablet) */
+      --top-pad: calc(clamp(56px, 10vw, 90px) + env(safe-area-inset-top));
+    }
+    /* Desktop: só troca o valor da variável */
+    @media (min-width:1024px){
+      :root{
+        --top-pad: calc(160px + env(safe-area-inset-top)); /* ajuste aqui */
+      }
     }
 
     * { box-sizing: border-box; }
@@ -33,16 +42,15 @@
     body {
       font-family: 'Open Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       background: linear-gradient(135deg, #000000, #1c1179);
-      background-attachment: scroll; /* mobile */
+      background-attachment: scroll;
       color: #ffffff;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100dvh;
-      padding-top: calc(clamp(56px, 10vw, 90px) + env(safe-area-inset-top)); /* mobile/tablet */
+      padding-top: var(--top-pad);
     }
-
     @media (min-width: 1024px){
       body{ background-attachment: fixed; }
     }
@@ -110,7 +118,6 @@
       padding: 0 var(--space-sm);
     }
 
-    /* GRID: 1 col (mobile), 2 cols (md), 3 cols (desktop) */
     .buttons {
       width: var(--container);
       margin: clamp(8px, 2vw, 12px) auto 0;
@@ -126,9 +133,9 @@
     @media (min-width: 1024px){
       .buttons{ 
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        align-items: center;           /* centraliza verticalmente os 3 cards */
+        align-items: center;
         margin-top: 28px;
-        margin-bottom: 9vh;            /* empurra o footer para fora do primeiro olhar */
+        margin-bottom: 9vh;
       }
     }
 
@@ -171,19 +178,16 @@
       border-radius: 12px;
     }
 
-    /* WHAT IF */
     .btn-whatif { line-height: 1.36; }
     .btn-whatif .line-1 { display: block; font-size: clamp(22px, 6.5vw, 43px); font-weight: 800; }
     .btn-whatif .line-2 { display: block; font-size: clamp(12px, 3.5vw, 16px); font-style: italic; opacity: 0.75; font-weight: 600; letter-spacing: 0.02em; }
 
-    /* CHARTS (soon) */
     .btn-charts { text-transform: none; gap: 6px; line-height: 1.55; }
     .btn-charts .line-1 { font-size: clamp(22px, 6vw, 42px); font-weight: 800; }
     .btn-charts .line-2 { font-size: clamp(12px, 3.5vw, 16px); font-style: italic; opacity: 0.75; font-weight: 600; letter-spacing: 0.02em; }
     .is-disabled { filter: grayscale(0.05); opacity: 0.95; }
     .btn-charts:hover { filter: none; }
 
-    /* Botão do meio maior e CENTRALIZADO no desktop */
     @media (min-width: 1024px){
       .btn-install {
         min-width: 270px;
@@ -221,17 +225,6 @@
     @media (prefers-reduced-motion: reduce){
       .btn, .btn:hover, .btn:active { transition: none; transform: none; }
     }
-
-    /* ===== Desktop spacing override (coloque este bloco no FINAL do <style>) ===== */
-    @media (min-width:1024px){
-      body{
-        padding-top: calc(160px + env(safe-area-inset-top)) !important; /* ↑ mais espaço entre topo e busca */
-      }
-      /* Se a logo parecer muito colada ao topo após aumentar o padding,
-         você pode também descer/ajustar ligeiramente: */
-      .logo{ top: calc(20px + env(safe-area-inset-top)); }
-    }
-    /* =========================================================================== */
   </style>
 </head>
 <body>
