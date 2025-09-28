@@ -33,21 +33,18 @@
     body {
       font-family: 'Open Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       background: linear-gradient(135deg, #000000, #1c1179);
-      background-attachment: scroll;
+      background-attachment: scroll; /* mobile */
       color: #ffffff;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100dvh;
-      padding-top: calc(clamp(56px, 10vw, 90px) + env(safe-area-inset-top));
+      padding-top: calc(clamp(56px, 10vw, 90px) + env(safe-area-inset-top)); /* mobile/tablet */
     }
+
     @media (min-width: 1024px){
-      body{
-        background-attachment: fixed;
-        /* ↑ mais espaço só no desktop (ajuste o 96px conforme sua preferência) */
-        padding-top: calc(96px + env(safe-area-inset-top));
-      }
+      body{ background-attachment: fixed; }
     }
 
     .logo {
@@ -113,7 +110,7 @@
       padding: 0 var(--space-sm);
     }
 
-    /* GRID */
+    /* GRID: 1 col (mobile), 2 cols (md), 3 cols (desktop) */
     .buttons {
       width: var(--container);
       margin: clamp(8px, 2vw, 12px) auto 0;
@@ -129,9 +126,9 @@
     @media (min-width: 1024px){
       .buttons{ 
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        align-items: center;    /* centraliza verticalmente os três cards */
+        align-items: center;           /* centraliza verticalmente os 3 cards */
         margin-top: 28px;
-        margin-bottom: 9vh;
+        margin-bottom: 9vh;            /* empurra o footer para fora do primeiro olhar */
       }
     }
 
@@ -186,7 +183,7 @@
     .is-disabled { filter: grayscale(0.05); opacity: 0.95; }
     .btn-charts:hover { filter: none; }
 
-    /* Botão do meio maior e centralizado no desktop */
+    /* Botão do meio maior e CENTRALIZADO no desktop */
     @media (min-width: 1024px){
       .btn-install {
         min-width: 270px;
@@ -224,6 +221,17 @@
     @media (prefers-reduced-motion: reduce){
       .btn, .btn:hover, .btn:active { transition: none; transform: none; }
     }
+
+    /* ===== Desktop spacing override (coloque este bloco no FINAL do <style>) ===== */
+    @media (min-width:1024px){
+      body{
+        padding-top: calc(160px + env(safe-area-inset-top)) !important; /* ↑ mais espaço entre topo e busca */
+      }
+      /* Se a logo parecer muito colada ao topo após aumentar o padding,
+         você pode também descer/ajustar ligeiramente: */
+      .logo{ top: calc(20px + env(safe-area-inset-top)); }
+    }
+    /* =========================================================================== */
   </style>
 </head>
 <body>
@@ -277,4 +285,3 @@
   </script>
 </body>
 </html>
-
