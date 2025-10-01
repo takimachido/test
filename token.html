@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>$FLASH • Token</title>
+  <title>$FLASH token</title>
   <link rel="icon" type="image/png" href="favicon.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
 
@@ -36,11 +36,17 @@
     .wrap{max-width:var(--wrap);margin:0 auto;padding:28px 20px 56px}
 
     /* logotipo 'f' */
-    .brand-f{
-      display:flex;justify-content:center;align-items:center;
-      height:56px;margin-bottom:12px;font-weight:800;font-size:44px;line-height:1;
-      color:rgba(147,119,255,.95); text-shadow:0 10px 35px var(--glow);
-    }
+.brand-f{
+  font-family: 'Open Sans', sans-serif;
+  font-style: italic;         /* italico verdadeiro, não apenas skew */
+  font-weight: 800;           /* peso forte como no mock */
+  font-size: 56px;            /* ajuste fino do tamanho */
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;       /* garante minúsculo */
+  color: #6b3aff;             /* roxo da marca */
+  text-shadow: none;          /* sem glow, igual ao logo enviado */
+}
 
     /* cards do topo */
     .stats{
@@ -51,7 +57,7 @@
       border:1px solid rgba(255,255,255,.08);
       border-color:var(--card-stroke);
       border-radius:var(--radius-xl);
-      padding:10px 22px;
+      padding:7px 22px;
       box-shadow:0 22px 40px rgba(0,0,0,.35);
     }
     .label{
