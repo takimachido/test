@@ -17,6 +17,7 @@
       --card-stroke:#2e2a4b;
       --pill:#3e27b2;
       --pill-2:#6b3aff;
+      --brand:#6b3aff;           /* cor da logo e hover do CA */
       --glow: rgba(96,74,255,.45);
 
       --wrap:1180px;
@@ -26,42 +27,31 @@
 
     *{box-sizing:border-box}
 
-    /* Fundo único fixo (sem borda branca ao rolar) */
+    /* Fundo único fixo */
     html, body{
-      margin:0;
-      padding:0;
-      min-height:100svh;
-      color:var(--text);
-      background:none;
+      margin:0; padding:0; min-height:100svh;
+      color:var(--text); background:none;
       font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       overflow-x:hidden;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     }
     body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      pointer-events:none;
+      content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
       background:
         radial-gradient(1200px 600px at 50% -10%, rgba(107,58,255,.25), transparent 60%),
         linear-gradient(135deg,var(--bg1),var(--bg2));
       background-repeat:no-repeat,no-repeat;
-      background-size:cover,cover;
-      background-position:center,center;
+      background-size:cover,cover; background-position:center,center;
     }
 
-    .wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px 56px}
+    .wrap{max-width:var(--wrap); margin:0 auto; padding:0 20px 56px}
 
     /* logo 'f' topo/centro */
     .brand-f{
       display:block; width:100%; text-align:center;
       margin:8px 0 12px;
-      font-family:'Open Sans',sans-serif;
       font-style:italic; font-weight:550; font-size:47px; line-height:1;
-      color:#6b3aff; text-shadow:none;
-      user-select:none;
+      color:var(--brand); text-shadow:none; user-select:none;
     }
 
     /* cards do topo */
@@ -96,13 +86,10 @@
       text-align:center; color:#ddd; font-size:16px; font-style:italic; opacity:.9;
       margin:10px 6px 16px; word-break:break-all;
       cursor:pointer; position:relative; display:block;
+      transition: color .15s ease, opacity .15s ease;
     }
-    .ca:hover,
-.ca:focus-visible{
-  color: #6b3aff;
-  opacity: 1;
-}
-    .ca:focus-visible{ outline:2px solid #6b3aff; outline-offset:2px; border-radius:8px; }
+    .ca:hover, .ca:focus-visible{ color:var(--brand); opacity:1; }
+    .ca:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:8px; }
     .ca.copied::after{
       content:"Copied!";
       position:absolute; left:50%; transform:translate(-50%,-8px);
@@ -116,7 +103,7 @@
       100%{opacity:0; transform:translate(-50%,-10px) scale(.98)}
     }
 
-    /* botões inferiores + efeito feixe de luz */
+    /* botões inferiores + feixe da ESQUERDA para a DIREITA */
     .actions{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
     .btn{
       position:relative; overflow:hidden; cursor:pointer;
@@ -129,27 +116,32 @@
       box-shadow:0 16px 40px var(--glow), inset 0 0 0 1px rgba(255,255,255,.08);
       transition: transform .1s ease, box-shadow .2s ease, filter .2s ease;
       -webkit-tap-highlight-color:transparent;
+      will-change: transform;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); box-shadow:0 20px 44px var(--glow) }
     .btn:active{ transform: translateY(0) scale(.99) }
 
-    /* feixe de luz */
+    /* feixe: nasce fora à ESQUERDA, cruza, e morre à DIREITA */
     .btn::after{
       content:"";
-      position:absolute; top:-60%; left:-30%;
-      width:25%; height:220%;
-      background: linear-gradient(115deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.65) 50%,
-        rgba(255,255,255,0) 100%);
-      transform: translateX(-120%) skewX(-20deg);
+      position:absolute; top:-70%; left:-50%;
+      width:55%; height:240%;
+      background:
+        linear-gradient(115deg,
+          rgba(255,255,255,0) 0%,
+          rgba(255,255,255,0.8) 50%,
+          rgba(255,255,255,0) 100%);
+      transform: translateX(-140%) rotate(18deg);
+      opacity:0;
       filter: blur(3px);
       pointer-events:none;
     }
-    .btn:hover::after{ animation: shine .9s ease; }
-    @keyframes shine{
-      from{ transform: translateX(-120%) skewX(-20deg); }
-      to  { transform: translateX(220%)  skewX(-20deg); }
+    .btn:hover::after{ animation: sweep 0.95s ease-out forwards; }
+    @keyframes sweep{
+      0%   { transform: translateX(-140%) rotate(18deg); opacity:0; }
+      10%  { opacity:.85; }
+      50%  { opacity:.95; }
+      100% { transform: translateX(160%) rotate(18deg); opacity:0; }
     }
 
     /* responsivo */
@@ -275,7 +267,7 @@
           caEl.classList.add("copied");
           setTimeout(()=> caEl.classList.remove("copied"), 1200);
         }catch{
-          // Fallback simples
+          // Fallback
           const tmp = document.createElement("textarea");
           tmp.value = CONFIG.ca;
           document.body.appendChild(tmp);
@@ -291,3 +283,4 @@
   </script>
 </body>
 </html>
+
