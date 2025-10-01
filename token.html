@@ -17,7 +17,6 @@
       --text:#ffffff;
       --brand:#6b3aff;
 
-      /* ajuste rápido do tamanho do gráfico */
       --chart-w: 100%;
       --chart-h: 520px;
     }
@@ -25,22 +24,21 @@
     *{box-sizing:border-box}
     html,body{
       margin:0;padding:0;height:100%;
-      background:radial-gradient(1200px 600px at 50% -10%, rgba(107,58,255,.25), transparent 60%),
-                 linear-gradient(135deg,var(--bg1),var(--bg2));
+      background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(107,58,255,.25), transparent 60%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
       font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
     }
     .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 56px}
 
-    /* Top "f" */
     .brand-f{
       display:flex;justify-content:center;align-items:center;
       height:56px;margin-bottom:18px;font-weight:800;font-size:44px;line-height:1;
       color:rgba(147,119,255,.9);text-shadow:0 6px 30px rgba(88,64,200,.45)
     }
-    
-    /* Stat cards row */
-    .stats{display:grid;grid-template-columns:repeat(4, 1fr);gap:22px;margin-bottom:22px}
+
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-bottom:22px}
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       border:1px solid rgba(255,255,255,.06);
@@ -50,17 +48,15 @@
     .card .label{font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
     .card .value{font-size:34px;font-weight:800;letter-spacing:.02em}
 
-    /* Chart frame */
     .chart-shell{
       background:#0d0f1a;border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;overflow:hidden;max-width:var(--chart-w);margin:0 auto
+      border-radius:16px;overflow:hidden;max-width:var(--chart-w);margin:0 auto;padding:16px
     }
-    .chart{width:100%;height:var(--chart-h);border:0;display:block}
+    .chart-wrap{position:relative;height:var(--chart-h);width:100%}
+    canvas{display:block !important;width:100% !important;height:100% !important}
 
-    /* Helper */
     .note{margin-top:14px;font-size:12px;color:var(--muted)}
 
-    /* Responsive */
     @media (max-width:1100px){ .stats{grid-template-columns:repeat(2,1fr)} }
     @media (max-width:640px){
       .stats{grid-template-columns:1fr}
@@ -74,80 +70,185 @@
   <div class="wrap">
     <div class="brand-f">f</div>
 
-    <!-- STAT CARDS (valores fixos preenchidos via script) -->
+    <!-- CARDS (valores definidos no código) -->
     <section class="stats">
       <div class="card">
         <div class="label">Total $FLASH Purchases</div>
-        <div class="value" id="totalSol">—</div>
+        <div class="value" id="v-totalSol">—</div>
       </div>
-
       <div class="card">
         <div class="label">Total Purchases ($USD)</div>
-        <div class="value" id="totalUsd">—</div>
+        <div class="value" id="v-totalUsd">—</div>
       </div>
-
       <div class="card">
         <div class="label">Total $FLASH Supply</div>
-        <div class="value" id="totalSupply">—</div>
+        <div class="value" id="v-totalSupply">—</div>
       </div>
-
       <div class="card">
         <div class="label">Boughtback Supply</div>
-        <div class="value" id="bbPercent">—</div>
+        <div class="value" id="v-bbPercent">—</div>
       </div>
     </section>
 
-    <!-- DEXSCREENER CHART (único "API" mantido) -->
+    <!-- GRÁFICO (CoinGecko + Chart.js) -->
     <section class="chart-shell">
-      <iframe
-        id="dexFrame"
-        class="chart"
-        title="Dexscreener Chart"
-        loading="lazy"
-        allowtransparency="true"
-        src="">
-      </iframe>
+      <div class="chart-wrap">
+        <canvas id="priceChart"></canvas>
+      </div>
     </section>
 
     <p class="note">
+      Gráfico: preço em USD via CoinGecko. Os valores dos cards são editados no bloco <code>VALUES</code> do script.
     </p>
   </div>
 
+  <!-- Chart.js + adapter de datas -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
+
   <script>
-    /***********************************************
-     *  EDITAR AQUI: VALORES MANUAIS QUE VÃO NA UI *
-     ***********************************************/
+    /***********************
+     *  EDITAR AQUI        *
+     ***********************/
+    // 1) Valores manuais exibidos nos cards
     const VALUES = {
-      totalSol: "1.8 SOL",
-      totalUsd: "$370.50",
+      totalSol: "12.34 SOL",
+      totalUsd: "$1,234.00",
       totalSupply: "1B $FLASH",
-      bbPercent: "0.58%"
+      bbPercent: "1.23%"
     };
 
-    /***********************************************
-     *  EDITAR AQUI: ID do par/token no Dexscreener *
-     *  Ex.: "2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs"
-     ***********************************************/
-    const CONFIG = {
-      dexscreenerId: "2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs"
+    // 2) Config do gráfico CoinGecko
+    // Se tiver coin id no CoinGecko, preencha 'coingeckoId'.
+    // Para token SPL (Solana), prefira usar o contrato ('mint') em 'coingeckoContract'.
+    const CG = {
+      // Exemplo (mint real do seu código anterior):
+      coingeckoContract: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
+      coingeckoId: "",          // opcional, ex.: "solana" (não use se já usar contract)
+      vsCurrency: "usd",
+      days: 30,                 // 1, 7, 14, 30, 90, 180, 365, 'max'
+      interval: "hourly",       // 'minutely','hourly','daily' (depende do 'days')
+      cacheTtlSec: 120          // evita bater no rate limit à toa
     };
 
-      };
-      for(const [key, id] of Object.entries(map)){
-        const el = document.getElementById(id);
-        if(el) el.textContent = VALUES[key] ?? "—";
+    /***********************
+     *  LÓGICA DA PÁGINA   *
+     ***********************/
+    function applyValues(){
+      document.getElementById("v-totalSol").textContent    = VALUES.totalSol;
+      document.getElementById("v-totalUsd").textContent    = VALUES.totalUsd;
+      document.getElementById("v-totalSupply").textContent = VALUES.totalSupply;
+      document.getElementById("v-bbPercent").textContent   = VALUES.bbPercent;
+    }
+
+    function cgUrl(){
+      const base = "https://api.coingecko.com/api/v3";
+      const qs = new URLSearchParams({
+        vs_currency: CG.vsCurrency,
+        days: String(CG.days),
+        interval: CG.interval
+      });
+      if (CG.coingeckoContract){
+        return `${base}/coins/solana/contract/${CG.coingeckoContract}/market_chart?${qs.toString()}`;
+      }
+      if (CG.coingeckoId){
+        return `${base}/coins/${CG.coingeckoId}/market_chart?${qs.toString()}`;
+      }
+      throw new Error("Configure 'coingeckoContract' (mint SPL) ou 'coingeckoId'.");
+    }
+
+    async function fetchCG(){
+      const url = cgUrl();
+      const key = "cg_cache_" + url;
+      const now = Date.now();
+      try{
+        // cache simples em localStorage
+        const cached = localStorage.getItem(key);
+        if (cached){
+          const {ts, data} = JSON.parse(cached);
+          if (now - ts < CG.cacheTtlSec * 1000) return data;
+        }
+      }catch{}
+
+      const r = await fetch(url, {mode:"cors"});
+      if(!r.ok) throw new Error("CoinGecko error: " + r.status);
+      const data = await r.json();
+      try{ localStorage.setItem(key, JSON.stringify({ts: now, data})); }catch{}
+      return data;
+    }
+
+    function renderChart(prices){
+      const ctx = document.getElementById("priceChart").getContext("2d");
+      const labels = prices.map(p => p[0]);    // timestamps (ms)
+      const values = prices.map(p => p[1]);    // price
+
+      // gradiente suave
+      const grad = ctx.createLinearGradient(0,0,0,400);
+      grad.addColorStop(0, "rgba(107,58,255,0.45)");
+      grad.addColorStop(1, "rgba(107,58,255,0.05)");
+
+      // destrói instância anterior se existir
+      if (window._priceChart) { window._priceChart.destroy(); }
+
+      window._priceChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            label: "$FLASH • Price (USD)",
+            data: values,
+            borderColor: "rgba(147,119,255,0.95)",
+            backgroundColor: grad,
+            fill: true,
+            tension: 0.25,
+            borderWidth: 2,
+            pointRadius: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          scales: {
+            x: {
+              type: "time",
+              time: { tooltipFormat: "PPp" },
+              grid: { color: "rgba(255,255,255,0.06)" },
+              ticks:{ color: "rgba(255,255,255,0.65)" }
+            },
+            y: {
+              beginAtZero: false,
+              grid: { color: "rgba(255,255,255,0.06)" },
+              ticks:{ color: "rgba(255,255,255,0.75)" }
+            }
+          },
+          plugins: {
+            legend: { display:false },
+            tooltip: {
+              callbacks: {
+                label: (ctx)=> "$" + ctx.parsed.y.toLocaleString("en-US", {maximumFractionDigits: 6})
+              }
+            }
+          }
+        }
+      });
+    }
+
+    async function init(){
+      applyValues();
+      try{
+        const data = await fetchCG();
+        // market_chart retorna { prices: [[ts, price], ...], market_caps: ..., total_volumes: ... }
+        renderChart(Array.isArray(data?.prices) ? data.prices : []);
+      }catch(err){
+        console.error(err);
+        const ctx = document.getElementById("priceChart").getContext("2d");
+        ctx.font = "14px Open Sans"; ctx.fillStyle="#a8a4c8";
+        ctx.fillText("Falha ao carregar gráfico da CoinGecko. Verifique o ID/contract.", 12, 24);
       }
     }
 
-    // Monta o embed do Dexscreener
-    function mountDex(){
-      const src = `https://dexscreener.com/solana/${encodeURIComponent(CONFIG.dexscreenerId)}?embed=1&theme=dark&info=0&trades=0`;
-      document.getElementById('dexFrame').src = src;
-    }
-
-    // Init
-    applyValues();
-    mountDex();
+    init();
   </script>
 </body>
 </html>
