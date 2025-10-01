@@ -26,7 +26,7 @@
 
       /* Feixe — ajuste aqui */
       --shine-w: 16%;            /* largura do feixe (↓ = mais fino) */
-      --shine-ms: 1100ms;         /* duração (↓ = mais rápido) */
+      --shine-ms: 1100ms;        /* duração (↓ = mais rápido) */
       --shine-tilt: -20deg;      /* inclinação */
       --shine-blur: 2px;         /* blur */
 
@@ -45,6 +45,7 @@
       font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       overflow-x:hidden;
       -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      overscroll-behavior:none;
     }
     body::before{
       content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
@@ -63,7 +64,12 @@
       margin:8px 0 12px;
       font-style:italic; font-weight:550; font-size:47px; line-height:1;
       color:var(--brand); text-shadow:none; user-select:none;
+      text-decoration:none;           /* sem sublinhado */
+      list-style:none;                 /* evita marcador */
     }
+    .brand-f:visited{ color:var(--brand); }
+    .brand-f::marker{ content:""; }    /* remove bullet se herdar list-style */
+    .brand-f::after{ content:none !important; } /* anula pseudo global de links */
 
     /* cards do topo */
     .stats{
@@ -138,8 +144,7 @@
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); box-shadow:0 20px 44px var(--glow) }
     .btn:active{ transform: translateY(0) scale(.99) }
 
-    /* FEIXE: nasce fora à ESQUERDA, cruza 100% e sai à DIREITA
-       (animamos 'left' para ficar proporcional ao tamanho do botão) */
+    /* FEIXE: nasce fora à ESQUERDA, cruza 100% e sai à DIREITA (animamos 'left') */
     .btn::after{
       content:"";
       position:absolute;
@@ -203,8 +208,8 @@
 </head>
 <body>
   <div class="wrap">
-    <a class="brand-f" href="https://flashscreener.com" >f</a>
-
+    <!-- Logo linka para a home -->
+    <a class="brand-f" href="https://flashscreener.com" aria-label="Ir para a página inicial">f</a>
 
     <!-- CARDS -->
     <section class="stats">
