@@ -208,6 +208,14 @@
       const pct = CONFIG.totalSupply > 0 ? (devHold.amount / CONFIG.totalSupply) * 100 : 0;
       setText("bbPercent", pctFmt(pct));
 
+      // nota de rodapé
+      const note = [];
+      if(!CONFIG.devWallet || !CONFIG.tokenMint){ note.push("⚠️ configure <b>devWallet</b> e <b>tokenMint</b> no código para calcular o Boughtback Supply."); }
+      if(buybacksSOL === 0){ note.push("ℹ️ totals de compras usam <code>buybacks.json</code> (manual/automatizável)."); }
+      if(note.length){
+        document.getElementById('footNote').innerHTML = note.join(" ");
+      }else{
+        document.getElementById('footNote').textContent = "APIs (Solana RPC + Jupiter).";
       }
     }
 
