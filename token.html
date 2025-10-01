@@ -25,10 +25,10 @@
       --radius-xl:22px;
 
       /* Feixe — ajuste aqui */
-      --shine-w: 18%;            /* largura do feixe (↓ = mais fino) */
-      --shine-ms: 600ms;         /* duração (↓ = mais rápido) */
-      --shine-tilt: -20deg;      /* inclinação do feixe */
-      --shine-blur: 2px;         /* blur do feixe */
+      --shine-w: 16%;            /* largura do feixe (↓ = mais fino) */
+      --shine-ms: 620ms;         /* duração (↓ = mais rápido) */
+      --shine-tilt: -20deg;      /* inclinação */
+      --shine-blur: 2px;         /* blur */
 
       /* Footer (mesmo tom do index) */
       --footer-bg:#0e0f15;
@@ -138,33 +138,34 @@
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); box-shadow:0 20px 44px var(--glow) }
     .btn:active{ transform: translateY(0) scale(.99) }
 
-    /* FEIXE: nasce fora à ESQUERDA, cruza e sai pela DIREITA */
+    /* FEIXE: nasce fora à ESQUERDA, cruza 100% e sai à DIREITA
+       (animamos 'left' para ficar proporcional ao tamanho do botão) */
     .btn::after{
       content:"";
       position:absolute;
-      top:-30%;               /* sobe um pouco para a inclinação não cortar */
-      left:-40%;              /* nasce bem à esquerda do botão */
+      top:-30%;
+      left:-65%;                        /* começa bem fora do botão */
       width: var(--shine-w);
       height: 160%;
       background: linear-gradient(90deg,
         rgba(255,255,255,0) 0%,
         rgba(255,255,255,0.95) 50%,
         rgba(255,255,255,0) 100%);
-      transform: translateX(-120%) skewX(var(--shine-tilt));
+      transform: skewX(var(--shine-tilt));  /* inclinação fixa */
       opacity: 0;
       filter: blur(var(--shine-blur));
       pointer-events: none;
       z-index: 1;
-      will-change: transform, opacity;
+      will-change: left, opacity;
     }
     .btn:hover::after{
       animation: sweep var(--shine-ms) cubic-bezier(.22,.61,.36,1) forwards;
     }
     @keyframes sweep{
-      0%   { transform: translateX(-120%) skewX(var(--shine-tilt)); opacity: 0; }
-      12%  { opacity: .9; }
-      50%  { opacity: 1; }
-      100% { transform: translateX(320%)  skewX(var(--shine-tilt)); opacity: 0; }
+      0%   { left:-65%;  opacity:0; }
+      12%  {             opacity:.9; }
+      50%  {             opacity:1;  }
+      100% { left:165%;  opacity:0; } /* termina bem fora à direita */
     }
 
     /* Footer (tom igual ao index) */
@@ -263,10 +264,10 @@
      ***********************/
     const CONFIG = {
       values: {
-        sol: "1.93 SOL",
-        usd: "$385,35",
+        sol: "2.14 SOL",
+        usd: "$440",
         supply: "1B $FLASH",
-        bb: "0.6%"
+        bb: "0.71%"
       },
       ca: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
       links: {
