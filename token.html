@@ -110,7 +110,6 @@
     </section>
 
     <p class="note">
-      Valores acima são definidos no código (bloco <code>VALUES</code>). Edite e publique.
     </p>
   </div>
 
@@ -119,10 +118,10 @@
      *  EDITAR AQUI: VALORES MANUAIS QUE VÃO NA UI *
      ***********************************************/
     const VALUES = {
-      totalSol: "0.00 SOL",
-      totalUsd: "$0.00",
+      totalSol: "1.8 SOL",
+      totalUsd: "$370.50",
       totalSupply: "1B $FLASH",
-      bbPercent: "0.00%"
+      bbPercent: "0.58%"
     };
 
     /***********************************************
@@ -133,13 +132,6 @@
       dexscreenerId: "2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs"
     };
 
-    // Preenche os cards com os valores acima
-    function applyValues(){
-      const map = {
-        totalSol: "1.8 SOL",
-        totalUsd: "$370.50",
-        totalSupply: "1B $FLASH",
-        bbPercent: "0.58%"
       };
       for(const [key, id] of Object.entries(map)){
         const el = document.getElementById(id);
