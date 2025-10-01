@@ -25,10 +25,15 @@
       --radius-xl:22px;
 
       /* controles do feixe */
-      --shine-w: 18%;            /* largura do feixe (mais baixo = mais fino) */
+      --shine-w: 18%;            /* largura do feixe (menor = mais fino) */
       --shine-angle: 18deg;      /* inclinação */
-      --shine-ms: 600ms;         /* duração (mais baixo = mais rápido) */
+      --shine-ms: 600ms;         /* duração (menor = mais rápido) */
       --shine-blur: 2px;         /* blur do feixe */
+
+      /* footer (ajuste para casar com o index) */
+      --footer-bg:#0e0f15;       /* <<< mude este valor se o index usar outro cinza */
+      --footer-border:#1b1c24;
+      --space-sm:10px;
     }
 
     *{box-sizing:border-box}
@@ -90,16 +95,16 @@
     /* CA (clicável para copiar) — hover limitado ao texto */
     .ca{
       display:block;
-      width: fit-content;          /* largura do próprio texto */
-      margin: 10px auto 16px;      /* centralizado */
-      white-space: nowrap;
-      text-align: center;
+      width:fit-content;          /* largura do próprio texto */
+      margin:10px auto 16px;      /* centralizado */
+      white-space:nowrap;
+      text-align:center;
 
       color:#ddd; font-size:16px; font-style:italic; opacity:.9;
       cursor:pointer; position:relative;
       transition: color .15s ease, opacity .15s ease;
     }
-    .ca:hover, .ca:focus-visible{ color: var(--brand); opacity:1; }
+    .ca:hover, .ca:focus-visible{ color:var(--brand); opacity:1; }
     .ca:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:8px; }
     .ca.copied::after{
       content:"Copied!";
@@ -127,7 +132,7 @@
       box-shadow:0 16px 40px var(--glow), inset 0 0 0 1px rgba(255,255,255,.08);
       transition: transform .1s ease, box-shadow .2s ease, filter .2s ease;
       -webkit-tap-highlight-color:transparent;
-      z-index:0; /* cria contexto para o feixe */
+      z-index:0;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); box-shadow:0 20px 44px var(--glow) }
     .btn:active{ transform: translateY(0) scale(.99) }
@@ -137,31 +142,49 @@
       content:"";
       position:absolute;
       top:-80%; left:-40%;
-      width: var(--shine-w);
-      height: 260%;
-      background: linear-gradient(90deg,
+      width:var(--shine-w);
+      height:260%;
+      background:linear-gradient(90deg,
         rgba(255,255,255,0) 0%,
         rgba(255,255,255,0.92) 50%,
         rgba(255,255,255,0) 100%);
-      transform: translateX(-150%) rotate(var(--shine-angle));
+      transform:translateX(-150%) rotate(var(--shine-angle));
       opacity:0;
-      filter: blur(var(--shine-blur));
+      filter:blur(var(--shine-blur));
       pointer-events:none;
-      z-index:1; /* garante que o feixe fica visível acima do botão/texto */
+      z-index:1;
     }
     .btn:hover::after{
-      animation: shine var(--shine-ms) cubic-bezier(.22,.61,.36,1) forwards;
+      animation:shine var(--shine-ms) cubic-bezier(.22,.61,.36,1) forwards;
     }
     @keyframes shine{
-      0%   { transform: translateX(-150%) rotate(var(--shine-angle)); opacity: 0; }
-      15%  { opacity: .9; }
-      50%  { opacity: 1; }
-      100% { transform: translateX(170%)  rotate(var(--shine-angle)); opacity: 0; }
+      0%   { transform:translateX(-150%) rotate(var(--shine-angle)); opacity:0; }
+      15%  { opacity:.9; }
+      50%  { opacity:1; }
+      100% { transform:translateX(170%) rotate(var(--shine-angle));  opacity:0; }
     }
+
+    /* ===== Footer (corrigido: fundo sólido no tom do index) ===== */
+    footer{
+      width:100%;
+      background: var(--footer-bg, #0e0f15); /* fallback sólido */
+      color:#9b9b9b;                          /* texto em cinza claro */
+      text-align:center;
+      padding: calc(var(--space-sm) + env(safe-area-inset-bottom)) 0 var(--space-sm);
+      font-size: clamp(10px, 2.2vw, 11px);
+      font-weight:300;
+      border-top:1px solid var(--footer-border);
+      margin-top:32px; /* respiro acima do footer */
+    }
+    @media (min-width:1024px){
+      footer{ padding:6px 0; }
+    }
+    footer a{ color:#9b9b9b; text-decoration:none; margin:0 10px; font-weight:600; }
+    footer a:hover{ color:#b497ff; }
 
     /* acessibilidade: reduz movimento */
     @media (prefers-reduced-motion: reduce){
-      .btn:hover::after{ animation: none; opacity:0; }
+      .btn:hover::after{ animation:none; opacity:0; }
     }
 
     /* responsivo */
@@ -172,24 +195,6 @@
       .value{font-size:28px}
       .btn{font-size:18px;padding:14px 22px}
     }
-
-        footer{
-      width: 100%;
-      background: var(--footer-bg);
-      color: #595959;
-      text-align: center;
-      padding: calc(var(--space-sm) + env(safe-area-inset-bottom)) 0 var(--space-sm);
-      font-size: clamp(10px, 2.2vw, 11px);
-      font-weight: 300;
-      border-top: 0.5px solid #333;
-      margin-top: auto;
-    }
-    @media (min-width:1024px){
-      footer{ padding: 5px 0; }
-    }
-    footer a{ color:#9b9b9b; text-decoration:none; margin:0 10px; font-weight:600; }
-    footer a:hover{ color:#b497ff; }
-    
   </style>
 </head>
 <body>
@@ -241,6 +246,13 @@
       <a class="btn" id="btn-ss" target="_blank" rel="noopener">Solscan</a>
     </nav>
   </div>
+
+  <!-- FOOTER (agora dentro do body e com fundo sólido) -->
+  <footer>
+    <a href="https://x.com/flashscreener" target="_blank" rel="noopener">X | Twitter</a>
+    <a href="/privacy/">Privacy Policy</a>
+    <a href="/token/" target="_blank" rel="noopener">$FLASH</a>
+  </footer>
 
   <script>
     /***********************
@@ -320,11 +332,6 @@
   </script>
 </body>
 </html>
-  
-<footer>
-    <a href="https://x.com/flashscreener" target="_blank" rel="noopener">X | Twitter</a>
-    <a href="/privacy/">Privacy Policy</a>
-    <a href="/token/" target="_blank" rel="noopener">$FLASH</a>
-  </footer>
+
 
 
