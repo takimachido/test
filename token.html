@@ -16,40 +16,65 @@
       --muted:#a8a4c8;
       --text:#ffffff;
       --brand:#6b3aff;
-      --good:#22e06b;
+
+      /* ajuste rápido do tamanho do gráfico */
+      --chart-w: 100%;
+      --chart-h: 520px;
     }
 
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;height:100%;background:radial-gradient(1200px 600px at 50% -10%, rgba(107,58,255,.25), transparent 60%), linear-gradient(135deg,var(--bg1),var(--bg2));font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text)}
+    html,body{
+      margin:0;padding:0;height:100%;
+      background:radial-gradient(1200px 600px at 50% -10%, rgba(107,58,255,.25), transparent 60%),
+                 linear-gradient(135deg,var(--bg1),var(--bg2));
+      font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+    }
     .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 56px}
 
     /* Top "f" */
-    .brand-f{display:flex;justify-content:center;align-items:center;height:56px;margin-bottom:18px;font-weight:800;font-size:44px;line-height:1;color:rgba(147,119,255,.9);text-shadow:0 6px 30px rgba(88,64,200,.45)}
+    .brand-f{
+      display:flex;justify-content:center;align-items:center;
+      height:56px;margin-bottom:18px;font-weight:800;font-size:44px;line-height:1;
+      color:rgba(147,119,255,.9);text-shadow:0 6px 30px rgba(88,64,200,.45)
+    }
     
     /* Stat cards row */
     .stats{display:grid;grid-template-columns:repeat(4, 1fr);gap:22px;margin-bottom:22px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.06);box-shadow:0 18px 40px rgba(0,0,0,.35);border-radius:20px;padding:18px 22px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+      border-radius:20px;padding:18px 22px
+    }
     .card .label{font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
     .card .value{font-size:34px;font-weight:800;letter-spacing:.02em}
-    .card small{display:block;margin-top:6px;font-size:11px;color:var(--muted)}
 
     /* Chart frame */
-    .chart-shell{background:#0d0f1a;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
-    .chart{width:100%;height:520px;border:0;display:block}
+    .chart-shell{
+      background:#0d0f1a;border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;overflow:hidden;max-width:var(--chart-w);margin:0 auto
+    }
+    .chart{width:100%;height:var(--chart-h);border:0;display:block}
 
-    /* Helper / toast */
+    /* Helper */
     .note{margin-top:14px;font-size:12px;color:var(--muted)}
 
     /* Responsive */
-    @media (max-width:1100px){ .stats{grid-template-columns:repeat(2,1fr)} .chart{height:640px} }
-    @media (max-width:640px){ .stats{grid-template-columns:1fr} .card{padding:16px 16px} .card .value{font-size:28px} .chart{height:540px} }
+    @media (max-width:1100px){ .stats{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:640px){
+      .stats{grid-template-columns:1fr}
+      .card{padding:16px}
+      .card .value{font-size:28px}
+      :root{ --chart-h: 440px; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="brand-f">f</div>
 
-    <!-- STAT CARDS -->
+    <!-- STAT CARDS (valores fixos preenchidos via script) -->
     <section class="stats">
       <div class="card">
         <div class="label">Total $FLASH Purchases</div>
@@ -63,7 +88,7 @@
 
       <div class="card">
         <div class="label">Total $FLASH Supply</div>
-        <div class="value">1B $FLASH</div>
+        <div class="value" id="totalSupply">—</div>
       </div>
 
       <div class="card">
@@ -72,7 +97,7 @@
       </div>
     </section>
 
-    <!-- DEXSCREENER CHART -->
+    <!-- DEXSCREENER CHART (único "API" mantido) -->
     <section class="chart-shell">
       <iframe
         id="dexFrame"
@@ -84,142 +109,53 @@
       </iframe>
     </section>
 
-    <p class="note" id="footNote">
+    <p class="note">
+      Valores acima são definidos no código (bloco <code>VALUES</code>). Edite e publique.
     </p>
   </div>
 
   <script>
-    /***********************
-     *  CONFIG EDITÁVEL   *
-     ***********************/
-    const CONFIG = {
-      // Mint do $FLASH (endereço do token SPL)
-      tokenMint: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
-
-      // Carteira do dev (usada para calcular 'Boughtback Supply')
-      devWallet: "9Vn3gApVFDw5uSpiQQsz3w7tc6sU3CzBwYKHkmsFm1Hu",
-
-      // Par/Token no Dexscreener (pode ser pairAddress OU token address)
-      dexscreenerId: "2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs",
-
-      // URL RPC pública gratuita (pode trocar por Helius/Alchemy com sua key depois)
-      rpcUrl: "https://api.mainnet-beta.solana.com",
-
-      // Supply fixo exibido (1B)
-      totalSupply: 1_000_000_000,
-
-      // Arquivo opcional com os buybacks do dev (em SOL) para somar automaticamente
-      // Crie um buybacks.json na raiz do repo com:
-      // { "txs": [ { "sig": "xxxxx", "sol": 1.234, "ts": 1727740000 }, ... ] }
-      buybacksJsonPath: "./buybacks.json"
+    /***********************************************
+     *  EDITAR AQUI: VALORES MANUAIS QUE VÃO NA UI *
+     ***********************************************/
+    const VALUES = {
+      totalSol: "0.00 SOL",
+      totalUsd: "$0.00",
+      totalSupply: "1B $FLASH",
+      bbPercent: "0.00%"
     };
 
-    /********* HELPERS *********/
-    const nf = new Intl.NumberFormat('en-US');
-    const solFmt = v => `${(v ?? 0).toLocaleString('en-US', {maximumFractionDigits: 4})} SOL`;
-    const usdFmt = v => `$${(v ?? 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-    const pctFmt = v => `${(v ?? 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}%`;
+    /***********************************************
+     *  EDITAR AQUI: ID do par/token no Dexscreener *
+     *  Ex.: "2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs"
+     ***********************************************/
+    const CONFIG = {
+      dexscreenerId: "2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs"
+    };
 
-    function setText(id, txt){ const el = document.getElementById(id); if(el) el.textContent = txt; }
+    // Preenche os cards com os valores acima
+    function applyValues(){
+      const map = {
+        totalSol: "1.8 SOL",
+        totalUsd: "$370.50",
+        totalSupply: "1B $FLASH",
+        bbPercent: "0.58%"
+      };
+      for(const [key, id] of Object.entries(map)){
+        const el = document.getElementById(id);
+        if(el) el.textContent = VALUES[key] ?? "—";
+      }
+    }
 
     // Monta o embed do Dexscreener
-    (function mountDex(){
+    function mountDex(){
       const src = `https://dexscreener.com/solana/${encodeURIComponent(CONFIG.dexscreenerId)}?embed=1&theme=dark&info=0&trades=0`;
       document.getElementById('dexFrame').src = src;
-    })();
-
-    // Busca preço do SOL (Jupiter Price API v3)
-    async function getSolPriceUSD(){
-      try{
-        const url = "https://lite-api.jup.ag/price/v3?ids=So11111111111111111111111111111111111111112";
-        const r = await fetch(url, {mode:"cors"});
-        const j = await r.json();
-        // Estrutura: { data: { <mint>: { price: <number> } } }
-        const item = j?.data?.["So11111111111111111111111111111111111111112"];
-        return Number(item?.price) || 0;
-      }catch(e){ console.warn("SOL price fail", e); return 0; }
     }
 
-    // Soma os buybacks (em SOL) a partir do arquivo opcional buybacks.json
-    async function getBuybacksSOL(){
-      try{
-        const r = await fetch(CONFIG.buybacksJsonPath, {cache:"no-store"});
-        if(!r.ok) throw new Error("no file");
-        const j = await r.json();
-        const total = (j?.txs || []).reduce((acc, it)=> acc + (Number(it.sol) || 0), 0);
-        return total;
-      }catch(e){
-        // Se não existir o arquivo, mantém 0 e mostra uma dica
-        document.getElementById('footNote').innerHTML = 
-          'Dica: crie <code>buybacks.json</code> no seu repositório para somar automaticamente os buybacks do dev (em SOL).';
-        return 0;
-      }
-    }
-
-    // Calcula o saldo de $FLASH do dev para % do supply (via getTokenAccountsByOwner)
-    async function getDevTokenHoldings(){
-      if(!CONFIG.devWallet || !CONFIG.tokenMint){ return { amount: 0, decimals: 0 }; }
-      try{
-        const body = {
-          jsonrpc: "2.0",
-          id: 1,
-          method: "getTokenAccountsByOwner",
-          params: [
-            CONFIG.devWallet,
-            { mint: CONFIG.tokenMint },
-            { encoding: "jsonParsed", commitment: "confirmed" }
-          ]
-        };
-        const r = await fetch(CONFIG.rpcUrl, {
-          method: "POST",
-          headers: { "content-type":"application/json" },
-          body: JSON.stringify(body)
-        });
-        const j = await r.json();
-        const list = j?.result?.value || [];
-        let total = 0;
-        let decimals = 0;
-        for(const acc of list){
-          const ta = acc?.account?.data?.parsed?.info?.tokenAmount;
-          if(ta){
-            decimals = ta.decimals;
-            total += Number(ta.uiAmount || 0);
-          }
-        }
-        return { amount: total, decimals };
-      }catch(e){
-        console.warn("holdings fail", e);
-        return { amount: 0, decimals: 0 };
-      }
-    }
-
-    async function main(){
-      // 1) Soma buybacks (SOL) via arquivo opcional
-      const [buybacksSOL, solPrice, devHold] = await Promise.all([
-        getBuybacksSOL(),
-        getSolPriceUSD(),
-        getDevTokenHoldings()
-      ]);
-
-      // 2) Preenche cards
-      setText("totalSol", solFmt(buybacksSOL));
-      setText("totalUsd", usdFmt(buybacksSOL * solPrice));
-
-      const pct = CONFIG.totalSupply > 0 ? (devHold.amount / CONFIG.totalSupply) * 100 : 0;
-      setText("bbPercent", pctFmt(pct));
-
-      // nota de rodapé
-      const note = [];
-      if(!CONFIG.devWallet || !CONFIG.tokenMint){ note.push("⚠️ configure <b>devWallet</b> e <b>tokenMint</b> no código para calcular o Boughtback Supply."); }
-      if(buybacksSOL === 0){ note.push("ℹ️ totals de compras usam <code>buybacks.json</code> (manual/automatizável)."); }
-      if(note.length){
-        document.getElementById('footNote').innerHTML = note.join(" ");
-      }else{
-        document.getElementById('footNote').textContent = "APIs (Solana RPC + Jupiter).";
-      }
-    }
-
-    main();
+    // Init
+    applyValues();
+    mountDex();
   </script>
 </body>
 </html>
