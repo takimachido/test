@@ -24,14 +24,14 @@
       --chart-h:500px;
       --radius-xl:22px;
 
-      /* controles do feixe */
-      --shine-w: 18%;            /* largura do feixe (menor = mais fino) */
-      --shine-angle: 18deg;      /* inclinação */
-      --shine-ms: 600ms;         /* duração (menor = mais rápido) */
+      /* Feixe — ajuste aqui */
+      --shine-w: 18%;            /* largura do feixe (↓ = mais fino) */
+      --shine-ms: 600ms;         /* duração (↓ = mais rápido) */
+      --shine-tilt: -20deg;      /* inclinação do feixe */
       --shine-blur: 2px;         /* blur do feixe */
 
-      /* footer (ajuste para casar com o index) */
-      --footer-bg:#0e0f15;       /* <<< mude este valor se o index usar outro cinza */
+      /* Footer (mesmo tom do index) */
+      --footer-bg:#0e0f15;
       --footer-border:#1b1c24;
       --space-sm:10px;
     }
@@ -133,48 +133,51 @@
       transition: transform .1s ease, box-shadow .2s ease, filter .2s ease;
       -webkit-tap-highlight-color:transparent;
       z-index:0;
+      will-change: transform;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); box-shadow:0 20px 44px var(--glow) }
     .btn:active{ transform: translateY(0) scale(.99) }
 
-    /* feixe: nasce à esquerda, cruza e morre à direita */
+    /* FEIXE: nasce fora à ESQUERDA, cruza e sai pela DIREITA */
     .btn::after{
       content:"";
       position:absolute;
-      top:-80%; left:-40%;
-      width:var(--shine-w);
-      height:260%;
-      background:linear-gradient(90deg,
+      top:-30%;               /* sobe um pouco para a inclinação não cortar */
+      left:-40%;              /* nasce bem à esquerda do botão */
+      width: var(--shine-w);
+      height: 160%;
+      background: linear-gradient(90deg,
         rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.92) 50%,
+        rgba(255,255,255,0.95) 50%,
         rgba(255,255,255,0) 100%);
-      transform:translateX(-150%) rotate(var(--shine-angle));
-      opacity:0;
-      filter:blur(var(--shine-blur));
-      pointer-events:none;
-      z-index:1;
+      transform: translateX(-120%) skewX(var(--shine-tilt));
+      opacity: 0;
+      filter: blur(var(--shine-blur));
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform, opacity;
     }
     .btn:hover::after{
-      animation:shine var(--shine-ms) cubic-bezier(.22,.61,.36,1) forwards;
+      animation: sweep var(--shine-ms) cubic-bezier(.22,.61,.36,1) forwards;
     }
-    @keyframes shine{
-      0%   { transform:translateX(-150%) rotate(var(--shine-angle)); opacity:0; }
-      15%  { opacity:.9; }
-      50%  { opacity:1; }
-      100% { transform:translateX(170%) rotate(var(--shine-angle));  opacity:0; }
+    @keyframes sweep{
+      0%   { transform: translateX(-120%) skewX(var(--shine-tilt)); opacity: 0; }
+      12%  { opacity: .9; }
+      50%  { opacity: 1; }
+      100% { transform: translateX(320%)  skewX(var(--shine-tilt)); opacity: 0; }
     }
 
-    /* ===== Footer (corrigido: fundo sólido no tom do index) ===== */
+    /* Footer (tom igual ao index) */
     footer{
       width:100%;
-      background: var(--footer-bg, #0e0f15); /* fallback sólido */
-      color:#9b9b9b;                          /* texto em cinza claro */
+      background: var(--footer-bg, #0e0f15);
+      color:#9b9b9b;
       text-align:center;
       padding: calc(var(--space-sm) + env(safe-area-inset-bottom)) 0 var(--space-sm);
       font-size: clamp(10px, 2.2vw, 11px);
       font-weight:300;
       border-top:1px solid var(--footer-border);
-      margin-top:32px; /* respiro acima do footer */
+      margin-top:32px;
     }
     @media (min-width:1024px){
       footer{ padding:6px 0; }
@@ -247,7 +250,7 @@
     </nav>
   </div>
 
-  <!-- FOOTER (agora dentro do body e com fundo sólido) -->
+  <!-- FOOTER -->
   <footer>
     <a href="https://x.com/flashscreener" target="_blank" rel="noopener">X | Twitter</a>
     <a href="/privacy/">Privacy Policy</a>
@@ -332,6 +335,3 @@
   </script>
 </body>
 </html>
-
-
-
