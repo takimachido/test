@@ -23,6 +23,12 @@
       --wrap:1180px;
       --chart-h:500px;
       --radius-xl:22px;
+
+      /* controles do feixe */
+      --shine-w: 18%;            /* largura do feixe (mais baixo = mais fino) */
+      --shine-angle: 18deg;      /* inclinação */
+      --shine-ms: 600ms;         /* duração (mais baixo = mais rápido) */
+      --shine-blur: 2px;         /* blur do feixe */
     }
 
     *{box-sizing:border-box}
@@ -81,43 +87,34 @@
     }
     .chart{ width:100%; height:var(--chart-h); border:0; display:block }
 
-    /* CA (clicável para copiar) */
-/* CA (clicável para copiar) — hover limitado ao texto */
-.ca{
-  display:block;
-  width: fit-content;          /* só o tamanho do texto */
-  margin: 10px auto 16px;      /* centraliza o bloco estreito */
-  white-space: nowrap;         /* não quebra em várias linhas */
-  text-align: center;
+    /* CA (clicável para copiar) — hover limitado ao texto */
+    .ca{
+      display:block;
+      width: fit-content;          /* largura do próprio texto */
+      margin: 10px auto 16px;      /* centralizado */
+      white-space: nowrap;
+      text-align: center;
 
-  color:#ddd; font-size:16px; font-style:italic; opacity:.9;
-  cursor:pointer; position:relative;
-  transition: color .15s ease, opacity .15s ease;
-}
-
-.ca:hover,
-.ca:focus-visible{
-  color: var(--brand);         /* mesma cor da logo */
-  opacity: 1;
-}
-
-.ca:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:8px; }
-
-.ca.copied::after{
-  content:"Copied!";
-  position:absolute; left:50%; transform:translate(-50%,-8px);
-  background:rgba(0,0,0,.55); color:#fff; font-style:normal; font-size:12px;
-  padding:4px 8px; border-radius:8px;
-  animation: fadePop 1.4s ease both;
-}
-
+      color:#ddd; font-size:16px; font-style:italic; opacity:.9;
+      cursor:pointer; position:relative;
+      transition: color .15s ease, opacity .15s ease;
+    }
+    .ca:hover, .ca:focus-visible{ color: var(--brand); opacity:1; }
+    .ca:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:8px; }
+    .ca.copied::after{
+      content:"Copied!";
+      position:absolute; left:50%; transform:translate(-50%,-8px);
+      background:rgba(0,0,0,.55); color:#fff; font-style:normal; font-size:12px;
+      padding:4px 8px; border-radius:8px;
+      animation: fadePop 1.4s ease both;
+    }
     @keyframes fadePop{
       0%{opacity:0; transform:translate(-50%,4px) scale(.98)}
       10%{opacity:1; transform:translate(-50%,-2px) scale(1)}
       100%{opacity:0; transform:translate(-50%,-10px) scale(.98)}
     }
 
-    /* botões inferiores + feixe da ESQUERDA para a DIREITA */
+    /* botões inferiores + feixe */
     .actions{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
     .btn{
       position:relative; overflow:hidden; cursor:pointer;
@@ -130,36 +127,41 @@
       box-shadow:0 16px 40px var(--glow), inset 0 0 0 1px rgba(255,255,255,.08);
       transition: transform .1s ease, box-shadow .2s ease, filter .2s ease;
       -webkit-tap-highlight-color:transparent;
-      will-change: transform;
+      z-index:0; /* cria contexto para o feixe */
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); box-shadow:0 20px 44px var(--glow) }
     .btn:active{ transform: translateY(0) scale(.99) }
 
-    /* feixe: nasce fora à ESQUERDA, cruza, e morre à DIREITA */
-.btn::after{
-  content:"";
-  position:absolute;
-  top:-70%; left:-50%;
-  width:22%;             /* ← era ~55%: menor = feixe mais fino */
-  height:240%;
-  background: linear-gradient(115deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0) 48%,     /* bordas transparentes maiores */
-    rgba(255,255,255,0.9) 50%,   /* núcleo bem estreito e intenso */
-    rgba(255,255,255,0) 52%,
-    rgba(255,255,255,0) 100%
-  );
-  transform: translateX(-140%) rotate(18deg);
-  opacity:0;
-  filter: blur(2px);            /* ← era 3px: menos blur = mais fino */
-  pointer-events:none;
-}
-    .btn:hover::after{ animation: sweep 0.7s ease-out forwards; }
-    @keyframes sweep{
-      0%   { transform: translateX(-140%) rotate(18deg); opacity:0; }
-      10%  { opacity:.85; }
-      50%  { opacity:.95; }
-      100% { transform: translateX(160%) rotate(18deg); opacity:0; }
+    /* feixe: nasce à esquerda, cruza e morre à direita */
+    .btn::after{
+      content:"";
+      position:absolute;
+      top:-80%; left:-40%;
+      width: var(--shine-w);
+      height: 260%;
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.92) 50%,
+        rgba(255,255,255,0) 100%);
+      transform: translateX(-150%) rotate(var(--shine-angle));
+      opacity:0;
+      filter: blur(var(--shine-blur));
+      pointer-events:none;
+      z-index:1; /* garante que o feixe fica visível acima do botão/texto */
+    }
+    .btn:hover::after{
+      animation: shine var(--shine-ms) cubic-bezier(.22,.61,.36,1) forwards;
+    }
+    @keyframes shine{
+      0%   { transform: translateX(-150%) rotate(var(--shine-angle)); opacity: 0; }
+      15%  { opacity: .9; }
+      50%  { opacity: 1; }
+      100% { transform: translateX(170%)  rotate(var(--shine-angle)); opacity: 0; }
+    }
+
+    /* acessibilidade: reduz movimento */
+    @media (prefers-reduced-motion: reduce){
+      .btn:hover::after{ animation: none; opacity:0; }
     }
 
     /* responsivo */
@@ -170,6 +172,24 @@
       .value{font-size:28px}
       .btn{font-size:18px;padding:14px 22px}
     }
+
+        footer{
+      width: 100%;
+      background: var(--footer-bg);
+      color: #ccc;
+      text-align: center;
+      padding: calc(var(--space-sm) + env(safe-area-inset-bottom)) 0 var(--space-sm);
+      font-size: clamp(10px, 2.2vw, 11px);
+      font-weight: 300;
+      border-top: 0.5px solid #333;
+      margin-top: auto;
+    }
+    @media (min-width:1024px){
+      footer{ padding: 5px 0; }
+    }
+    footer a{ color:#9b9b9b; text-decoration:none; margin:0 10px; font-weight:600; }
+    footer a:hover{ color:#b497ff; }
+    
   </style>
 </head>
 <body>
@@ -241,7 +261,7 @@
         solscan: "https://solscan.io/token/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump"
       },
       gecko: {
-        pathType: "tokens", // "tokens" | "pools"
+        pathType: "tokens",
         id: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
         params: {
           embed: "1",
@@ -285,7 +305,6 @@
           caEl.classList.add("copied");
           setTimeout(()=> caEl.classList.remove("copied"), 1200);
         }catch{
-          // Fallback
           const tmp = document.createElement("textarea");
           tmp.value = CONFIG.ca;
           document.body.appendChild(tmp);
@@ -301,4 +320,11 @@
   </script>
 </body>
 </html>
+  
+<footer>
+    <a href="https://x.com/flashscreener" target="_blank" rel="noopener">X | Twitter</a>
+    <a href="/privacy/">Privacy Policy</a>
+    <a href="https://pump.fun/coin/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump" target="_blank" rel="noopener">$FLASH</a>
+  </footer>
+
 
