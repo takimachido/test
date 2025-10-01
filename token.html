@@ -26,15 +26,17 @@
 
     *{box-sizing:border-box}
 
-    /* REMOVE a borda branca e o efeito duplicado do fundo */
+    /* Fundo único fixo (sem borda branca ao rolar) */
     html, body{
       margin:0;
       padding:0;
-      min-height:100svh;         /* altura mínima = viewport */
+      min-height:100svh;
       color:var(--text);
-      background:none;           /* fundo vai no ::before */
+      background:none;
       font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;         /* evita faixa clara lateral se algo extrapolar */
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
     body::before{
       content:"";
@@ -50,80 +52,100 @@
       background-position:center,center;
     }
 
-    .wrap{max-width:var(--wrap);margin:0 auto;padding:0px 20px 56px}
+    .wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px 56px}
 
-    /* logo 'f' no topo e centro */
+    /* logo 'f' topo/centro */
     .brand-f{
-      display:block;
-      width:100%;
-      text-align:center;
+      display:block; width:100%; text-align:center;
       margin:8px 0 12px;
       font-family:'Open Sans',sans-serif;
-      font-style:italic;
-      font-weight:480;           /* ajuste fino conforme sua imagem */
-      font-size:50px;
-      line-height:1;
-      color:#6b3aff;
-      text-shadow:none;
+      font-style:italic; font-weight:500; font-size:45px; line-height:1;
+      color:#6b3aff; text-shadow:none;
+      user-select:none;
     }
 
     /* cards do topo */
     .stats{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:8px
+      display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-bottom:8px;
     }
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--card-stroke);
       border-radius:var(--radius-xl);
-      padding:5px 22px;          /* fino na altura, como você pediu */
+      padding:5px 22px; /* mais fino na altura */
       box-shadow:0 22px 40px rgba(0,0,0,.35);
     }
     .label{
       font-size:12px; letter-spacing:.1em; text-transform:uppercase;
-      color:var(--muted); margin-bottom:6px
+      color:var(--muted); margin-bottom:6px;
     }
     .value{
-      font-size:34px; font-weight:600; letter-spacing:.02em; line-height:1
+      font-size:34px; font-weight:700; letter-spacing:.02em; line-height:1;
+      font-variant-numeric:tabular-nums lining-nums;
     }
 
     /* moldura do gráfico */
     .chart-shell{
-      background:#0d0f1a;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      overflow:hidden;
-      box-shadow:0 22px 40px rgba(0,0,0,.35);
+      background:#0d0f1a; border:1px solid rgba(255,255,255,.08);
+      border-radius:16px; overflow:hidden; box-shadow:0 22px 40px rgba(0,0,0,.35);
     }
-    .chart{width:100%;height:var(--chart-h);border:0;display:block}
+    .chart{ width:100%; height:var(--chart-h); border:0; display:block }
 
-    /* CA abaixo do gráfico */
+    /* CA (clicável para copiar) */
     .ca{
-      text-align:center;
-      color:#ddd;
-      font-size:16px;
-      font-style:italic;
-      opacity:.85;
-      margin:10px 6px 16px;
-      word-break:break-all;
+      text-align:center; color:#ddd; font-size:16px; font-style:italic; opacity:.9;
+      margin:10px 6px 16px; word-break:break-all;
+      cursor:pointer; position:relative; display:block;
+    }
+    .ca:focus-visible{ outline:2px solid #6b3aff; outline-offset:2px; border-radius:8px; }
+    .ca.copied::after{
+      content:"Copied!";
+      position:absolute; left:50%; transform:translate(-50%,-8px);
+      background:rgba(0,0,0,.55); color:#fff; font-style:normal; font-size:12px;
+      padding:4px 8px; border-radius:8px;
+      animation: fadePop 1.4s ease both;
+    }
+    @keyframes fadePop{
+      0%{opacity:0; transform:translate(-50%,4px) scale(.98)}
+      10%{opacity:1; transform:translate(-50%,-2px) scale(1)}
+      100%{opacity:0; transform:translate(-50%,-10px) scale(.98)}
     }
 
-    /* botões inferiores */
-    .actions{
-      display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
-    }
+    /* botões inferiores + efeito feixe de luz */
+    .actions{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
     .btn{
+      position:relative; overflow:hidden; cursor:pointer;
       appearance:none; -webkit-appearance:none;
       display:inline-flex; align-items:center; justify-content:center;
-      padding:14px 26px;
-      border-radius:999px;
+      padding:14px 26px; border-radius:999px;
       font-weight:800; letter-spacing:.02em; text-transform:uppercase;
       font-size:22px; color:#fff; text-decoration:none;
       background: linear-gradient(180deg, var(--pill-2), var(--pill));
       box-shadow:0 16px 40px var(--glow), inset 0 0 0 1px rgba(255,255,255,.08);
       transition: transform .1s ease, box-shadow .2s ease, filter .2s ease;
+      -webkit-tap-highlight-color:transparent;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); box-shadow:0 20px 44px var(--glow) }
     .btn:active{ transform: translateY(0) scale(.99) }
+
+    /* feixe de luz */
+    .btn::after{
+      content:"";
+      position:absolute; top:-60%; left:-30%;
+      width:45%; height:220%;
+      background: linear-gradient(115deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.65) 50%,
+        rgba(255,255,255,0) 100%);
+      transform: translateX(-120%) skewX(-20deg);
+      filter: blur(3px);
+      pointer-events:none;
+    }
+    .btn:hover::after{ animation: shine .9s ease; }
+    @keyframes shine{
+      from{ transform: translateX(-120%) skewX(-20deg); }
+      to  { transform: translateX(220%)  skewX(-20deg); }
+    }
 
     /* responsivo */
     @media (max-width:1100px){ .stats{grid-template-columns:repeat(2,1fr)} }
@@ -171,8 +193,10 @@
       </iframe>
     </section>
 
-    <!-- CA -->
-    <div class="ca" id="caText">H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump</div>
+    <!-- CA (click-to-copy) -->
+    <div class="ca" id="caText" role="button" tabindex="0" title="Click to copy">
+      H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump
+    </div>
 
     <!-- BOTÕES -->
     <nav class="actions">
@@ -222,7 +246,9 @@
       document.getElementById("v-usd").textContent    = CONFIG.values.usd;
       document.getElementById("v-supply").textContent = CONFIG.values.supply;
       document.getElementById("v-bb").textContent     = CONFIG.values.bb;
-      document.getElementById("caText").textContent   = CONFIG.ca;
+
+      const caEl = document.getElementById("caText");
+      caEl.textContent = CONFIG.ca;
 
       // Links
       document.getElementById("btn-cg").href = CONFIG.links.coingecko;
@@ -236,6 +262,26 @@
       const id   = encodeURIComponent(CONFIG.gecko.id);
       const qs   = new URLSearchParams(CONFIG.gecko.params).toString();
       document.getElementById("gtFrame").src = `${base}/${path}/${id}?${qs}`;
+
+      // Click-to-copy no CA (com feedback visual)
+      async function copyCA(){
+        try{
+          await navigator.clipboard.writeText(CONFIG.ca);
+          caEl.classList.add("copied");
+          setTimeout(()=> caEl.classList.remove("copied"), 1200);
+        }catch{
+          // Fallback simples
+          const tmp = document.createElement("textarea");
+          tmp.value = CONFIG.ca;
+          document.body.appendChild(tmp);
+          tmp.select(); document.execCommand("copy");
+          document.body.removeChild(tmp);
+          caEl.classList.add("copied");
+          setTimeout(()=> caEl.classList.remove("copied"), 1200);
+        }
+      }
+      caEl.addEventListener("click", copyCA);
+      caEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); copyCA(); }});
     })();
   </script>
 </body>
