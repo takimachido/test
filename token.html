@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
@@ -12,10 +12,16 @@
       --bg1:#040414;
       --bg2:#1b1179;
       --text:#ffffff;
+      --muted:#a8a4c8;
+      --card:#141328;
+      --card-stroke:#2e2a4b;
+      --pill:#3e27b2;            /* roxo marca */
+      --pill-2:#6b3aff;          /* roxo claro p/ gradiente */
+      --glow: rgba(96,74,255,.45);
 
-      /* Tamanho do gráfico (ajuste rápido) */
-      --chart-w: 100%;
-      --chart-h: 520px;
+      --wrap:1180px;
+      --chart-h:520px;
+      --radius-xl:22px;
     }
 
     *{box-sizing:border-box}
@@ -24,27 +30,84 @@
       background:
         radial-gradient(1200px 600px at 50% -10%, rgba(107,58,255,.25), transparent 60%),
         linear-gradient(135deg,var(--bg1),var(--bg2));
-      font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
+      font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
-    .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 56px}
+    .wrap{max-width:var(--wrap);margin:0 auto;padding:28px 20px 56px}
 
-    /* Top "f" */
+    /* logotipo 'f' */
     .brand-f{
       display:flex;justify-content:center;align-items:center;
-      height:56px;margin-bottom:18px;font-weight:800;font-size:44px;line-height:1;
-      color:rgba(147,119,255,.9);text-shadow:0 6px 30px rgba(88,64,200,.45)
+      height:56px;margin-bottom:12px;font-weight:800;font-size:44px;line-height:1;
+      color:rgba(147,119,255,.95); text-shadow:0 10px 35px var(--glow);
     }
 
-    /* Moldura do gráfico */
+    /* cards do topo */
+    .stats{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:16px
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.08);
+      border-color:var(--card-stroke);
+      border-radius:var(--radius-xl);
+      padding:18px 22px;
+      box-shadow:0 22px 40px rgba(0,0,0,.35);
+    }
+    .label{
+      font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--muted); margin-bottom:10px
+    }
+    .value{
+      font-size:34px; font-weight:800; letter-spacing:.02em
+    }
+
+    /* moldura do gráfico */
     .chart-shell{
-      background:#0d0f1a;border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;overflow:hidden;max-width:var(--chart-w);margin:0 auto
+      background:#0d0f1a;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 22px 40px rgba(0,0,0,.35);
     }
     .chart{width:100%;height:var(--chart-h);border:0;display:block}
 
+    /* CA abaixo do gráfico */
+    .ca{
+      text-align:center;
+      color:#ddd;
+      font-size:14px;
+      font-style:italic;
+      opacity:.85;
+      margin:10px 6px 16px;
+      word-break:break-all;
+    }
+
+    /* botões inferiores */
+    .actions{
+      display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+    }
+    .btn{
+      appearance:none; -webkit-appearance:none;
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:16px 26px;
+      border-radius:999px;
+      font-weight:800; letter-spacing:.02em; text-transform:uppercase;
+      font-size:22px; color:#fff; text-decoration:none;
+      background: linear-gradient(180deg, var(--pill-2), var(--pill));
+      box-shadow:0 16px 40px var(--glow), inset 0 0 0 1px rgba(255,255,255,.08);
+      transition: transform .1s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); box-shadow:0 20px 44px var(--glow) }
+    .btn:active{ transform: translateY(0) scale(.99) }
+
+    /* responsivo */
+    @media (max-width:1100px){ .stats{grid-template-columns:repeat(2,1fr)} }
     @media (max-width:640px){
-      :root{ --chart-h: 440px; }
+      :root{ --chart-h:440px }
+      .stats{grid-template-columns:1fr}
+      .value{font-size:28px}
+      .btn{font-size:18px;padding:14px 22px}
     }
   </style>
 </head>
@@ -52,72 +115,114 @@
   <div class="wrap">
     <div class="brand-f">f</div>
 
-    <!-- GRÁFICO — GeckoTerminal (único embed) -->
+    <!-- CARDS -->
+    <section class="stats">
+      <div class="card">
+        <div class="label">Total $Flash Purchases</div>
+        <div class="value" id="v-sol">XXX SOL</div>
+      </div>
+      <div class="card">
+        <div class="label">Total Purchases ($USD)</div>
+        <div class="value" id="v-usd">$XXX.XX</div>
+      </div>
+      <div class="card">
+        <div class="label">Total Supply</div>
+        <div class="value" id="v-supply">1B $FLASH</div>
+      </div>
+      <div class="card">
+        <div class="label">Boughtback Supply</div>
+        <div class="value" id="v-bb">X.XX%</div>
+      </div>
+    </section>
+
+    <!-- GRÁFICO GeckoTerminal -->
     <section class="chart-shell">
       <iframe
         id="gtFrame"
         class="chart"
         title="GeckoTerminal Chart"
         loading="lazy"
-        allow="clipboard-write"
         allowfullscreen
         src="">
       </iframe>
     </section>
+
+    <!-- CA -->
+    <div class="ca" id="caText">H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump</div>
+
+    <!-- BOTÕES -->
+    <nav class="actions">
+      <a class="btn" id="btn-cg" target="_blank" rel="noopener">Coingecko</a>
+      <a class="btn" id="btn-ds" target="_blank" rel="noopener">Dexscreener</a>
+      <a class="btn" id="btn-pf" target="_blank" rel="noopener">Pump Fun</a>
+      <a class="btn" id="btn-ss" target="_blank" rel="noopener">Solscan</a>
+    </nav>
   </div>
 
   <script>
-    /*********************************
-     *  CONFIG — EDITE APENAS AQUI  *
-     *********************************
-     * pathType:
-     *   - "pools": usar endereço do POOL (recomendado para candles/ohlcv)
-     *   - "tokens": usar endereço do TOKEN (mint SPL)
-     * idOnGeckoTerminal:
-     *   - se pathType="pools" => endereço do pool (LP)
-     *   - se pathType="tokens" => endereço do token (mint)
-     *
-     * Dica: gere o código na página oficial de embed do GeckoTerminal e
-     * copie o trecho do src — você pode só colar aqui abaixo.
-     */
+    /***********************
+     *   CONFIG EDITÁVEL   *
+     ***********************/
     const CONFIG = {
-      pathType: "pools",
-      // Coloque aqui o pool OU o token do $FLASH no GeckoTerminal:
-      idOnGeckoTerminal: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
+      // — Valores dos cards (manuais)
+      values: {
+        sol: "XXX SOL",
+        usd: "$XXX.XX",
+        supply: "1B $FLASH",
+        bb: "X.XX%"
+      },
 
-      // Opções visuais do embed:
-      info: 0,           // 0 esconde header lateral; 1 mostra
-      swaps: 0,          // 0 esconde trades; 1 mostra
-      light_chart: 0,    // 0 = dark, 1 = light
-      chart_type: "price",    // "price" | "market_cap" (alguns temas mostram "ohlcv" por padrão)
-      resolution: "1h",       // "1m","5m","15m","1h","4h","1d" (depende do ativo)
-      
-      // Cor de fundo do canvas (hex sem '#'); combine com o fundo da sua página:
-      bg_color: "0d0f1a"
+      // — Endereço do contrato (CA) exibido no centro
+      ca: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
+
+      // — Links dos botões (coloque as URLs oficiais do seu token)
+      links: {
+        coingecko: "https://www.coingecko.com/en/coins/your-token-slug",     // <— troque
+        dexscreener: "https://dexscreener.com/solana/2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs", // <— troque se precisar
+        pumpfun: "https://pump.fun/coin/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",              // <— troque
+        solscan: "https://solscan.io/token/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump"
+      },
+
+      // — GeckoTerminal embed
+      // Use "tokens/<MINT>" OU "pools/<POOL>".
+      gecko: {
+        pathType: "tokens", // "tokens" | "pools"
+        id: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump", // mint ou pool
+        params: {
+          embed: "1",
+          info: "0",
+          swaps: "0",
+          light_chart: "0",
+          chart_type: "price",
+          resolution: "1h",
+          bg_color: "0d0f1a"
+        }
+      }
     };
 
-    function buildGeckoTerminalSrc(){
+    // aplica valores nos cards e CA
+    (function apply(){
+      const v = CONFIG.values;
+      document.getElementById("v-sol").textContent    = v.sol;
+      document.getElementById("v-usd").textContent    = v.usd;
+      document.getElementById("v-supply").textContent = v.supply;
+      document.getElementById("v-bb").textContent     = v.bb;
+
+      // CA
+      document.getElementById("caText").textContent = CONFIG.ca;
+
+      // links
+      document.getElementById("btn-cg").href = CONFIG.links.coingecko;
+      document.getElementById("btn-ds").href = CONFIG.links.dexscreener;
+      document.getElementById("btn-pf").href = CONFIG.links.pumpfun;
+      document.getElementById("btn-ss").href = CONFIG.links.solscan;
+
+      // GeckoTerminal iframe
       const base = "https://www.geckoterminal.com/solana";
-      const pathType = CONFIG.pathType === "tokens" ? "tokens" : "pools";
-      const id = encodeURIComponent(CONFIG.idOnGeckoTerminal);
-
-      const params = new URLSearchParams({
-        embed: "1",
-        info: String(CONFIG.info),
-        swaps: String(CONFIG.swaps),
-        light_chart: String(CONFIG.light_chart),
-        chart_type: CONFIG.chart_type,
-        resolution: CONFIG.resolution,
-        bg_color: CONFIG.bg_color
-      });
-
-      return `${base}/${pathType}/${id}?${params.toString()}`;
-    }
-
-    // Monta o iframe
-    (function mount(){
-      const src = buildGeckoTerminalSrc();
-      document.getElementById("gtFrame").src = src;
+      const path = CONFIG.gecko.pathType === "pools" ? "pools" : "tokens";
+      const id   = encodeURIComponent(CONFIG.gecko.id);
+      const qs   = new URLSearchParams(CONFIG.gecko.params).toString();
+      document.getElementById("gtFrame").src = `${base}/${path}/${id}?${qs}`;
     })();
   </script>
 </body>
