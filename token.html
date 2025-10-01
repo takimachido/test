@@ -7,7 +7,6 @@
   <link rel="icon" type="image/png" href="favicon.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,800;1,400;1,600;1,800&display=swap" rel="stylesheet">
 
-
   <style>
     :root{
       --bg1:#040414;
@@ -16,8 +15,8 @@
       --muted:#a8a4c8;
       --card:#141328;
       --card-stroke:#2e2a4b;
-      --pill:#3e27b2;            /* roxo marca */
-      --pill-2:#6b3aff;          /* roxo claro p/ gradiente */
+      --pill:#3e27b2;
+      --pill-2:#6b3aff;
       --glow: rgba(96,74,255,.45);
 
       --wrap:1180px;
@@ -26,30 +25,47 @@
     }
 
     *{box-sizing:border-box}
-    html,body{
-      margin:0;padding:0;height:100%;
-      position: fixed;
+
+    /* REMOVE a borda branca e o efeito duplicado do fundo */
+    html, body{
+      margin:0;
+      padding:0;
+      min-height:100svh;         /* altura mínima = viewport */
+      color:var(--text);
+      background:none;           /* fundo vai no ::before */
+      font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow-x:hidden;         /* evita faixa clara lateral se algo extrapolar */
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      pointer-events:none;
       background:
         radial-gradient(1200px 600px at 50% -10%, rgba(107,58,255,.25), transparent 60%),
         linear-gradient(135deg,var(--bg1),var(--bg2));
-      color:var(--text);
-      font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background-repeat:no-repeat,no-repeat;
+      background-size:cover,cover;
+      background-position:center,center;
     }
+
     .wrap{max-width:var(--wrap);margin:0 auto;padding:28px 20px 56px}
 
-    /* logotipo 'f' */
-.brand-f{
-  font-family: 'Open Sans', sans-serif;
-  font-style: italic;         /* italico verdadeiro, não apenas skew */
-  font-weight: 500;           /* peso forte como no mock */
-  font-size: 56px;            /* ajuste fino do tamanho */
-  text-align:center;
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: none;       /* garante minúsculo */
-  color: #6b3aff;             /* roxo da marca */
-  text-shadow: none;          /* sem glow, igual ao logo enviado */
-}
+    /* logo 'f' no topo e centro */
+    .brand-f{
+      display:block;
+      width:100%;
+      text-align:center;
+      margin:8px 0 12px;
+      font-family:'Open Sans',sans-serif;
+      font-style:italic;
+      font-weight:500;           /* ajuste fino conforme sua imagem */
+      font-size:56px;
+      line-height:1;
+      color:#6b3aff;
+      text-shadow:none;
+    }
 
     /* cards do topo */
     .stats{
@@ -57,18 +73,17 @@
     }
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08);
-      border-color:var(--card-stroke);
+      border:1px solid var(--card-stroke);
       border-radius:var(--radius-xl);
-      padding:5px 22px;
+      padding:5px 22px;          /* fino na altura, como você pediu */
       box-shadow:0 22px 40px rgba(0,0,0,.35);
     }
     .label{
       font-size:12px; letter-spacing:.1em; text-transform:uppercase;
-      color:var(--muted); margin-bottom:10px
+      color:var(--muted); margin-bottom:6px
     }
     .value{
-      font-size:34px; font-weight:800; letter-spacing:.02em
+      font-size:34px; font-weight:800; letter-spacing:.02em; line-height:1
     }
 
     /* moldura do gráfico */
@@ -144,7 +159,7 @@
       </div>
     </section>
 
-    <!-- GRÁFICO GeckoTerminal -->
+    <!-- GRÁFICO — GeckoTerminal -->
     <section class="chart-shell">
       <iframe
         id="gtFrame"
@@ -173,30 +188,22 @@
      *   CONFIG EDITÁVEL   *
      ***********************/
     const CONFIG = {
-      // — Valores dos cards (manuais)
       values: {
         sol: "1.93 SOL",
         usd: "$385,35",
         supply: "1B $FLASH",
         bb: "0.6%"
       },
-
-      // — Endereço do contrato (CA) exibido no centro
       ca: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
-
-      // — Links dos botões (coloque as URLs oficiais do seu token)
       links: {
-        coingecko: "https://www.coingecko.com/en/coins/flashscreener",     // <— troque
-        dexscreener: "https://dexscreener.com/solana/2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs", // <— troque se precisar
-        pumpfun: "https://pump.fun/coin/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",              // <— troque
+        coingecko: "https://www.coingecko.com/en/coins/flashscreener",
+        dexscreener: "https://dexscreener.com/solana/2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs",
+        pumpfun: "https://pump.fun/coin/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
         solscan: "https://solscan.io/token/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump"
       },
-
-      // — GeckoTerminal embed
-      // Use "tokens/<MINT>" OU "pools/<POOL>".
       gecko: {
         pathType: "tokens", // "tokens" | "pools"
-        id: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump", // mint ou pool
+        id: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
         params: {
           embed: "1",
           info: "0",
@@ -209,24 +216,21 @@
       }
     };
 
-    // aplica valores nos cards e CA
-    (function apply(){
-      const v = CONFIG.values;
-      document.getElementById("v-sol").textContent    = v.sol;
-      document.getElementById("v-usd").textContent    = v.usd;
-      document.getElementById("v-supply").textContent = v.supply;
-      document.getElementById("v-bb").textContent     = v.bb;
+    (function init(){
+      // Preenche cards e CA
+      document.getElementById("v-sol").textContent    = CONFIG.values.sol;
+      document.getElementById("v-usd").textContent    = CONFIG.values.usd;
+      document.getElementById("v-supply").textContent = CONFIG.values.supply;
+      document.getElementById("v-bb").textContent     = CONFIG.values.bb;
+      document.getElementById("caText").textContent   = CONFIG.ca;
 
-      // CA
-      document.getElementById("caText").textContent = CONFIG.ca;
-
-      // links
+      // Links
       document.getElementById("btn-cg").href = CONFIG.links.coingecko;
       document.getElementById("btn-ds").href = CONFIG.links.dexscreener;
       document.getElementById("btn-pf").href = CONFIG.links.pumpfun;
       document.getElementById("btn-ss").href = CONFIG.links.solscan;
 
-      // GeckoTerminal iframe
+      // GeckoTerminal embed
       const base = "https://www.geckoterminal.com/solana";
       const path = CONFIG.gecko.pathType === "pools" ? "pools" : "tokens";
       const id   = encodeURIComponent(CONFIG.gecko.id);
