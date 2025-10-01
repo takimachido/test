@@ -82,21 +82,35 @@
     .chart{ width:100%; height:var(--chart-h); border:0; display:block }
 
     /* CA (clicável para copiar) */
-    .ca{
-      text-align:center; color:#ddd; font-size:16px; font-style:italic; opacity:.9;
-      margin:10px 6px 16px; word-break:break-all;
-      cursor:pointer; position:relative; display:block;
-      transition: color .15s ease, opacity .15s ease;
-    }
-    .ca:hover, .ca:focus-visible{ color:var(--brand); opacity:1; }
-    .ca:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:8px; }
-    .ca.copied::after{
-      content:"Copied!";
-      position:absolute; left:50%; transform:translate(-50%,-8px);
-      background:rgba(0,0,0,.55); color:#fff; font-style:normal; font-size:12px;
-      padding:4px 8px; border-radius:8px;
-      animation: fadePop 1.4s ease both;
-    }
+/* CA (clicável para copiar) — hover limitado ao texto */
+.ca{
+  display:block;
+  width: fit-content;          /* só o tamanho do texto */
+  margin: 10px auto 16px;      /* centraliza o bloco estreito */
+  white-space: nowrap;         /* não quebra em várias linhas */
+  text-align: center;
+
+  color:#ddd; font-size:16px; font-style:italic; opacity:.9;
+  cursor:pointer; position:relative;
+  transition: color .15s ease, opacity .15s ease;
+}
+
+.ca:hover,
+.ca:focus-visible{
+  color: var(--brand);         /* mesma cor da logo */
+  opacity: 1;
+}
+
+.ca:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:8px; }
+
+.ca.copied::after{
+  content:"Copied!";
+  position:absolute; left:50%; transform:translate(-50%,-8px);
+  background:rgba(0,0,0,.55); color:#fff; font-style:normal; font-size:12px;
+  padding:4px 8px; border-radius:8px;
+  animation: fadePop 1.4s ease both;
+}
+
     @keyframes fadePop{
       0%{opacity:0; transform:translate(-50%,4px) scale(.98)}
       10%{opacity:1; transform:translate(-50%,-2px) scale(1)}
@@ -122,21 +136,25 @@
     .btn:active{ transform: translateY(0) scale(.99) }
 
     /* feixe: nasce fora à ESQUERDA, cruza, e morre à DIREITA */
-    .btn::after{
-      content:"";
-      position:absolute; top:-70%; left:-50%;
-      width:55%; height:240%;
-      background:
-        linear-gradient(115deg,
-          rgba(255,255,255,0) 0%,
-          rgba(255,255,255,0.8) 50%,
-          rgba(255,255,255,0) 100%);
-      transform: translateX(-140%) rotate(18deg);
-      opacity:0;
-      filter: blur(3px);
-      pointer-events:none;
-    }
-    .btn:hover::after{ animation: sweep 0.95s ease-out forwards; }
+.btn::after{
+  content:"";
+  position:absolute;
+  top:-70%; left:-50%;
+  width:22%;             /* ← era ~55%: menor = feixe mais fino */
+  height:240%;
+  background: linear-gradient(115deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 48%,     /* bordas transparentes maiores */
+    rgba(255,255,255,0.9) 50%,   /* núcleo bem estreito e intenso */
+    rgba(255,255,255,0) 52%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: translateX(-140%) rotate(18deg);
+  opacity:0;
+  filter: blur(2px);            /* ← era 3px: menos blur = mais fino */
+  pointer-events:none;
+}
+    .btn:hover::after{ animation: sweep 0.7s ease-out forwards; }
     @keyframes sweep{
       0%   { transform: translateX(-140%) rotate(18deg); opacity:0; }
       10%  { opacity:.85; }
