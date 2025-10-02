@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>$FLASH token</title>
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="../favicon.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,800;1,400;1,600;1,800&display=swap" rel="stylesheet">
 
   <style>
@@ -25,10 +25,10 @@
       --radius-xl:22px;
 
       /* Feixe — ajuste aqui */
-      --shine-w: 16%;            /* largura do feixe (↓ = mais fino) */
-      --shine-ms: 1250ms;        /* duração (↓ = mais rápido) */
-      --shine-tilt: -20deg;      /* inclinação */
-      --shine-blur: 2px;         /* blur */
+      --shine-w: 16%;
+      --shine-ms: 1250ms;
+      --shine-tilt: -20deg;
+      --shine-blur: 2px;
 
       /* Footer (mesmo tom do index) */
       --footer-bg:#0e0f15;
@@ -68,8 +68,8 @@
       list-style:none;                 /* evita marcador */
     }
     .brand-f:visited{ color:var(--brand); }
-    .brand-f::marker{ content:""; }    /* remove bullet se herdar list-style */
-    .brand-f::after{ content:none !important; } /* anula pseudo global de links */
+    .brand-f::marker{ content:""; }
+    .brand-f::after{ content:none !important; }
 
     /* cards do topo */
     .stats{
@@ -79,7 +79,7 @@
       background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--card-stroke);
       border-radius:var(--radius-xl);
-      padding:5px 22px; /* mais fino na altura */
+      padding:5px 22px;
       box-shadow:0 22px 40px rgba(0,0,0,.35);
     }
     .label{
@@ -101,8 +101,8 @@
     /* CA (clicável para copiar) — hover limitado ao texto */
     .ca{
       display:block;
-      width:fit-content;          /* largura do próprio texto */
-      margin:10px auto 16px;      /* centralizado */
+      width:fit-content;
+      margin:10px auto 16px;
       white-space:nowrap;
       text-align:center;
 
@@ -149,14 +149,14 @@
       content:"";
       position:absolute;
       top:-30%;
-      left:-65%;                        /* começa bem fora do botão */
+      left:-65%;
       width: var(--shine-w);
       height: 160%;
       background: linear-gradient(90deg,
         rgba(255,255,255,0) 0%,
         rgba(255,255,255,0.95) 50%,
         rgba(255,255,255,0) 100%);
-      transform: skewX(var(--shine-tilt));  /* inclinação fixa */
+      transform: skewX(var(--shine-tilt));
       opacity: 0;
       filter: blur(var(--shine-blur));
       pointer-events: none;
@@ -170,7 +170,19 @@
       0%   { left:-65%;  opacity:0; }
       12%  {             opacity:.9; }
       50%  {             opacity:1;  }
-      100% { left:165%;  opacity:0; } /* termina bem fora à direita */
+      100% { left:165%;  opacity:0; }
+    }
+
+    /* link “Buyback txns” (mesmo estilo do CA) */
+    .ca-link{
+      text-decoration:none;      /* sem sublinhado */
+      margin: 14px auto 10px;    /* ajusta o espaçamento com os botões/rodapé */
+      display:block;
+      width:fit-content;
+    }
+    .ca-link:hover, .ca-link:focus-visible{
+      color:var(--brand);
+      opacity:1;
     }
 
     /* Footer (tom igual ao index) */
@@ -183,7 +195,7 @@
       font-size: clamp(10px, 2.2vw, 11px);
       font-weight:300;
       border-top:1px solid var(--footer-border);
-      margin-top:12px;
+      margin-top:5px;
     }
     @media (min-width:1024px){
       footer{ padding:6px 0; }
@@ -255,13 +267,16 @@
       <a class="btn" id="btn-pf" target="_blank" rel="noopener">Pump Fun</a>
       <a class="btn" id="btn-ss" target="_blank" rel="noopener">Solscan</a>
     </nav>
+
+    <!-- NOVO: link “Buyback txns” (abre em nova aba) -->
+    <a id="bbLink" class="ca ca-link" href="#" target="_blank" rel="noopener">Buyback txns</a>
   </div>
 
   <!-- FOOTER -->
   <footer>
     <a href="https://x.com/flashscreener" target="_blank" rel="noopener">X | Twitter</a>
     <a href="/privacy/">Privacy Policy</a>
-    <a href="/token/" target="_blank" rel="noopener">$FLASH</a>
+    <a href="/token/" target="_self" rel="noopener">$FLASH</a>
   </footer>
 
   <script>
@@ -270,17 +285,18 @@
      ***********************/
     const CONFIG = {
       values: {
-        sol: "2.25 SOL",
-        usd: "$455",
+        sol: "2.53 SOL",
+        usd: "$514.85",
         supply: "1B $FLASH",
-        bb: "0.75%"
+        bb: "0.89%"
       },
       ca: "H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
       links: {
         coingecko: "https://www.coingecko.com/en/coins/flashscreener",
         dexscreener: "https://dexscreener.com/solana/2EcHPd85rbHceAZZj9LgMmXdrkn3YRP3tSBVpMHbtsEs",
         pumpfun: "https://pump.fun/coin/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
-        solscan: "https://solscan.io/token/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump"
+        solscan: "https://solscan.io/token/H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump",
+        buybacks: "https://solscan.io/account/9Vn3gApVFDw5uSpiQQsz3w7tc6sU3CzBwYKHkmsFm1Hu?cluster=mainnet"  /* <— troque pelo link que preferir */
       },
       gecko: {
         pathType: "tokens",
@@ -307,11 +323,14 @@
       const caEl = document.getElementById("caText");
       caEl.textContent = CONFIG.ca;
 
-      // Links
+      // Links dos botões
       document.getElementById("btn-cg").href = CONFIG.links.coingecko;
       document.getElementById("btn-ds").href = CONFIG.links.dexscreener;
       document.getElementById("btn-pf").href = CONFIG.links.pumpfun;
       document.getElementById("btn-ss").href = CONFIG.links.solscan;
+
+      // Link do "Buyback txns"
+      document.getElementById("bbLink").href = CONFIG.links.buybacks;
 
       // GeckoTerminal embed
       const base = "https://www.geckoterminal.com/solana";
@@ -342,4 +361,3 @@
   </script>
 </body>
 </html>
-
