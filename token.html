@@ -64,8 +64,8 @@
       margin:8px 0 12px;
       font-style:italic; font-weight:550; font-size:47px; line-height:1;
       color:var(--brand); text-shadow:none; user-select:none;
-      text-decoration:none;           /* sem sublinhado */
-      list-style:none;                 /* evita marcador */
+      text-decoration:none;
+      list-style:none;
     }
     .brand-f:visited{ color:var(--brand); }
     .brand-f::marker{ content:""; }
@@ -101,8 +101,8 @@
     /* CA (clicável para copiar) — hover limitado ao texto */
     .ca{
       display:block;
-      width:fit-content;
-      margin:10px auto 16px;
+      width:fit-content;          /* largura do próprio texto */
+      margin:10px auto 16px;      /* centralizado */
       white-space:nowrap;
       text-align:center;
 
@@ -175,10 +175,10 @@
 
     /* link “Buyback txns” (mesmo estilo do CA) */
     .ca-link{
-      text-decoration:none;      /* sem sublinhado */
-      margin: 14px auto 10px;    /* ajusta o espaçamento com os botões/rodapé */
+      text-decoration:none;
       display:block;
       width:fit-content;
+      margin:12px auto 6px;   /* fica ACIMA do CA */
     }
     .ca-link:hover, .ca-link:focus-visible{
       color:var(--brand);
@@ -255,6 +255,9 @@
       </iframe>
     </section>
 
+    <!-- NOVO: link “Buyback txns” (acima do CA) -->
+    <a id="bbLink" class="ca ca-link" href="#" target="_blank" rel="noopener">Buyback txns</a>
+
     <!-- CA (click-to-copy) -->
     <div class="ca" id="caText" role="button" tabindex="0" title="Click to copy">
       H9BkzwHKyBAnKmaxuLPKKRZGu8whbigdhhqQVkRapump
@@ -267,9 +270,6 @@
       <a class="btn" id="btn-pf" target="_blank" rel="noopener">Pump Fun</a>
       <a class="btn" id="btn-ss" target="_blank" rel="noopener">Solscan</a>
     </nav>
-
-    <!-- NOVO: link “Buyback txns” (abre em nova aba) -->
-    <a id="bbLink" class="ca ca-link" href="#" target="_blank" rel="noopener">Buyback txns</a>
   </div>
 
   <!-- FOOTER -->
@@ -361,3 +361,4 @@
   </script>
 </body>
 </html>
+
