@@ -69,21 +69,16 @@
       color: #fff;
     }
 
-footer {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 10;
+    footer{
       width: 100%;
-      background: #060611;
+      background: var(--footer-bg);
       color: #ccc;
       text-align: center;
-      padding: 9px 0;
-      font-size: 15px;
-      font-weight: normal;
-      font-style: normal;
+      padding: calc(var(--space-sm) + env(safe-area-inset-bottom)) 0 var(--space-sm);
+      font-size: clamp(10px, 2.2vw, 11px);
+      font-weight: 300;
       border-top: 0.5px solid #333;
+      margin-top: auto;
     }
 
     footer a {
