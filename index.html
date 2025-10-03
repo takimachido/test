@@ -124,7 +124,7 @@
       grid-template-columns: 1fr;
       column-gap: 8px;
       justify-items: center;
-      align-items: stretch;
+      align-items: center;
     }
     @media (min-width:640px){
       .buttons{ grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -132,7 +132,7 @@
     @media (min-width:1024px){
       .buttons{
         grid-template-columns: 1fr minmax(560px, 2fr) 1fr; /* centro mais largo */
-        align-items: center;
+        align-items: end;
         margin-top: 20px;
         margin-bottom: 9vh;
       }
@@ -179,7 +179,7 @@
       --side-size: clamp(220px, 15vw, 160px);
       width: var(--side-size);
       height: var(--side-size);
-      border-radius: 30px;         /* cantos arredondados em ~30px */
+      border-radius: 25px;         /* cantos arredondados em ~30px */
       font-size: clamp(36px, 1.4vw, 18px);
       font-weight: 800;
       padding: 0;                  /* mantém proporção quadrada */
