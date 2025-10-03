@@ -122,6 +122,7 @@
       display: grid;
       gap: clamp(12px, 2.4vw, 18px);
       grid-template-columns: 1fr;
+      column-gap: 8px;
       justify-items: center;
       align-items: stretch;
     }
@@ -175,12 +176,12 @@
 
     /* ===== Botões laterais (menores, quadrados) ===== */
     .btn-side{
-      --side-size: clamp(180px, 15vw, 160px);
+      --side-size: clamp(250px, 15vw, 160px);
       width: var(--side-size);
       height: var(--side-size);
       border-radius: 30px;         /* cantos arredondados em ~30px */
-      font-size: clamp(26px, 1.4vw, 18px);
-      font-weight: 700;
+      font-size: clamp(36px, 1.4vw, 18px);
+      font-weight: 800;
       padding: 0;                  /* mantém proporção quadrada */
       max-width: none;             /* ignora max-width genérico */
       justify-self: center;        /* não esticar na célula */
