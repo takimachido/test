@@ -39,9 +39,7 @@
       text-decoration: none;
     }
 
-    .logo:hover {
-      color: #3e27b2;
-    }
+    .logo:hover { color: #3e27b2; }
 
     h1 {
       font-size: 69px;
@@ -71,14 +69,36 @@
       color: #fff;
     }
 
-    /* Tweet centralizado dentro do fluxo do texto */
-    .tweet-embed{
-      display: flex;
-      justify-content: center;
+    /* Screenshot do tweet */
+    :root { --tweet-radius: 45px; }      /* ajuste aqui se quiser mais/menos arredondado */
+
+    .tweet-shot {
       margin: 22px 0 8px;
+      text-align: center;
+    }
+    .tweet-shot img{
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--tweet-radius);
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.35),
+        0 0 0 1px rgba(255,255,255,0.06) inset;
+    }
+    .tweet-shot .see-tweet{
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #b497ff;
+      text-decoration: none;
+      opacity: 0.95;
+    }
+    .tweet-shot .see-tweet:hover{
+      text-decoration: underline;
+      opacity: 1;
     }
 
-    /* “f” minúsculo em Open Sans itálico, com glow, acima do rodapé */
+    /* “f” minúsculo com glow, acima do rodapé */
     .mini-f{
       font-family: 'Open Sans', sans-serif;
       font-style: italic;
@@ -102,7 +122,7 @@
       color: #9b9b9b;
       text-align: center;
       padding: 4px 0 calc(9px + env(safe-area-inset-bottom));
-      font-size: clamp(11px, 2.2vw, 14px); /* corrigido: clamp com min < max */
+      font-size: clamp(11px, 2.2vw, 14px);
       font-weight: 330;
       border-top: 0.5px solid #333;
       margin-top: auto;
@@ -115,10 +135,7 @@
       margin: 0 8px;
       font-weight: normal;
     }
-
-    footer a:hover {
-      color: #b497ff;
-    }
+    footer a:hover { color: #b497ff; }
   </style>
 </head>
 <body>
@@ -176,17 +193,13 @@
       That was the beginning of something big.
     </p>
 
-    <!-- EMBED DO TWEET (abaixo de IMPLEMENTATION, acima de EVOLUTION) -->
-    <div class="tweet-embed">
-      <!-- alvo para renderização programática -->
-      <div id="tweet-1882290937092849788"></div>
-
-      <!-- fallback sem JS / bloqueadores -->
-      <noscript>
-        <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
-          <a href="https://twitter.com/0xKalashnikov/status/1882290937092849788">Tweet</a>
-        </blockquote>
-      </noscript>
+    <!-- SCREENSHOT DO TWEET (abaixo de IMPLEMENTATION, acima de EVOLUTION) -->
+    <div class="tweet-shot">
+      <img src="/images/tweet.png"
+           alt="@0xKalashnikov tweet">
+      <a class="see-tweet"
+         href="https://x.com/0xKalashnikov/status/1882290937092849788"
+         target="_blank" rel="noopener">see tweet</a>
     </div>
 
     <h3>EVOLUTION</h3>
@@ -221,8 +234,5 @@
     <a href="/about/" target="_self" rel="noopener">About</a>
     <a href="/token/" target="_self" rel="noopener">$FLASH</a>
   </footer>
-
-  <!-- Script do X/Twitter para renderizar o embed -->
-  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
