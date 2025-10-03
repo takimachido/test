@@ -22,10 +22,10 @@
       --shadow: 0 12px 30px rgba(0,0,0,.35);
 
       --site-bg: linear-gradient(135deg, #000000, #1c1179);
-      --top-pad: calc(clamp(40px, 7vw, 70px) + env(safe-area-inset-top)); /* mobile/tablet */
+      --top-pad: calc(clamp(40px, 7vw, 70px) + env(safe-area-inset-top));
     }
     @media (min-width:1024px){
-      :root{ --top-pad: calc(36px + env(safe-area-inset-top)); } /* aproxima no desktop */
+      :root{ --top-pad: calc(36px + env(safe-area-inset-top)); }
     }
 
     * { box-sizing: border-box; }
@@ -34,7 +34,6 @@
       overscroll-behavior: none;
     }
 
-    /* Fundo único e fixo */
     body{ background: transparent; }
     body::before{
       content:"";
@@ -73,7 +72,6 @@
 
     .container{ width: var(--container); margin: 0 auto; padding: 0 var(--space-sm); }
 
-    /* Header centralizado */
     header{
       width: var(--container);
       margin: 0 auto clamp(12px, 3vw, 24px);
@@ -83,11 +81,9 @@
       gap: clamp(8px, 2vw, 18px);
     }
 
-    /* Esconde a barra sem ocupar espaço */
     .search-box{ display: none; }
     .search-input{ display: none; }
 
-    /* Título */
     h1{
       font-weight: 900;
       margin: clamp(8px, 2vw, 16px) 0;
@@ -122,17 +118,18 @@
       display: grid;
       gap: clamp(12px, 2.4vw, 18px);
       grid-template-columns: 1fr;
-      column-gap: 5px;
       justify-items: center;
-      align-items: center;
+      align-items: stretch;
     }
     @media (min-width:640px){
       .buttons{ grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
     @media (min-width:1024px){
       .buttons{
-        grid-template-columns: 1fr minmax(560px, 2fr) 1fr; /* centro mais largo */
-        align-items: end;
+        grid-template-columns: max-content minmax(560px, 2fr) max-content;
+        align-items: end;               /* laterais alinhados pelo bottom */
+        justify-content: center;
+        column-gap: 14px;
         margin-top: 20px;
         margin-bottom: 9vh;
       }
@@ -174,22 +171,38 @@
       object-fit: contain; border-radius: 12px;
     }
 
-    /* ===== Botões laterais (menores, quadrados) ===== */
+    /* Laterais (quadrados) */
     .btn-side{
-      --side-size: clamp(220px, 15vw, 160px);
-      width: 250px;
-      height: 200px;
-      border-radius: 20px;         /* cantos arredondados em ~30px */
-      font-size: clamp(44px, 1.4vw, 18px);
+      --side-size: clamp(140px, 15vw, 180px);
+      width: var(--side-size);
+      height: var(--side-size);
+      border-radius: 30px;
+      max-width: none;
+      display: flex;                /* para suportar título + subtítulo */
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;                     /* espaço entre título e subtítulo */
+      padding: 0;
+    }
+    .btn-side .title{
       font-weight: 800;
-      padding: 0;                  /* mantém proporção quadrada */
-      max-width: none;             /* ignora max-width genérico */
-      justify-self: center;        /* não esticar na célula */
-      display: grid;
-      place-items: center;
+      line-height: 1;
+    }
+    .btn-side .sub{
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-style: italic;
+      text-transform: none;         /* garante minúsculas */
+      opacity: .75;                 /* “um pouco transparente” */
+      font-size: clamp(12px, 1.2vw, 14px);
+      line-height: 1.1;
+      letter-spacing: .2px;
     }
 
-    /* Mantém o botão central exatamente como estava */
+    /* Esconde CHARTS e WHAT IF mantendo a simetria */
+    .btn-charts, .btn-whatif{ visibility: hidden; pointer-events: none; }
+
     @media (min-width:1024px){
       .btn-install{
         min-width: 290px;
@@ -203,7 +216,7 @@
       .btn-install .icons img{ width: 85px; height: 85px; }
     }
 
-    /* ====== HOVER ESPECIAL: brilho + faixa cruza TODO o botão ====== */
+    /* ====== HOVER ESPECIAL (instal + laterais) ====== */
     @media (hover:hover) and (pointer:fine){
       .btn-install, .btn-side{
         position: relative;
@@ -211,8 +224,6 @@
         isolation: isolate;
         transition: transform .25s ease, box-shadow .30s ease, background .30s ease, filter .2s ease;
       }
-
-      /* Glow suave */
       .btn-install::before, .btn-side::before{
         content:"";
         position:absolute;
@@ -225,8 +236,6 @@
           radial-gradient(140px 80px at 30% -20%, rgba(188,173,255,.35), transparent 70%),
           radial-gradient(200px 100px at 100% 120%, rgba(78,151,255,.25), transparent 70%);
       }
-
-      /* FAIXA (sheen) */
       .btn-install::after, .btn-side::after{
         content:"";
         position:absolute;
@@ -244,7 +253,6 @@
         filter: blur(.5px);
         will-change: transform, opacity;
       }
-
       .btn-install:hover, .btn-side:hover{
         transform: translateY(-3px) scale(1.02);
         box-shadow:
@@ -257,12 +265,8 @@
         opacity: 1;
         animation: sheen-x 2s cubic-bezier(.2,.7,.2,1) forwards;
       }
-
-      @keyframes sheen-x{
-        to{ transform: translateX(100%) rotate(18deg); }
-      }
+      @keyframes sheen-x{ to{ transform: translateX(100%) rotate(18deg); } }
     }
-    /* ================================================================ */
 
     footer{
       width: 100%;
@@ -283,10 +287,8 @@
 
     @media (prefers-reduced-motion: reduce){
       .btn, .btn:hover, .btn:active{ transition:none; transform:none; }
-      .btn-install::before,
-      .btn-install::after,
-      .btn-side::before,
-      .btn-side::after{ animation:none !important; transition:none !important; opacity:0 !important; }
+      .btn-install::before, .btn-install::after,
+      .btn-side::before, .btn-side::after{ animation:none !important; transition:none !important; opacity:0 !important; }
     }
   </style>
 </head>
@@ -306,10 +308,13 @@
   </header>
 
   <main class="buttons">
-    <!-- Lado esquerdo: ABOUT -->
-    <a href="/about/" class="btn btn-side btn-about" title="About FlashScreener">ABOUT</a>
+    <!-- Esquerda: ABOUT (com subtítulo) -->
+    <a href="/about/" class="btn btn-side btn-about" title="About FlashScreener">
+      <span class="title">ABOUT</span>
+      <span class="sub">how it all started</span>
+    </a>
 
-    <!-- Centro: INSTALL (inalterado em posição e tamanho) -->
+    <!-- Centro: INSTALL (inalterado) -->
     <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext"
        class="btn btn-install" target="_blank" rel="noopener">
       INSTALL EXTENSION
@@ -320,8 +325,11 @@
       </div>
     </a>
 
-    <!-- Lado direito: $FLASH -->
-    <a href="/token/" class="btn btn-side btn-flash" title="$FLASH token">$FLASH</a>
+    <!-- Direita: $FLASH (com subtítulo) -->
+    <a href="/token/" class="btn btn-side btn-flash" title="$FLASH token">
+      <span class="title">$FLASH</span>
+      <span class="sub">for the culture</span>
+    </a>
   </main>
 
   <footer>
@@ -337,4 +345,3 @@
   </script>
 </body>
 </html>
-
