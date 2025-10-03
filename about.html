@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy - FlashScreener</title>
   <link rel="icon" type="image/png" href="../favicon.png">
+  <!-- ADD: Open Sans com variantes em itálico para render exato -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
   <style>
     html, body {
       margin: 0;
@@ -42,7 +44,7 @@
     }
 
     h1 {
-      font-size: 69px;
+      font-size: 58px;
       font-weight: bold;
       margin-bottom: 10px;
     }
@@ -69,16 +71,20 @@
       color: #fff;
     }
 
-    /* NOVO: “f” minúsculo em Open Sans itálico acima do rodapé */
-    .mini-f {
+    /* NOVO: “f” minúsculo em Open Sans itálico, centralizado, acima do rodapé */
+    .mini-f{
       font-family: 'Open Sans', sans-serif;
-      font-style: italic;
-      font-weight: 600;
+      font-style: italic;     /* itálico verdadeiro da fonte */
+      font-weight: 400;       /* igual ao ícone (regular italic) */
       font-size: 44px;
       line-height: 1;
       color: #3e27b2;
       text-align: center;
-      margin: 48px 0 20px; /* espaço acima e um respiro antes do footer */
+      text-transform: none;   /* garante minúsculo */
+      font-variant: normal;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      margin: 48px 0 20px;    /* respiro antes do footer */
       user-select: none;
     }
 
@@ -183,7 +189,7 @@
     </p>
   </div>
 
-  <!-- NOVO: “f” minúsculo em itálico (Open Sans), centralizado, acima do rodapé -->
+  <!-- “f” minúsculo Open Sans itálico, centralizado, acima do rodapé -->
   <div class="mini-f" aria-label="FlashScreener f logo">f</div>
 
   <!-- Footer -->
@@ -191,7 +197,7 @@
     <a href="https://x.com/flashscreener" target="_blank" rel="noopener">X | Twitter</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/token/" target="_self" rel="noopener">$FLASH</a>
-    <a href="/about/" target="_self" rel="noopener">About</a>
   </footer>
 </body>
 </html>
+
