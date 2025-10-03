@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About - FlashScreener</title>
   <link rel="icon" type="image/png" href="../favicon.png">
-  <!-- ADD: Open Sans com variantes em itálico para render exato -->
+  <!-- Open Sans com variantes em itálico -->
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
   <style>
     html, body {
@@ -44,7 +44,7 @@
     }
 
     h1 {
-      font-size: 58px;
+      font-size: 69px;
       font-weight: bold;
       margin-bottom: 10px;
     }
@@ -71,39 +71,42 @@
       color: #fff;
     }
 
-    /* NOVO: “f” minúsculo em Open Sans itálico, centralizado, acima do rodapé */
-     /* Glow sutil no “f” */
+    /* Tweet centralizado dentro do fluxo do texto */
+    .tweet-embed{
+      display: flex;
+      justify-content: center;
+      margin: 22px 0 8px;
+    }
+
+    /* “f” minúsculo em Open Sans itálico, com glow, acima do rodapé */
     .mini-f{
-    font-family: 'Open Sans', sans-serif;
-    font-style: italic;
-    font-weight: 490;
-    font-size: 60px;
-    line-height: 1;
-    color: #6b3aff;
-    text-align: center;
-    text-transform: none;
-    margin: 18px 0 20px;
-    user-select: none;
-
-    /* >>> efeito glow <<< */
-    text-shadow:
-    0 0 4px rgba(62, 39, 178, 0.65),   /* núcleo roxo */
-    0 0 10px rgba(107, 58, 255, 0.50), /* halo 1 */
-    0 0 18px rgba(62, 39, 178, 0.35);  /* halo 2 */
-}
-
+      font-family: 'Open Sans', sans-serif;
+      font-style: italic;
+      font-weight: 490;
+      font-size: 60px;
+      line-height: 1;
+      color: #6b3aff;
+      text-align: center;
+      text-transform: none;
+      margin: 18px 0 20px;
+      user-select: none;
+      text-shadow:
+        0 0 4px rgba(62, 39, 178, 0.65),
+        0 0 10px rgba(107, 58, 255, 0.50),
+        0 0 18px rgba(62, 39, 178, 0.35);
+    }
 
     footer{
       width: 100%;
-      background-color: #060611; 
+      background-color: #060611;
       color: #9b9b9b;
       text-align: center;
       padding: 4px 0 calc(9px + env(safe-area-inset-bottom));
-      font-size: clamp(12px, 2.2vw, 11px);
+      font-size: clamp(11px, 2.2vw, 14px); /* corrigido: clamp com min < max */
       font-weight: 330;
       border-top: 0.5px solid #333;
       margin-top: auto;
-      background-image: none;  
+      background-image: none;
     }
 
     footer a {
@@ -173,17 +176,12 @@
       That was the beginning of something big.
     </p>
 
-    <!-- Container opcional para controlar largura -->
-<div style="max-width: 560px; margin: 24px auto;">
-  <!-- Versão simples: só o link do post -->
-  <blockquote class="twitter-tweet" data-theme="dark">
-    <a href="https://x.com/0xKalashnikov/status/1882290937092849788"></a>
-  </blockquote>
-</div>
-
-<!-- Script do X/Twitter (carrega de forma assíncrona) -->
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
+    <!-- EMBED DO TWEET (abaixo de IMPLEMENTATION, acima de EVOLUTION) -->
+    <div class="tweet-embed">
+      <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
+        <a href="https://x.com/0xKalashnikov/status/1882290937092849788">Tweet</a>
+      </blockquote>
+    </div>
 
     <h3>EVOLUTION</h3>
     <p>
@@ -199,9 +197,9 @@
       simple. Currently, what drives trenches and motivates the masses to buy tokens, whether memes or utility tokens, is the possibility 
       of making a profit and being part of something great. This doesn't mean that $FLASH is an investment with promised profits; on the 
       contrary, it's a token like any other memecoin; the community and culture are what make the project successful. A super-hyped 
-      meme without community and leadership is nothing more than an empty and artificial pump; and a token with unique utility and cutting-edge 
-      leadership, but without community and culture, is nothing more than a flop. So why not combine the best of both and see what happens? $FLASH
-      is where the degenerate and unemployed world of trenches meets the utility and tek of a serious project. Free and open to everyone, 
+      meme without community and leadership is nothing more than an empty and artificial pump; and a token with unique utility and 
+      cutting-edge leadership, but without community and culture, is nothing more than a flop. So why not combine the best of both and see what happens? 
+      $FLASH is where the degenerate and unemployed world of trenches meets the utility and tek of a serious project. Free and open to everyone, 
       where everybody has the same chances and opportunities, and I will do my best to take our community to the highest levels ever seen by a 
       token created on pump fun. Because this isn't just about FlashScreener, this is about our culture.
     </p>
@@ -217,6 +215,8 @@
     <a href="/about/" target="_self" rel="noopener">About</a>
     <a href="/token/" target="_self" rel="noopener">$FLASH</a>
   </footer>
+
+  <!-- Script do X/Twitter para renderizar o embed -->
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
-
