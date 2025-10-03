@@ -73,17 +73,17 @@
 
     .container{ width: var(--container); margin: 0 auto; padding: 0 var(--space-sm); }
 
-    /* Header centralizado de verdade */
+    /* Header centralizado */
     header{
       width: var(--container);
       margin: 0 auto clamp(12px, 3vw, 24px);
       display: flex;
       flex-direction: column;
-      align-items: center;   /* centraliza TODOS os filhos */
+      align-items: center;
       gap: clamp(8px, 2vw, 18px);
     }
 
-    /* Esconde a barra sem ocupar espaço (não empurra o layout) */
+    /* Esconde a barra sem ocupar espaço */
     .search-box{ display: none; }
     .search-input{ display: none; }
 
@@ -94,13 +94,13 @@
       line-height: 1.05;
       letter-spacing: .5px;
       text-align: center;
-      font-size: clamp(28px, 8vw, 80px);  /* teto mais baixo ajuda a caber */
+      font-size: clamp(28px, 8vw, 80px);
     }
     @media (min-width:1024px){
       h1{
-        white-space: nowrap;   /* 1 linha no desktop */
-        width: max-content;    /* bloco encolhe ao conteúdo */
-        margin-left: auto;     /* centraliza ao pixel */
+        white-space: nowrap;
+        width: max-content;
+        margin-left: auto;
         margin-right: auto;
       }
     }
@@ -173,9 +173,22 @@
       object-fit: contain; border-radius: 12px;
     }
 
-    /* Esconde CHARTS e WHAT IF sem remover do layout (mantém simetria) */
-    .btn-charts, .btn-whatif{ visibility: hidden; pointer-events: none; }
+    /* ===== Botões laterais (menores, quadrados) ===== */
+    .btn-side{
+      --side-size: clamp(110px, 15vw, 160px);
+      width: var(--side-size);
+      height: var(--side-size);
+      border-radius: 30px;         /* cantos arredondados em ~30px */
+      font-size: clamp(14px, 1.4vw, 18px);
+      font-weight: 800;
+      padding: 0;                  /* mantém proporção quadrada */
+      max-width: none;             /* ignora max-width genérico */
+      justify-self: center;        /* não esticar na célula */
+      display: grid;
+      place-items: center;
+    }
 
+    /* Mantém o botão central exatamente como estava */
     @media (min-width:1024px){
       .btn-install{
         min-width: 290px;
@@ -183,74 +196,72 @@
         min-height: 185px;
         margin-top: 32px;
         padding: 42px 54px;
-        font-size: clamp(18px, 3vw, 42px); /* 1 linha sem ficar enorme */
+        font-size: clamp(18px, 3vw, 42px);
         white-space: nowrap;
       }
       .btn-install .icons img{ width: 85px; height: 85px; }
     }
 
-/* ====== HOVER ESPECIAL: brilho + faixa cruza TODO o botão ====== */
-@media (hover:hover) and (pointer:fine){
-  .btn-install{
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    transition: transform .25s ease, box-shadow .30s ease, background .30s ease, filter .2s ease;
-  }
+    /* ====== HOVER ESPECIAL: brilho + faixa cruza TODO o botão ====== */
+    @media (hover:hover) and (pointer:fine){
+      .btn-install, .btn-side{
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        transition: transform .25s ease, box-shadow .30s ease, background .30s ease, filter .2s ease;
+      }
 
-  /* Glow suave (igual antes) */
-  .btn-install::before{
-    content:"";
-    position:absolute;
-    inset:-2px;
-    border-radius: inherit;
-    pointer-events:none;
-    opacity: 0;
-    transition: opacity .35s ease;
-    background:
-      radial-gradient(140px 80px at 30% -20%, rgba(188,173,255,.35), transparent 70%),
-      radial-gradient(200px 100px at 100% 120%, rgba(78,151,255,.25), transparent 70%);
-  }
+      /* Glow suave */
+      .btn-install::before, .btn-side::before{
+        content:"";
+        position:absolute;
+        inset:-2px;
+        border-radius: inherit;
+        pointer-events:none;
+        opacity: 0;
+        transition: opacity .35s ease;
+        background:
+          radial-gradient(140px 80px at 30% -20%, rgba(188,173,255,.35), transparent 70%),
+          radial-gradient(200px 100px at 100% 120%, rgba(78,151,255,.25), transparent 70%);
+      }
 
-  /* FAIXA (sheen) — ocupa 120% do botão, brilho estreito no centro */
-  .btn-install::after{
-    content:"";
-    position:absolute;
-    top:-60%;
-    bottom:-60%;
-    left:-10%;
-    width:120%;
-    pointer-events:none;
-    opacity:0;
-    /* brilho fino no centro do gradiente */
-    background: linear-gradient(120deg,
-      rgba(255,255,255,0) 46%,
-      rgba(255,255,255,.40) 50%,
-      rgba(255,255,255,0) 54%);
-    transform: translateX(-100%) rotate(18deg); /* começa fora à esquerda */
-    filter: blur(.5px);
-    will-change: transform, opacity;
-  }
+      /* FAIXA (sheen) */
+      .btn-install::after, .btn-side::after{
+        content:"";
+        position:absolute;
+        top:-60%;
+        bottom:-60%;
+        left:-10%;
+        width:120%;
+        pointer-events:none;
+        opacity:0;
+        background: linear-gradient(120deg,
+          rgba(255,255,255,0) 46%,
+          rgba(255,255,255,.40) 50%,
+          rgba(255,255,255,0) 54%);
+        transform: translateX(-100%) rotate(18deg);
+        filter: blur(.5px);
+        will-change: transform, opacity;
+      }
 
-  .btn-install:hover{
-    transform: translateY(-3px) scale(1.02);
-    box-shadow:
-      0 12px 30px rgba(0,0,0,.35),
-      0 18px 40px rgba(82,66,200,.55),
-      0 0 0 2px rgba(180,151,255,.22) inset;
-  }
-  .btn-install:hover::before{ opacity: 1; }
-  .btn-install:hover::after{
-    opacity: 1;
-    /* mais rápido; ajuste a duração se quiser */
-    animation: sheen-x 2s cubic-bezier(.2,.7,.2,1) forwards;
-  }
+      .btn-install:hover, .btn-side:hover{
+        transform: translateY(-3px) scale(1.02);
+        box-shadow:
+          0 12px 30px rgba(0,0,0,.35),
+          0 18px 40px rgba(82,66,200,.55),
+          0 0 0 2px rgba(180,151,255,.22) inset;
+      }
+      .btn-install:hover::before, .btn-side:hover::before{ opacity: 1; }
+      .btn-install:hover::after, .btn-side:hover::after{
+        opacity: 1;
+        animation: sheen-x 2s cubic-bezier(.2,.7,.2,1) forwards;
+      }
 
-  @keyframes sheen-x{
-    to{ transform: translateX(100%) rotate(18deg); } /* sai pela direita */
-  }
-}
-/* ================================================================ */
+      @keyframes sheen-x{
+        to{ transform: translateX(100%) rotate(18deg); }
+      }
+    }
+    /* ================================================================ */
 
     footer{
       width: 100%;
@@ -272,7 +283,9 @@
     @media (prefers-reduced-motion: reduce){
       .btn, .btn:hover, .btn:active{ transition:none; transform:none; }
       .btn-install::before,
-      .btn-install::after{ animation:none !important; transition:none !important; opacity:0 !important; }
+      .btn-install::after,
+      .btn-side::before,
+      .btn-side::after{ animation:none !important; transition:none !important; opacity:0 !important; }
     }
   </style>
 </head>
@@ -292,11 +305,10 @@
   </header>
 
   <main class="buttons">
-    <a class="btn btn-charts is-disabled" aria-disabled="true" title="Charts • soon">
-      <span class="line-1">CHARTS</span>
-      <span class="line-2">Soon</span>
-    </a>
+    <!-- Lado esquerdo: ABOUT -->
+    <a href="/about/" class="btn btn-side btn-about" title="About FlashScreener">ABOUT</a>
 
+    <!-- Centro: INSTALL (inalterado em posição e tamanho) -->
     <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext"
        class="btn btn-install" target="_blank" rel="noopener">
       INSTALL EXTENSION
@@ -307,10 +319,8 @@
       </div>
     </a>
 
-    <a href="/whatif/" class="btn btn-whatif">
-      <span class="line-1">WHAT IF</span>
-      <span class="line-2">Compare Marketcaps</span>
-    </a>
+    <!-- Lado direito: $FLASH -->
+    <a href="/token/" class="btn btn-side btn-flash" title="$FLASH token">$FLASH</a>
   </main>
 
   <footer>
@@ -326,3 +336,4 @@
   </script>
 </body>
 </html>
+
