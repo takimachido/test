@@ -72,21 +72,26 @@
     }
 
     /* NOVO: “f” minúsculo em Open Sans itálico, centralizado, acima do rodapé */
+     /* Glow sutil no “f” */
     .mini-f{
-      font-family: 'Open Sans', sans-serif;
-      font-style: italic;     /* itálico verdadeiro da fonte */
-      font-weight: 500;       /* igual ao ícone (regular italic) */
-      font-size: 60px;
-      line-height: 1;
-      color: #3e27b2;
-      text-align: center;
-      text-transform: none;   /* garante minúsculo */
-      font-variant: normal;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      margin: 20px 0 20px;    /* respiro antes do footer */
-      user-select: none;
-    }
+    font-family: 'Open Sans', sans-serif;
+    font-style: italic;
+    font-weight: 520;
+    font-size: 60px;
+    line-height: 1;
+    color: #6b3aff;
+    text-align: center;
+    text-transform: none;
+    margin: 18px 0 20px;
+    user-select: none;
+
+    /* >>> efeito glow <<< */
+    text-shadow:
+    0 0 4px rgba(62, 39, 178, 0.65),   /* núcleo roxo */
+    0 0 10px rgba(107, 58, 255, 0.50), /* halo 1 */
+    0 0 18px rgba(62, 39, 178, 0.35);  /* halo 2 */
+}
+
 
     footer{
       width: 100%;
