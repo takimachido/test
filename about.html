@@ -178,9 +178,15 @@
 
     <!-- EMBED DO TWEET (abaixo de IMPLEMENTATION, acima de EVOLUTION) -->
     <div class="tweet-embed">
-      <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
-        <a href="https://x.com/0xKalashnikov/status/1882290937092849788">Tweet</a>
-      </blockquote>
+      <!-- alvo para renderização programática -->
+      <div id="tweet-1882290937092849788"></div>
+
+      <!-- fallback sem JS / bloqueadores -->
+      <noscript>
+        <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
+          <a href="https://twitter.com/0xKalashnikov/status/1882290937092849788">Tweet</a>
+        </blockquote>
+      </noscript>
     </div>
 
     <h3>EVOLUTION</h3>
