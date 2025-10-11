@@ -26,12 +26,12 @@
       --top-pad: calc(clamp(40px, 7vw, 70px) + env(safe-area-inset-top));
 
       /* Cores do brilho para a animação (tons fiéis ao original) */
-        --bg-1:#000000;
-        --bg-2:#0a0a2a;
-        --bg-3:#1c1179;
-        --glow-1:#4b41ff; /* violeta suave */
-        --glow-2:#142fa8; /* azul elétrico */
-        --glow-3:#5c23d7;
+      --bg-1:#000000;
+      --bg-2:#000000;
+      --bg-3:#1c1179;
+      --glow-1:#4b41ff; /* violeta suave */
+      --glow-2:#05186c; /* azul elétrico */
+      --glow-3:#5c23d7; /* violeta vibrante */
     }
     @media (min-width:1024px){
       :root{ --top-pad: calc(36px + env(safe-area-inset-top)); }
@@ -76,30 +76,30 @@
       background:
         radial-gradient(35% 45% at 30% 40%, color-mix(in oklab, var(--glow-1) 65%, transparent) 0%, transparent 60%),
         radial-gradient(30% 40% at 70% 60%, color-mix(in oklab, var(--glow-2) 55%, transparent) 0%, transparent 65%);
-      animation-duration: 15s;
+      animation-duration: 10s;
       animation-delay: -4s;
     }
     .bg-anim .l2{
       background:
         radial-gradient(40% 55% at 60% 30%, color-mix(in oklab, var(--glow-3) 55%, transparent) 0%, transparent 60%),
         radial-gradient(28% 38% at 20% 70%, color-mix(in oklab, var(--glow-1) 45%, transparent) 0%, transparent 65%);
-      animation-duration: 20s;
+      animation-duration: 15s;
       animation-delay: -10s;
-      opacity:.65;
+      opacity:.85;
       filter: blur(100px);
     }
     .bg-anim .l3{
       background:
         radial-gradient(45% 60% at 50% 50%, color-mix(in oklab, var(--glow-2) 40%, transparent) 0%, transparent 60%);
-      animation-duration: 28s;
+      animation-duration: 21s;
       animation-delay: -18s;
-      opacity:.55;
+      opacity:.65;
       filter: blur(120px);
     }
     @keyframes drift{
-      0%   { transform: translate3d(-8%, -10%, 0) scale(1.00) rotate(0deg); }
-      50%  { transform: translate3d( 6%, -5%, 0) scale(1.05) rotate(20deg); }
-      100% { transform: translate3d(-4%,  9%, 0) scale(1.10) rotate(40deg); }
+      0%   { transform: translate3d(-10%, -13%, 0) scale(1.00) rotate(0deg); }
+      50%  { transform: translate3d( 9%, -7%, 0) scale(1.05) rotate(20deg); }
+      100% { transform: translate3d(-7%,  12%, 0) scale(1.10) rotate(40deg); }
     }
 
     /* Fallback para navegadores sem color-mix */
