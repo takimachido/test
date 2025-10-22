@@ -112,31 +112,20 @@
       padding: 0 var(--space-sm);
     }
 
-    /* GRID dos botões (mantido) */
+    /* Grade do botão principal (somente 1 no topo) */
     .buttons{
       width: var(--container);
-      margin: clamp(8px, 2vw, 12px) auto 0;
+      margin: clamp(8px, 2vw, 12px) auto 2vh;
       display: grid;
-      gap: clamp(12px, 2.4vw, 18px);
-      grid-template-columns: 1fr;
-      justify-items: center;
+      grid-template-columns: minmax(260px, 720px);
+      justify-content: center;
       align-items: stretch;
-    }
-    @media (min-width:640px){
-      .buttons{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-    }
-    @media (min-width:1024px){
-      .buttons{
-        grid-template-columns: 1fr minmax(560px, 2fr) 1fr; /* centro mais largo (original) */
-        align-items: end;                              /* alinhamento original */
-        margin-top: 18px;
-        margin-bottom: 2vh;
-      }
+      gap: clamp(12px, 2.4vw, 18px);
     }
 
     .btn{
       width: 100%;
-      max-width: 520px;
+      max-width: 720px;
       background: var(--btn-bg);
       color: white;
       font-size: clamp(18px, 1.8vw, 35px);
@@ -170,35 +159,6 @@
       object-fit: contain; border-radius: 12px;
     }
 
-    /* Laterais (mantidos) */
-    .btn-side{
-      width: 269px;
-      height: 195px;
-      border-radius: 20px;
-      font-size: clamp(43px, 1.4vw, 18px);
-      font-weight: 780;
-      padding: 0;
-      max-width: none;
-      justify-self: center;
-      display: grid;
-      place-items: center;
-    }
-    /* Subtítulo novo (apenas adicionando estilo) */
-    .btn-side .sub{
-      font-family: 'Open Sans', sans-serif;
-      font-style: italic;
-      font-weight: 550;
-      text-transform: none;     /* minúsculas */
-      opacity: .6;             /* levemente translúcido */
-      font-size: clamp(17px, 1vw, 13px);
-      line-height: 1;
-      letter-spacing: .3px;
-      margin-top: -80px;
-    }
-
-    /* Esconde CHARTS e WHAT IF mantendo simetria */
-    .btn-charts, .btn-whatif{ visibility: hidden; pointer-events: none; }
-
     @media (min-width:1024px){
       .btn-install{
         min-width: 290px;
@@ -206,13 +166,13 @@
         min-height: 185px;
         margin-top: 32px;
         padding: 42px 54px;
-        font-size: clamp(18px, 3vw, 42px); /* exatamente como antes */
+        font-size: clamp(18px, 3vw, 42px);
         white-space: nowrap;
       }
       .btn-install .icons img{ width: 85px; height: 85px; }
     }
 
-    /* ====== Hover especial (central + laterais) — mantido ====== */
+    /* Hover especial do botão grande */
     @media (hover:hover) and (pointer:fine){
       .btn-install{
         position: relative;
@@ -264,55 +224,6 @@
       @keyframes sheen-x{
         to{ transform: translateX(100%) rotate(18deg); }
       }
-
-      /* aplica o mesmo efeito aos laterais, sem mexer em tamanho/posicionamento */
-      .btn-side{
-        position: relative;
-        overflow: hidden;
-        isolation: isolate;
-        transition: transform .25s ease, box-shadow .30s ease, background .30s ease, filter .2s ease;
-      }
-      .btn-side::before{
-        content:"";
-        position:absolute;
-        inset:-2px;
-        border-radius: inherit;
-        pointer-events:none;
-        opacity: 0;
-        transition: opacity .35s ease;
-        background:
-          radial-gradient(140px 80px at 30% -20%, rgba(188,173,255,.35), transparent 70%),
-          radial-gradient(200px 100px at 100% 120%, rgba(78,151,255,.25), transparent 70%);
-      }
-      .btn-side::after{
-        content:"";
-        position:absolute;
-        top:-60%;
-        bottom:-60%;
-        left:-10%;
-        width:120%;
-        pointer-events:none;
-        opacity:0;
-        background: linear-gradient(120deg,
-          rgba(255,255,255,0) 46%,
-          rgba(255,255,255,.40) 50%,
-          rgba(255,255,255,0) 54%);
-        transform: translateX(-100%) rotate(18deg);
-        filter: blur(.5px);
-        will-change: transform, opacity;
-      }
-      .btn-side:hover{
-        transform: translateY(-3px) scale(1.02);
-        box-shadow:
-          0 12px 30px rgba(0,0,0,.35),
-          0 18px 40px rgba(82,66,200,.55),
-          0 0 0 2px rgba(180,151,255,.22) inset;
-      }
-      .btn-side:hover::before{ opacity: 1; }
-      .btn-side:hover::after{
-        opacity: 1;
-        animation: sheen-x 2s cubic-bezier(.2,.7,.2,1) forwards;
-      }
     }
 
     footer{
@@ -335,13 +246,11 @@
     @media (prefers-reduced-motion: reduce){
       .btn, .btn:hover, .btn:active{ transition:none; transform:none; }
       .btn-install::before,
-      .btn-install::after,
-      .btn-side::before,
-      .btn-side::after{ animation:none !important; transition:none !important; opacity:0 !important; }
+      .btn-install::after{ animation:none !important; transition:none !important; opacity:0 !important; }
     }
 
-    /* ====== ADIÇÕES PARA A SEGUNDA SESSÃO ====== */
-    .section-telegram{
+    /* ====== Seções com 1 botão (Telegram, About, $FLASH) ====== */
+    .section-block{
       width: var(--container);
       margin: clamp(0px, 10vw, 8px) auto 0;
       display: flex;
@@ -349,24 +258,20 @@
       align-items: center;
       gap: clamp(8px, 2vw, 18px);
     }
-    /* grid próprio para centralizar um único botão grande */
-    .buttons-bot{
+    .buttons-single{
       width: var(--container);
       margin: clamp(9px, 3vw, 30px) auto 10vh;
       display: grid;
-      grid-template-columns: minmax(260px, 600px);
+      grid-template-columns: minmax(260px, 720px);
       justify-content: center;
       gap: clamp(12px, 2.4vw, 18px);
     }
     @media (min-width:1024px){
-      .buttons-bot{
+      .buttons-single{
         grid-template-columns: minmax(560px, 720px);
         margin-bottom: 7vh;
         margin-top: 1px;
       }
-    }
-    /* botão do bot reaproveita .btn-install (sem icons necessários) */
-    .btn-bot{ /* opcional para ganchos futuros */
     }
   </style>
 </head>
@@ -385,14 +290,8 @@
     <p class="subtext">See who are the top holders and how much they own</p>
   </header>
 
+  <!-- Somente o botão de instalação na primeira seção -->
   <main class="buttons">
-    <!-- Lado esquerdo: ABOUT (agora com subtítulo) -->
-    <a href="/about/" class="btn btn-side btn-about" title="About FlashScreener">
-      <span>ABOUT</span>
-      <span class="sub">How it all started</span>
-    </a>
-
-    <!-- Centro: INSTALL (inalterado) -->
     <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext"
        class="btn btn-install" target="_blank" rel="noopener">
       INSTALL EXTENSION
@@ -402,26 +301,40 @@
         <img src="edge.png" alt="Edge" loading="lazy">
       </div>
     </a>
-
-    <!-- Lado direito: $FLASH (agora com subtítulo) -->
-    <a href="/token/" class="btn btn-side btn-flash" title="$FLASH token">
-      <span>$FLASH</span>
-      <span class="sub">For the culture</span>
-    </a>
   </main>
 
-  <!-- ====== NOVA SESSÃO: MASTER THE TELEGRAM ====== -->
-  <section class="section-telegram container" aria-labelledby="telegram-title">
+  <!-- ====== MASTER OF TELEGRAM ====== -->
+  <section class="section-block container" aria-labelledby="telegram-title">
     <h1 id="telegram-title">MASTER OF TELEGRAM</h1>
 
     <p class="subtext">Send any Solana CA and our bot will reply you with everything</p>
     <p class="subtext">Price, MCap, liquidity, creation date... All the details and links you need to outperform CT</p>
     <p class="subtext">Dominate everything! Completely FREE, easy and fast</p>
 
-    <div class="buttons-bot">
-      <a href="https://t.me/FlashScreenerBot" class="btn btn-install btn-bot" target="_blank" rel="noopener">
+    <div class="buttons-single">
+      <a href="https://t.me/FlashScreenerBot" class="btn btn-install" target="_blank" rel="noopener">
         ADD FLASHSCREENER BOT👾
       </a>
+    </div>
+  </section>
+
+  <!-- ====== ABOUT (seção dedicada) ====== -->
+  <section class="section-block container" id="about" aria-labelledby="about-title">
+    <h1 id="about-title">ABOUT</h1>
+    <p class="subtext">How it all started</p>
+
+    <div class="buttons-single">
+      <a href="/about/" class="btn btn-install">ABOUT</a>
+    </div>
+  </section>
+
+  <!-- ====== $FLASH (seção dedicada) ====== -->
+  <section class="section-block container" id="flash" aria-labelledby="flash-title">
+    <h1 id="flash-title">$FLASH</h1>
+    <p class="subtext">For the culture</p>
+
+    <div class="buttons-single">
+      <a href="/token/" class="btn btn-install">$FLASH</a>
     </div>
   </section>
 
