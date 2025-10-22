@@ -273,6 +273,11 @@
         margin-top: 1px;
       }
     }
+
+    /* === Ajuste: reduzir espaço acima/abaixo do título da seção ABOUT === */
+    #about.section-block{ gap: clamp(4px, 1vw, 10px); }           /* menos espaço entre os filhos */
+    #about-title{ margin: clamp(0px, .6vw, 6px) 0; }              /* topo/fundo do H1 bem compacto */
+    #about .subtext:first-of-type{ margin-top: clamp(2px, .8vw, 8px); } /* aproxima o primeiro texto do título */
   </style>
 </head>
 <body>
@@ -320,7 +325,7 @@
 
   <!-- ====== ABOUT (seção dedicada) ====== -->
   <section class="section-block container" id="about" aria-labelledby="about-title">
-    <h1 id="about-title">ABOUT</h1>
+    <h1 id="about-title">ABOUT FLASHSCREENER</h1>
     <p class="subtext">How it all started.</p>
     <p class="subtext">From the first creative spark to the final product.</p>
     <p class="subtext">How a simple idea became one of the most useful tools in the trenches.</p>
@@ -332,14 +337,14 @@
 
   <!-- ====== $FLASH (seção dedicada) ====== -->
   <section class="section-block container" id="flash" aria-labelledby="flash-title">
-    <h1 id="flash-title">$FLASH</h1>
+    <h1 id="flash-title">MEET THE FLASH COIN</h1>
     <p class="subtext">For the culture.</p>
     <p class="subtext">The token of the FlashScreener ecosystem.</p>
-    <p class="subtext">Join us in the great Solana movement of mass tokenization.</p>
+    <p class="subtext">Join us in the Solana great movement of mass tokenization.</p>
     <p class="subtext">Thousands of CAs being deployed every day, FlashScreener is inevitable.</p>
 
     <div class="buttons-single">
-      <a href="/token/" class="btn btn-install">$FLASH</a>
+      <a href="/token/" class="btn btn-install">$FLASH LINKS</a>
     </div>
   </section>
 
