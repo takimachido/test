@@ -34,7 +34,6 @@
       overscroll-behavior: none;
     }
 
-    /* Fundo fixo */
     body{ background: transparent; }
     body::before{
       content:"";
@@ -112,7 +111,6 @@
       padding: 0 var(--space-sm);
     }
 
-    /* Grade do botão principal (somente 1 no topo) */
     .buttons{
       width: var(--container);
       margin: clamp(8px, 2vw, 12px) auto 2vh;
@@ -172,7 +170,6 @@
       .btn-install .icons img{ width: 85px; height: 85px; }
     }
 
-    /* Hover especial do botão grande */
     @media (hover:hover) and (pointer:fine){
       .btn-install{
         position: relative;
@@ -249,7 +246,6 @@
       .btn-install::after{ animation:none !important; transition:none !important; opacity:0 !important; }
     }
 
-    /* ====== Seções com 1 botão (Telegram, About, $FLASH) ====== */
     .section-block{
       width: var(--container);
       margin: clamp(0px, 10vw, 8px) auto 0;
@@ -274,10 +270,9 @@
       }
     }
 
-    /* === Ajuste: reduzir espaço acima/abaixo do título da seção ABOUT === */
-    #about.section-block{ gap: clamp(4px, 1vw, 10px); }           /* menos espaço entre os filhos */
-    #about-title{ margin: clamp(0px, .6vw, 6px) 0; }              /* topo/fundo do H1 bem compacto */
-    #about .subtext:first-of-type{ margin-top: clamp(2px, .8vw, 8px); } /* aproxima o primeiro texto do título */
+    #about.section-block{ gap: clamp(4px, 1vw, 10px); }          
+    #about-title{ margin: clamp(0px, .6vw, 6px) 0; }           
+    #about .subtext:first-of-type{ margin-top: clamp(2px, .8vw, 8px); }
   </style>
 </head>
 <body>
@@ -290,12 +285,11 @@
 
     <h1>DOMINATE THE TRENCHES</h1>
 
-    <p class="subtext">Instantly open any Solana CA from your timeline using our extension</p>
-    <p class="subtext">Quickly check if dev sold or still hold any supply to dump</p>
-    <p class="subtext">See who are the top holders and how much they own</p>
+    <p class="subtext">Instantly open any Solana CA from your timeline using our extension.</p>
+    <p class="subtext">Quickly check if dev sold or still hold any supply to dump.</p>
+    <p class="subtext">See who are the top holders and how much they own.</p>
   </header>
 
-  <!-- Somente o botão de instalação na primeira seção -->
   <main class="buttons">
     <a href="https://chromewebstore.google.com/detail/flashca/gcofgbleammojncmhnkkabhlbhmeanhd?utm_source=ext"
        class="btn btn-install" target="_blank" rel="noopener">
@@ -308,13 +302,12 @@
     </a>
   </main>
 
-  <!-- ====== MASTER OF TELEGRAM ====== -->
   <section class="section-block container" aria-labelledby="telegram-title">
     <h1 id="telegram-title">MASTER OF TELEGRAM</h1>
 
-    <p class="subtext">Send any Solana CA and our bot will reply you with everything</p>
-    <p class="subtext">Price, MCap, liquidity, creation date... All the details and links you need to outperform CT</p>
-    <p class="subtext">Dominate the TG! Completely FREE, easy and fast</p>
+    <p class="subtext">Send any Solana CA and our bot will reply you with everything.</p>
+    <p class="subtext">Price, MCap, liquidity, creation date... All the details and links you need to outperform CT.</p>
+    <p class="subtext">Dominate the TG! Completely FREE, easy and fast.</p>
 
     <div class="buttons-single">
       <a href="https://t.me/FlashScreenerBot" class="btn btn-install" target="_blank" rel="noopener">
@@ -323,7 +316,6 @@
     </div>
   </section>
 
-  <!-- ====== ABOUT (seção dedicada) ====== -->
   <section class="section-block container" id="about" aria-labelledby="about-title">
     <h1 id="about-title">ABOUT FLASHSCREENER</h1>
     <p class="subtext">How it all started.</p>
@@ -335,7 +327,6 @@
     </div>
   </section>
 
-  <!-- ====== $FLASH (seção dedicada) ====== -->
   <section class="section-block container" id="flash" aria-labelledby="flash-title">
     <h1 id="flash-title">MEET THE FLASH COIN</h1>
     <p class="subtext">For the culture.</p>
