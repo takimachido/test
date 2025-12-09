@@ -130,6 +130,7 @@ nav ul li a:hover::after {
 }
 
 .logo-container {
+	margin-top: 1.5rem;
     margin-bottom: 2rem;
    
 }
@@ -1570,11 +1571,11 @@ footer {
 @media (min-width: 1024px) {
   #hero .hero-content {
     max-width: 540px;            
-    transform: translateX(-400px); 
+    transform: translateX(-380px); 
   }
 
   #hero .logo-container img {
-    width: 140px;                
+    width: 130px;                
   }
 
   #hero h1 {
