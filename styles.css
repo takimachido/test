@@ -1570,24 +1570,24 @@ footer {
 @media (min-width: 1024px) {
   #hero .hero-content {
     max-width: 540px;            
-    transform: translateX(-300px); 
+    transform: translateX(-400px); 
   }
 
   #hero .logo-container img {
-    width: 120px;                
+    width: 140px;                
   }
 
   #hero h1 {
-    font-size: 3.3rem;           
+    font-size: 4rem;           
     letter-spacing: 4px;
   }
 
   #hero .subtitle {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     margin-bottom: 2.5rem;       
   }
 
   #hero .browser-logos {
-    margin-top: 3rem;             
+    margin-top: 3.2rem;             
   }
 }
