@@ -1570,7 +1570,7 @@ footer {
 @media (min-width: 1024px) {
   #hero .hero-content {
     max-width: 540px;            
-    transform: translateX(-120px); 
+    transform: translateX(-200px); 
   }
 
   #hero .logo-container img {
