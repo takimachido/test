@@ -1555,7 +1555,6 @@ footer {
     filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
 }
 
-/* Mobile responsive for tool buttons */
 @media (max-width: 768px) {
     .tool-btn {
         padding: 0.8rem 1.5rem;
@@ -1566,4 +1565,29 @@ footer {
     .btn-icon {
         font-size: 1.3rem;
     }
+}
+
+@media (min-width: 1024px) {
+  #hero .hero-content {
+    max-width: 540px;            
+    transform: translateX(-120px); 
+  }
+
+  #hero .logo-container img {
+    width: 120px;                
+  }
+
+  #hero h1 {
+    font-size: 3.3rem;           
+    letter-spacing: 4px;
+  }
+
+  #hero .subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 2.5rem;       
+  }
+
+  #hero .browser-logos {
+    margin-top: 3rem;             
+  }
 }
