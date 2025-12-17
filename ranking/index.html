@@ -5,9 +5,9 @@
   <title>Ranking | FlashScreener</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#4d0fff">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="./pm.css?v=1" />
-  <link rel="icon" type="image/x-icon" href="img/favicon.png" />
+  <link rel="stylesheet" href="./styles.css?v=1">
+  <link rel="stylesheet" href="./pm.css?v=1">
+  <link rel="icon" type="image/x-icon" href="./img/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,6 +23,8 @@
   </header>
 
   <main class="ranking-container">
+    <section class="pm-strip" id="pm-strip"></section>
+
     <div class="table">
       <div class="table-header">
         <div class="col col-rank"></div>
@@ -42,8 +44,8 @@
 
   <footer>
     <div class="footer-socials">
-      <a href="https://x.com/flashscreener"><img src="img/twitter-x-logo.png" alt="Twitter/X"></a>
-      <a href="https://t.me/FlashScreener"><img src="img/Telegram_logo.webp" alt="Telegram"></a>
+      <a href="https://x.com/flashscreener"><img src="./img/twitter-x-logo.png" alt="Twitter/X"></a>
+      <a href="https://t.me/FlashScreener"><img src="./img/Telegram_logo.webp" alt="Telegram"></a>
     </div>
     <p class="footer-links">
       <a href="/privacy">Privacy Policy</a>
@@ -51,6 +53,7 @@
     <p class="copyright">© 2025 FlashScreener. All rights reserved.</p>
   </footer>
 
-  <script src="data.js"></script>
+  <script src="./data.js?v=1" defer></script>
+  <script src="./pm.js?v=1" defer></script>
 </body>
 </html>
