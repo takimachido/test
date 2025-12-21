@@ -1,35 +1,32 @@
 .pm-strip {
-  width: 100%;
   max-width: 1280px;
-  margin: 0 auto 24px auto;
-  padding: 0 16px;
+  margin: 18px auto 14px;
+  padding: 0 32px;
 }
 
 .pm-grid {
   display: grid;
-  grid-template-columns: 2fr 1.2fr;
+  grid-template-columns: 1.8fr 1.2fr;
   gap: 16px;
   align-items: stretch;
 }
 
 .pm-card {
-  border-radius: 16px;
-  background: #0e1221;
-  border: 1px solid #1e2338;
-  color: #f5f5f7;
+  border-radius: 18px;
+  background: #fff;
+  color: #0b0f1a;
+  box-shadow: 0 18px 46px rgba(0,0,0,.45);
   overflow: hidden;
-  position: relative;
   display: flex;
   flex-direction: column;
 }
 
 .pm-card--hero {
-  padding: 0;
+  padding: 14px;
 }
 
 .pm-carousel {
   position: relative;
-  height: 100%;
   width: 100%;
   overflow: hidden;
 }
@@ -37,8 +34,7 @@
 .pm-slides {
   display: flex;
   width: 100%;
-  height: 100%;
-  transition: transform 300ms cubic-bezier(0.25, 1, 0.5, 1);
+  transition: transform 220ms ease;
   will-change: transform;
 }
 
@@ -46,245 +42,200 @@
   flex: 0 0 100%;
   width: 100%;
   box-sizing: border-box;
-  padding: 20px;
 }
 
 .pm-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  height: 100%;
+  gap: 20px;
   align-items: stretch;
+  min-height: 250px;
 }
 
 .pm-left {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 5px;
 }
 
 .pm-right {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   min-width: 0;
 }
 
 .pm-header {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .pm-market-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: #181b2a;
-  flex: 0 0 auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: #f0f2f5;
+  flex-shrink: 0;
 }
 
 .pm-market-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
-  line-height: 1.3;
-  color: #fff;
+  line-height: 1.2;
 }
 
 .pm-outcomes {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 10px;
 }
 
 .pm-row {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
   align-items: center;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 6px 10px;
-  border-radius: 8px;
 }
 
 .pm-row-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #94a3b8;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.pm-row-pct {
   font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  min-width: 36px;
-  text-align: right;
+  font-weight: 600;
+  color: rgba(11,15,26,0.7);
 }
 
 .pm-row-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+}
+
+.pm-row-pct {
+  font-size: 16px;
+  font-weight: 800;
 }
 
 .pm-yn {
   display: flex;
-  background: #000;
-  border-radius: 6px;
+  background: #f0f2f5;
   padding: 2px;
+  border-radius: 8px;
   gap: 2px;
 }
 
 .pm-yn-btn {
   border: 0;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 11px;
+  background: transparent;
+  padding: 4px 8px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-yes {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-}
-
-.btn-no {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
+  border-radius: 6px;
 }
 
 .pm-news {
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: auto;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.05);
 }
 
 .pm-news-label {
-  font-size: 10px;
-  text-transform: uppercase;
+  font-size: 11px;
   font-weight: 700;
-  color: #64748b;
-  margin-bottom: 4px;
+  color: #888;
+  text-transform: uppercase;
 }
 
 .pm-news-text {
-  font-size: 11px;
+  font-size: 12px;
+  color: #444;
   line-height: 1.4;
-  color: #94a3b8;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .pm-chart {
-  width: 100%;
   flex: 1;
+  width: 100%;
+  background: #f9fafb;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.2);
-  min-height: 120px;
+  position: relative;
+  overflow: hidden;
 }
 
 .pm-dots {
-  position: absolute;
-  bottom: 12px;
-  left: 0;
-  width: 100%;
   display: flex;
   justify-content: center;
   gap: 6px;
+  margin-top: 10px;
 }
 
 .pm-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
+  background: #ddd;
   border: 0;
-  background: rgba(255, 255, 255, 0.2);
   cursor: pointer;
 }
 
 .pm-dot.is-active {
-  background: #3b82f6;
+  background: #4d0fff;
 }
 
 .pm-card--side {
   padding: 20px;
+  justify-content: space-between;
 }
 
 .pm-side-head {
   display: flex;
   gap: 12px;
-  margin-bottom: 16px;
+}
+
+.pm-side-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f2f5;
 }
 
 .pm-side-title {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1.3;
 }
 
 .pm-side-rows {
+  margin: 15px 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  flex: 1;
-}
-
-.pm-side-meta {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.pm-volume-badge {
-  font-size: 11px;
-  color: #64748b;
-  font-weight: 500;
-}
-
-.pm-vol-val {
-  color: #e2e8f0;
-  font-weight: 600;
+  gap: 12px;
 }
 
 .pm-actions {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 8px;
+  margin-top: 10px;
 }
 
 .btn-dflow {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  border: 0;
+  background: #4d0fff;
   color: #fff;
-  font-weight: 600;
-  font-size: 12px;
+  border: 0;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .btn-kalshi-link {
-  background: transparent;
-  border: 1px solid #2d3248;
-  color: #94a3b8;
-  font-size: 12px;
-  padding: 0 12px;
-  border-radius: 8px;
+  background: #f0f2f5;
+  border: 0;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .pm-grid { grid-template-columns: 1fr; }
-  .pm-hero { grid-template-columns: 1fr; }
+  .pm-strip { padding: 0 16px; }
 }
