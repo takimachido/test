@@ -2,7 +2,8 @@
   const root = document.getElementById("pm-strip");
   if (!root) return;
 
-  const API_PM_BACKEND = "https://prediction-backend-r0vj.onrender.com";
+  // ⚠️ IMPORTANTE: Cole aqui a URL nova que aparecer no seu painel do Render após o deploy do prediction_backend
+  const API_PM_BACKEND = "https://prediction-backend-r0vj.onrender.com"; 
 
   const fmtVol = (n) => {
     if (!n) return "$0";
@@ -12,6 +13,7 @@
   };
 
   const drawChart = (color) => {
+    // Gera dados aleatórios para o visual do gráfico (placeholder visual)
     const points = Array.from({length: 12}, () => Math.floor(Math.random() * 40) + 30);
     const width = 640;
     const height = 320;
@@ -34,18 +36,94 @@
     `;
   };
 
+  // --- SKELETON LOADER (Efeito de Carregamento) ---
+  function renderSkeleton() {
+    const slidesContainer = document.getElementById("pmSlides");
+    const sideRows = document.getElementById("sideRows");
+    const sideTitle = document.getElementById("sideTitle");
+    const sideIcon = document.getElementById("sideIcon");
+    const sideVol = document.getElementById("sideVol");
+
+    // Skeleton Widget Principal
+    if (slidesContainer) {
+      slidesContainer.innerHTML = `
+        <article class="pm-slide">
+          <div class="pm-hero">
+            <div class="pm-left">
+              <div class="pm-header">
+                <div class="pm-market-icon skeleton"></div>
+                <div class="skeleton skeleton-text" style="width: 60%; height: 24px;"></div>
+              </div>
+              <div class="pm-outcomes">
+                <div class="pm-row">
+                  <div class="skeleton skeleton-text" style="width: 30%;"></div>
+                  <div class="pm-row-right">
+                    <div class="skeleton skeleton-btn"></div>
+                    <div class="skeleton skeleton-btn"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="pm-news">
+                 <div class="skeleton skeleton-text" style="width: 100%;"></div>
+                 <div class="skeleton skeleton-text" style="width: 80%;"></div>
+              </div>
+            </div>
+            <div class="pm-right">
+              <div class="pm-chart skeleton"></div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    // Skeleton Widget Lateral
+    if (sideTitle) {
+      sideTitle.innerHTML = '<div class="skeleton skeleton-text" style="width: 140px;"></div>';
+      if(sideIcon) sideIcon.classList.add('skeleton');
+      if(sideVol) sideVol.innerHTML = '<span class="skeleton" style="display:inline-block; width: 50px;">&nbsp;</span>';
+    }
+
+    if (sideRows) {
+      sideRows.innerHTML = `
+        <div class="pm-side-row pm-row">
+           <div class="skeleton skeleton-text" style="width: 60px;"></div>
+           <div class="pm-side-right pm-row-right">
+              <div class="skeleton skeleton-btn"></div>
+              <div class="skeleton skeleton-btn"></div>
+           </div>
+        </div>
+      `;
+    }
+  }
+
   async function fetchMarkets() {
+    renderSkeleton(); // Mostra o esqueleto imediatamente
+
     try {
       const response = await fetch(`${API_PM_BACKEND}/kalshi-markets`);
+      
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+
       const data = await response.json();
       
       if (data && data.markets && data.markets.length > 0) {
+        // Remove a classe skeleton do icone antes de atualizar
+        const sideIcon = document.getElementById("sideIcon");
+        if(sideIcon) sideIcon.classList.remove('skeleton');
+        
         updateUI(data.markets);
+      } else {
+        throw new Error("Nenhum mercado encontrado na resposta.");
       }
     } catch (e) {
+      console.error("Erro ao carregar Prediction Markets:", e);
+      // Mantém o loading ou mostra erro discreto se preferir
       const sideTitle = document.getElementById("sideTitle");
-      if (sideTitle) sideTitle.innerText = "Error loading markets";
-      console.error(e);
+      if (sideTitle && !sideTitle.querySelector('.skeleton')) {
+         sideTitle.innerText = "Markets Offline";
+      }
     }
   }
 
@@ -61,13 +139,13 @@
             <div class="pm-left">
               <div class="pm-header">
                 <div class="pm-market-icon" style="background-image: url('${m.image_url || ''}'); background-size: cover; background-position: center; background-color: #f0f2f5;">
-                  ${!m.image_url ? '<span style="display:flex;align-items:center;justify-content:center;height:100%;">📊</span>' : ''}
+                  ${!m.image_url ? '<span style="display:flex;align-items:center;justify-content:center;height:100%;font-size:18px;">📊</span>' : ''}
                 </div>
                 <div class="pm-market-title">${m.title}</div>
               </div>
               <div class="pm-outcomes">
                 <div class="pm-row">
-                  <div class="pm-row-label">Market Probability</div>
+                  <div class="pm-row-label">Probability</div>
                   <div class="pm-row-right">
                     <div class="pm-row-pct">${Math.round(m.last_price || 50)}%</div>
                     <div class="pm-yn">
@@ -93,13 +171,25 @@
     const sideTitle = document.getElementById("sideTitle");
     const sideVol = document.getElementById("sideVol");
     const sideRows = document.getElementById("sideRows");
+    const sideIcon = document.getElementById("sideIcon");
 
     if (sideTitle) sideTitle.innerText = sideMarket.title;
     if (sideVol) sideVol.innerText = fmtVol(sideMarket.volume);
+    
+    if (sideIcon) {
+        // Limpa classes antigas de skeleton
+        sideIcon.className = "pm-side-icon"; 
+        sideIcon.style.backgroundImage = `url('${sideMarket.image_url || ''}')`;
+        sideIcon.style.backgroundSize = "cover";
+        sideIcon.style.backgroundPosition = "center";
+        if(!sideMarket.image_url) sideIcon.innerText = "📈";
+        else sideIcon.innerText = "";
+    }
+
     if (sideRows) {
       sideRows.innerHTML = `
         <div class="pm-side-row pm-row">
-          <div class="pm-side-label pm-row-label">Chances</div>
+          <div class="pm-side-label pm-row-label">Current Odds</div>
           <div class="pm-side-right pm-row-right">
             <div class="pm-side-pct pm-row-pct">${Math.round(sideMarket.last_price || 50)}%</div>
             <div class="pm-yn">
@@ -117,6 +207,7 @@
     }
   }
 
+  // Navegação do Carrossel (Dots)
   const dots = document.querySelectorAll(".pm-dot");
   const slides = document.getElementById("pmSlides");
   if (slides && dots.length) {
@@ -129,5 +220,6 @@
     });
   }
 
+  // Inicia
   fetchMarkets();
 })();
