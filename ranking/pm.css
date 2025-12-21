@@ -1,241 +1,310 @@
+/* Reset e Fontes Globais */
 .pm-strip {
-  max-width: 1280px;
-  margin: 18px auto 14px;
-  padding: 0 32px;
+  max-width: 1200px; /* Um pouco mais estreito para ficar compacto como o da Kalshi */
+  margin: 20px auto;
+  padding: 0 20px;
+  font-family: 'Inter', sans-serif; /* Garantindo a fonte */
 }
 
+/* Grid Principal */
 .pm-grid {
   display: grid;
-  grid-template-columns: 1.8fr 1.2fr;
-  gap: 16px;
-  align-items: stretch;
-}
-
-.pm-card {
-  border-radius: 18px;
-  background: #fff;
-  color: #0b0f1a;
-  box-shadow: 0 18px 46px rgba(0,0,0,.45);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.pm-card--hero {
-  padding: 14px;
-}
-
-.pm-carousel {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
-.pm-slides {
-  display: flex;
-  width: 100%;
-  transition: transform 220ms ease;
-  will-change: transform;
-}
-
-.pm-slide {
-  flex: 0 0 100%;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.pm-hero {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.6fr 1fr; /* Proporção similar à da Kalshi */
   gap: 20px;
-  align-items: stretch;
-  min-height: 250px;
+  align-items: start;
 }
 
-.pm-left {
+/* Card Base Style (Estilo Kalshi: Branco limpo, sem sombras pesadas) */
+.pm-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Sombra muito suave */
+  color: #1a1a1a; /* Texto quase preto */
+  overflow: hidden;
+}
+
+/* =========================================
+   ESTILOS DO NOVO WIDGET HERO (TIPO KALSHI)
+   ========================================= */
+.pm-card--hero {
+  padding: 0; /* O padding será interno */
+}
+
+.pm-hero-container {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr; /* Divisão Esquerda/Direita interna */
+  min-height: 380px;
+}
+
+/* --- Coluna Esquerda (Dados) --- */
+.k-left-col {
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 5px;
+  border-right: 1px solid #f0f0f0; /* Linha divisória sutil */
 }
 
-.pm-right {
+/* Cabeçalho */
+.k-header {
   display: flex;
-  flex-direction: column;
-  min-width: 0;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.pm-header {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.pm-market-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background-color: #f0f2f5;
+.k-main-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background-color: #f7f7f7;
+  background-size: cover;
+  background-position: center;
   flex-shrink: 0;
 }
 
-.pm-market-title {
-  font-size: 18px;
+.k-title {
+  font-size: 22px;
   font-weight: 700;
   line-height: 1.2;
+  color: #000;
 }
 
-.pm-outcomes {
+/* Lista de Sub-mercados */
+.k-outcomes-list {
+  flex-grow: 1; /* Ocupa o espaço disponível */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.k-outcome-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f7f7f7;
+}
+
+.k-outcome-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.k-mini-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #eee;
+  background-size: cover;
+}
+
+.k-outcome-name {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.k-outcome-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.k-pct {
+  font-size: 16px;
+  font-weight: 700;
+  font-feature-settings: "tnum" on, "lnum" on; /* Números tabulares para alinhamento */
+}
+
+/* Botões Yes/No Estilo Kalshi */
+.k-yn-group {
+  display: flex;
+  background: #f7f7f7; /* Fundo cinza bem claro */
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.k-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Cores específicas dos botões */
+.k-btn.yes {
+  background: transparent;
+  color: #00d293; /* Verde Kalshi */
+}
+.k-btn.yes:hover { background: #e0f7ef; }
+
+.k-btn.no {
+  background: transparent;
+  color: #ff4d4d; /* Vermelho/Rosa para Não */
+}
+.k-btn.no:hover { background: #ffe5e5; }
+
+/* Seção de Notícias */
+.k-news-section {
+  margin-top: auto; /* Empurra para baixo */
+  padding-top: 16px;
+}
+
+.k-news-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.k-news-label { font-weight: 700; }
+
+.k-news-text {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limita a 2 linhas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.k-news-meta {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #999;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* --- Coluna Direita (Gráfico) --- */
+.k-right-col {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.k-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.k-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.k-dot { width: 8px; height: 8px; border-radius: 50%; }
+.k-dot.green { background: #00d293; }
+.k-dot.blue { background: #3b82f6; }
+.k-dot.gray { background: #9ca3af; }
+
+.k-chart-container {
+  flex-grow: 1;
+  position: relative;
+  /* Placeholder para o gráfico SVG */
+}
+
+/* Rodapé de Navegação */
+.k-footer-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-top: 1px solid #f0f0f0;
+  font-size: 13px;
+  color: #999;
+}
+
+.k-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.k-nav-arrow {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid #eee;
+}
+
+
+/* =========================================
+   WIDGET LATERAL (Estilo Kalshi)
+   ========================================= */
+.pm-card--side {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.k-side-header {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.k-side-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.k-side-label { font-size: 14px; font-weight: 600; color: #666; }
+
+.k-side-actions {
+  margin-top: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.pm-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.k-vol-label { font-size: 14px; font-weight: 600; margin-bottom: 5px;}
 
-.pm-row-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(11,15,26,0.7);
-}
-
-.pm-row-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pm-row-pct {
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.pm-yn {
-  display: flex;
-  background: #f0f2f5;
-  padding: 2px;
-  border-radius: 8px;
-  gap: 2px;
-}
-
-.pm-yn-btn {
-  border: 0;
-  background: transparent;
-  padding: 4px 8px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.pm-news {
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(0,0,0,0.05);
-}
-
-.pm-news-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: #888;
-  text-transform: uppercase;
-}
-
-.pm-news-text {
-  font-size: 12px;
-  color: #444;
-  line-height: 1.4;
-}
-
-.pm-chart {
-  flex: 1;
+.btn-dflow, .btn-kalshi-link {
   width: 100%;
-  background: #f9fafb;
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-}
-
-.pm-dots {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.pm-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #ddd;
-  border: 0;
-  cursor: pointer;
-}
-
-.pm-dot.is-active {
-  background: #4d0fff;
-}
-
-.pm-card--side {
-  padding: 20px;
-  justify-content: space-between;
-}
-
-.pm-side-head {
-  display: flex;
-  gap: 12px;
-}
-
-.pm-side-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #f0f2f5;
-}
-
-.pm-side-title {
-  font-size: 17px;
+  padding: 12px;
+  border-radius: 8px;
   font-weight: 700;
-}
-
-.pm-side-rows {
-  margin: 15px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.pm-actions {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  margin-top: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  border: none;
 }
 
 .btn-dflow {
-  background: #4d0fff;
-  color: #fff;
-  border: 0;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
+  background: #4d0fff; /* Roxo do seu site para o botão on-chain */
+  color: white;
 }
 
 .btn-kalshi-link {
-  background: #f0f2f5;
-  border: 0;
-  padding: 10px 15px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
+  background: #f7f7f7;
+  color: #1a1a1a;
 }
 
+/* Responsividade */
 @media (max-width: 960px) {
   .pm-grid { grid-template-columns: 1fr; }
-  .pm-strip { padding: 0 16px; }
+  .pm-hero-container { grid-template-columns: 1fr; }
+  .k-left-col { border-right: none; border-bottom: 1px solid #f0f0f0; }
+  .k-chart-container { min-height: 200px; }
 }
