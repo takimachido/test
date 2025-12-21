@@ -3,18 +3,19 @@
   if (!root) return;
 
   const fmtVol = (n) => {
+    if (!n) return "$0";
     if (n >= 1000000) return "$" + (n / 1000000).toFixed(1) + "M";
     if (n >= 1000) return "$" + (n / 1000).toFixed(1) + "k";
     return "$" + n;
   };
 
-  const drawChart = (points, color) => {
-    if (!points || points.length < 2) return "";
+  const drawChart = (color) => {
+    const points = Array.from({length: 10}, () => Math.floor(Math.random() * 50) + 20);
+    const width = 640;
+    const height = 320;
     const min = Math.min(...points);
     const max = Math.max(...points);
     const range = max - min || 1;
-    const width = 640;
-    const height = 320;
     
     let d = `M 0 ${height - ((points[0] - min) / range) * height}`;
     points.forEach((p, i) => {
@@ -25,13 +26,7 @@
 
     return `
       <svg viewBox="0 0 640 320" preserveAspectRatio="none" style="width:100%; height:100%;">
-        <defs>
-          <linearGradient id="grad-${color.replace('#','')}" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="${color}" stop-opacity="0.1"/>
-            <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <path d="${d} L 640 320 L 0 320 Z" fill="url(#grad-${color.replace('#','')})"></path>
+        <path d="${d} L 640 320 L 0 320 Z" fill="${color}" fill-opacity="0.05"></path>
         <path d="${d}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
     `;
@@ -39,13 +34,18 @@
 
   async function fetchMarkets() {
     try {
-      const response = await fetch('https://api.kalshi.com/trade-api/v2/markets?limit=10&status=open&sort=volume');
-      const data = await response.json();
+      const proxy = "https://api.allorigins.win/get?url=";
+      const target = encodeURIComponent("https://api.kalshi.com/trade-api/v2/markets?limit=10&status=open&sort=volume");
+      const response = await fetch(proxy + target);
+      const resData = await response.json();
+      const data = JSON.parse(resData.contents);
+      
       if (data && data.markets) {
         updateUI(data.markets);
       }
     } catch (e) {
-      console.error(e);
+      document.getElementById("sideTitle").innerText = "Market Temporary Offline";
+      console.error("CORS Error or API Down", e);
     }
   }
 
@@ -54,20 +54,20 @@
     const sideMarket = markets[3] || markets[0];
 
     const slidesContainer = document.getElementById("pmSlides");
-    if (slidesContainer && heroMarkets.length) {
+    if (slidesContainer) {
       slidesContainer.innerHTML = heroMarkets.map((m, i) => `
         <article class="pm-slide">
           <div class="pm-hero">
             <div class="pm-left">
               <div class="pm-header">
-                <div class="pm-market-icon" style="background-image: url('${m.image_url || ''}'); background-size: cover;"></div>
+                <div class="pm-market-icon" style="background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; font-size: 20px;">📊</div>
                 <div class="pm-market-title">${m.title}</div>
               </div>
               <div class="pm-outcomes">
                 <div class="pm-row">
-                  <div class="pm-row-label">Market Probability</div>
+                  <div class="pm-row-label">Probability</div>
                   <div class="pm-row-right">
-                    <div class="pm-row-pct">${m.yes_bid}%</div>
+                    <div class="pm-row-pct">${m.last_price || 50}%</div>
                     <div class="pm-yn">
                       <button class="pm-yn-btn btn-yes">YES</button>
                       <button class="pm-yn-btn btn-no">NO</button>
@@ -77,22 +77,36 @@
               </div>
               <div class="pm-news">
                 <div class="pm-news-label">Volume</div>
-                <div class="pm-news-text">${fmtVol(m.volume)} traded in this contract.</div>
+                <div class="pm-news-text">${fmtVol(m.volume)} traded</div>
               </div>
             </div>
             <div class="pm-right">
-              <div class="pm-chart">${drawChart([10, 20, 15, 30, 25, 40, 35, 50], i === 0 ? "#22d3ee" : "#a78bfa")}</div>
+              <div class="pm-chart">${drawChart(i === 0 ? "#22d3ee" : "#4d0fff")}</div>
             </div>
           </div>
         </article>
       `).join('');
     }
 
-    const sideTitle = document.querySelector(".pm-side-title");
-    if (sideTitle && sideMarket) {
-      sideTitle.innerText = sideMarket.title;
-      document.querySelector(".pm-vol-val").innerText = fmtVol(sideMarket.volume);
-    }
+    document.getElementById("sideTitle").innerText = sideMarket.title;
+    document.getElementById("sideVol").innerText = fmtVol(sideMarket.volume);
+    
+    const sideRows = document.getElementById("sideRows");
+    sideRows.innerHTML = `
+      <div class="pm-side-row">
+        <span class="pm-row-label">Current Odds</span>
+        <div class="pm-row-right">
+          <span class="pm-row-pct">${sideMarket.last_price || 50}%</span>
+          <div class="pm-yn">
+             <button class="pm-yn-btn">Y</button>
+             <button class="pm-yn-btn">N</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const kBtn = document.getElementById("sideKalshiBtn");
+    kBtn.onclick = () => window.open(`https://kalshi.com/markets/${sideMarket.ticker}?ref=flashscreener`, "_blank");
   }
 
   const dots = document.querySelectorAll(".pm-dot");
