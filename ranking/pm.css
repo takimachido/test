@@ -1,9 +1,8 @@
 /* =========================================
-   ESTRUTURA BASE (AJUSTE FINO DE LARGURA)
+   ESTRUTURA BASE
    ========================================= */
 .pm-strip {
-  /* Reduzi de 1280px para 1120px para ficar mais compacto e "app-like" */
-  max-width: 1320px; 
+  max-width: 1320px;
   margin: 24px auto;
   padding: 0 24px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -13,10 +12,9 @@
 
 .pm-grid {
   display: grid;
-  /* O TRUQUE MÁGICO: minmax(0, Xfr) impede que o conteúdo estoure a largura */
   grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
   gap: 24px;
-  align-items: stretch; /* Garante que ambos tenham a mesma altura */
+  align-items: stretch;
 }
 
 /* =========================================
@@ -28,15 +26,16 @@
   width: 100%;
   border-radius: 16px;
   background: #fff;
-  /* Sombra mais suave e difusa igual Kalshi */
   box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column; /* Garante que os dots fiquem embaixo */
 }
 
 .pm-slides {
   display: flex;
   width: 100%;
-  height: 100%; /* Força altura total */
-  transition: transform 0.5s cubic-bezier(0.2, 1, 0.4, 1); /* Animação mais premium */
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.2, 1, 0.4, 1);
 }
 
 .pm-slide {
@@ -47,23 +46,56 @@
 }
 
 /* =========================================
+   DOTS (NAVEGAÇÃO POR BOLINHAS)
+   ========================================= */
+.pm-dots-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Espaço entre as bolinhas */
+  padding: 16px 0 20px 0; /* Espaço acima e abaixo */
+  background: #fff;
+  border-top: 1px solid #f7f7f7; /* Linha sutil separando do conteúdo */
+}
+
+.pm-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e5e7eb; /* Cinza claro (Inativo) */
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.pm-dot:hover {
+  background-color: #d1d5db;
+}
+
+.pm-dot.is-active {
+  background-color: #1a1a1a; /* Preto/Escuro (Ativo) */
+  transform: scale(1.1); /* Leve aumento */
+}
+
+/* =========================================
    WIDGET HERO (O PRINCIPAL)
    ========================================= */
 .pm-card--hero {
-  height: 100%; /* Garante que preencha o slide */
+  height: 100%;
 }
 
 .pm-hero-container {
   display: grid;
-  grid-template-columns: 1.3fr 1fr; /* Coluna de dados um pouco maior que o gráfico */
+  grid-template-columns: 1.3fr 1fr;
   height: 100%;
-  min-height: 320px; /* Altura mínima fixa para consistência */
+  min-height: 300px;
   background: #fff;
 }
 
 /* --- Coluna Esquerda (Dados) --- */
 .k-left-col {
-  padding: 24px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #f2f2f2;
@@ -72,8 +104,8 @@
 .k-header {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .k-main-icon {
@@ -92,14 +124,13 @@
 }
 
 .k-title {
-  font-size: 18px; /* Reduzi levemente para não quebrar linha fácil */
+  font-size: 18px;
   font-weight: 700;
   line-height: 1.3;
   color: #111;
   letter-spacing: -0.01em;
 }
 
-/* Lista */
 .k-outcomes-list {
   flex-grow: 1;
   display: flex;
@@ -149,7 +180,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Botões Yes/No */
 .k-yn-group {
   display: flex;
   background: #f5f7f9;
@@ -175,7 +205,6 @@
 .k-btn.no { color: #ff5c5c; background: transparent; }
 .k-btn.no:hover { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-/* News */
 .k-news-section {
   margin-top: auto;
   padding-top: 14px;
@@ -192,7 +221,7 @@
 
 /* --- Coluna Direita (Gráfico) --- */
 .k-right-col {
-  padding: 24px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -223,25 +252,15 @@
 .k-chart-container {
   flex-grow: 1;
   width: 100%;
-  /* Garante que o SVG não force largura */
   min-width: 0; 
   display: flex;
   align-items: flex-end;
 }
 
-/* Navegação */
+/* Navegação Seta (Opcional, se quiser manter junto com os dots) */
 .k-footer-nav {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 24px;
-  border-top: 1px solid #f2f2f2;
-  background: #fcfcfc;
-  font-size: 12px;
-  font-weight: 600;
-  color: #999;
+  display: none; /* Escondi as setas de texto para focar nos dots, como no print */
 }
-.k-nav-btn { cursor: pointer; display: flex; align-items: center; gap: 4px; transition: color 0.2s; }
-.k-nav-btn:hover { color: #333; }
 
 /* =========================================
    WIDGET LATERAL
@@ -249,12 +268,12 @@
 .pm-card--side {
   background: #fff;
   border-radius: 16px;
-  padding: 24px;
+  padding: 18px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%; /* Força ocupar altura total do grid */
+  height: 100%;
   box-sizing: border-box;
 }
 
@@ -305,7 +324,6 @@
 }
 .btn-kalshi-link:hover { background: #e6e8ea; }
 
-/* Responsividade */
 @media (max-width: 960px) {
   .pm-grid { grid-template-columns: 1fr; }
   .pm-hero-container { grid-template-columns: 1fr; }
