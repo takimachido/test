@@ -2,7 +2,6 @@
   const root = document.getElementById("pm-strip");
   if (!root) return;
 
-  // URL do seu Backend no Render
   const API_PM_BACKEND = "https://prediction-backend-r0vj.onrender.com";
 
   const fmtVol = (n) => {
@@ -75,7 +74,7 @@
     const slidesContainer = document.getElementById("pmSlides");
     const carousel = document.querySelector('.pm-carousel');
 
-    // 1. Render Slides
+    // 1. RENDER SLIDES
     if (slidesContainer) {
       slidesContainer.innerHTML = heroMarkets.map((m) => {
         const mainProb = Math.round(m.last_price || 50);
@@ -129,33 +128,42 @@
       `}).join('');
     }
 
-    // 2. Setup Dots & Arrows (Limpeza total antes de criar)
+    // 2. SETUP DOTS & ARROWS (Na mesma linha)
     if (carousel) {
-      // Remove elementos de navegação antigos
-      carousel.querySelectorAll('.pm-dots-container, .pm-nav-arrow').forEach(el => el.remove());
+      // Limpa navegação antiga
+      const oldNav = carousel.querySelector('.pm-dots-container');
+      if(oldNav) oldNav.remove();
 
-      // Cria Arrows
+      // Cria container de controles
+      const controlsContainer = document.createElement('div');
+      controlsContainer.className = 'pm-dots-container';
+
+      // Botão Anterior
       const prevBtn = document.createElement('button');
       prevBtn.className = 'pm-nav-arrow pm-prev';
-      prevBtn.innerHTML = '←'; // Seta simples
-      
+      prevBtn.innerHTML = '←';
+
+      // Botão Próximo
       const nextBtn = document.createElement('button');
       nextBtn.className = 'pm-nav-arrow pm-next';
-      nextBtn.innerHTML = '→'; // Seta simples
+      nextBtn.innerHTML = '→';
 
-      // Cria Dots
-      const dotsContainer = document.createElement('div');
-      dotsContainer.className = 'pm-dots-container';
-      dotsContainer.innerHTML = heroMarkets.map((_, i) => `<button class="pm-dot ${i === 0 ? 'is-active' : ''}" data-index="${i}"></button>`).join('');
+      // String dos Dots
+      const dotsHTML = heroMarkets.map((_, i) => 
+        `<button class="pm-dot ${i === 0 ? 'is-active' : ''}" data-index="${i}"></button>`
+      ).join('');
 
-      // Adiciona ao DOM
-      carousel.appendChild(prevBtn);
-      carousel.appendChild(nextBtn);
-      carousel.appendChild(dotsContainer);
+      // Monta a estrutura: [Setinha] [Bolinhas] [Setinha]
+      controlsContainer.appendChild(prevBtn);
+      controlsContainer.insertAdjacentHTML('beforeend', dotsHTML); // Injeta os dots no meio
+      controlsContainer.appendChild(nextBtn);
+
+      carousel.appendChild(controlsContainer);
       
       // Lógica de Navegação
       const slides = document.getElementById("pmSlides");
-      const dots = dotsContainer.querySelectorAll(".pm-dot");
+      // Seleciona os elementos AGORA que foram criados
+      const dots = controlsContainer.querySelectorAll(".pm-dot");
       const totalSlides = heroMarkets.length;
       let currentSlide = 0;
 
@@ -174,7 +182,7 @@
       });
     }
 
-    // 3. Update Widget Lateral
+    // 3. WIDGET LATERAL
     const sideWidget = document.getElementById("pmSideWidget");
     if (sideWidget) {
       sideWidget.innerHTML = `
@@ -184,7 +192,7 @@
             <span class="k-side-label">Current Odds</span>
              <div class="k-outcome-right">
                 <span class="k-pct" style="color: #00d293;">${Math.round(sideMarket.last_price || 50)}%</span>
-                <div class="k-yn-group"><button class="k-btn yes">Y</button><button class="k-btn no">N</button></div>
+                <div class="k-yn-group"><button class="k-btn yes">Y</button><button class="k-btn no">No</button></div>
             </div>
           </div>
         </div>
