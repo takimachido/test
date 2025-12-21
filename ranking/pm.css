@@ -1,39 +1,53 @@
-/* Reset e Fontes Globais */
+/* =========================================
+   ESTRUTURA BASE E CARROSSEL (CRUCIAL)
+   ========================================= */
 .pm-strip {
-  max-width: 1200px; /* Um pouco mais estreito para ficar compacto como o da Kalshi */
+  max-width: 1200px;
   margin: 20px auto;
   padding: 0 20px;
-  font-family: 'Inter', sans-serif; /* Garantindo a fonte */
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
 }
 
-/* Grid Principal */
 .pm-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr; /* Proporção similar à da Kalshi */
+  grid-template-columns: 1.6fr 1fr;
   gap: 20px;
   align-items: start;
 }
 
-/* Card Base Style (Estilo Kalshi: Branco limpo, sem sombras pesadas) */
-.pm-card {
-  background: #ffffff;
+/* O "Palco" do Carrossel */
+.pm-carousel {
+  overflow: hidden; /* Esconde os slides laterais */
+  position: relative;
+  width: 100%;
   border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Sombra muito suave */
-  color: #1a1a1a; /* Texto quase preto */
-  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* O "Trem" que move os slides */
+.pm-slides {
+  display: flex; /* Coloca os slides lado a lado */
+  width: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Animação suave */
+}
+
+/* Cada Slide Individual */
+.pm-slide {
+  min-width: 100%; /* Ocupa 100% da largura do palco */
+  flex: 0 0 100%;
+  box-sizing: border-box;
 }
 
 /* =========================================
-   ESTILOS DO NOVO WIDGET HERO (TIPO KALSHI)
+   ESTILO VISUAL TIPO KALSHI (WIDGET HERO)
    ========================================= */
-.pm-card--hero {
-  padding: 0; /* O padding será interno */
-}
-
 .pm-hero-container {
   display: grid;
-  grid-template-columns: 1.4fr 1fr; /* Divisão Esquerda/Direita interna */
+  grid-template-columns: 1.4fr 1fr;
   min-height: 380px;
+  background: #fff;
 }
 
 /* --- Coluna Esquerda (Dados) --- */
@@ -41,10 +55,9 @@
   padding: 24px;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #f0f0f0; /* Linha divisória sutil */
+  border-right: 1px solid #f0f0f0;
 }
 
-/* Cabeçalho */
 .k-header {
   display: flex;
   align-items: flex-start;
@@ -53,134 +66,116 @@
 }
 
 .k-main-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 10px;
-  background-color: #f7f7f7;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
   background-size: cover;
   background-position: center;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
 }
 
 .k-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.3;
   color: #000;
 }
 
-/* Lista de Sub-mercados */
+/* Lista de Mercados */
 .k-outcomes-list {
-  flex-grow: 1; /* Ocupa o espaço disponível */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0; 
 }
 
 .k-outcome-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 12px;
+  padding: 12px 0;
   border-bottom: 1px solid #f7f7f7;
 }
+.k-outcome-row:last-child { border-bottom: none; }
 
 .k-outcome-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .k-mini-icon {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background-color: #eee;
   background-size: cover;
+  background-position: center;
 }
 
 .k-outcome-name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
+  color: #333;
 }
 
 .k-outcome-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .k-pct {
   font-size: 16px;
   font-weight: 700;
-  font-feature-settings: "tnum" on, "lnum" on; /* Números tabulares para alinhamento */
+  min-width: 40px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Botões Yes/No Estilo Kalshi */
+/* Botões Yes/No */
 .k-yn-group {
   display: flex;
-  background: #f7f7f7; /* Fundo cinza bem claro */
-  border-radius: 8px;
-  padding: 3px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  padding: 2px;
   gap: 2px;
 }
 
 .k-btn {
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 4px 12px;
+  font-size: 12px;
   font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-/* Cores específicas dos botões */
-.k-btn.yes {
-  background: transparent;
-  color: #00d293; /* Verde Kalshi */
-}
+.k-btn.yes { color: #00d293; background: transparent; }
 .k-btn.yes:hover { background: #e0f7ef; }
 
-.k-btn.no {
-  background: transparent;
-  color: #ff4d4d; /* Vermelho/Rosa para Não */
-}
+.k-btn.no { color: #ff4d4d; background: transparent; }
 .k-btn.no:hover { background: #ffe5e5; }
 
-/* Seção de Notícias */
+/* Rodapé Notícias */
 .k-news-section {
-  margin-top: auto; /* Empurra para baixo */
+  margin-top: auto;
   padding-top: 16px;
-}
-
-.k-news-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  margin-bottom: 4px;
-}
-
-.k-news-label { font-weight: 700; }
-
-.k-news-text {
-  font-size: 13px;
-  color: #666;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limita a 2 linhas */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  border-top: 1px solid #f0f0f0;
 }
 
 .k-news-meta {
-  margin-top: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #999;
+  font-size: 12px;
+  color: #888;
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
 }
 
 /* --- Coluna Direita (Gráfico) --- */
@@ -188,13 +183,12 @@
   padding: 24px;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  position: relative;
 }
 
 .k-chart-legend {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  gap: 15px;
   margin-bottom: 20px;
 }
 
@@ -202,8 +196,9 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
 }
 
 .k-dot { width: 8px; height: 8px; border-radius: 50%; }
@@ -213,92 +208,72 @@
 
 .k-chart-container {
   flex-grow: 1;
-  position: relative;
-  /* Placeholder para o gráfico SVG */
+  width: 100%;
 }
 
-/* Rodapé de Navegação */
+/* Navegação Rodapé */
 .k-footer-nav {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 12px 24px;
   border-top: 1px solid #f0f0f0;
-  font-size: 13px;
-  color: #999;
+  font-size: 12px;
+  color: #888;
+  background: #fff;
 }
-
-.k-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.k-nav-arrow {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  border: 1px solid #eee;
-}
-
+.k-nav-btn { cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.k-nav-btn:hover { color: #000; }
 
 /* =========================================
-   WIDGET LATERAL (Estilo Kalshi)
+   WIDGET LATERAL
    ========================================= */
 .pm-card--side {
+  background: #fff;
+  border-radius: 16px;
   padding: 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .k-side-header {
   font-size: 18px;
   font-weight: 700;
-  line-height: 1.3;
+  color: #000;
+  margin-bottom: 10px;
 }
 
 .k-side-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
-}
-
-.k-side-label { font-size: 14px; font-weight: 600; color: #666; }
-
-.k-side-actions {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.k-vol-label { font-size: 14px; font-weight: 600; margin-bottom: 5px;}
-
-.btn-dflow, .btn-kalshi-link {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  text-align: center;
-  border: none;
+  padding: 10px 0;
+  border-top: 1px solid #f7f7f7;
 }
 
 .btn-dflow {
-  background: #4d0fff; /* Roxo do seu site para o botão on-chain */
+  width: 100%;
+  background: #4d0fff;
   color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .btn-kalshi-link {
+  width: 100%;
   background: #f7f7f7;
-  color: #1a1a1a;
+  color: #333;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-top: 8px;
 }
 
 /* Responsividade */
@@ -306,5 +281,5 @@
   .pm-grid { grid-template-columns: 1fr; }
   .pm-hero-container { grid-template-columns: 1fr; }
   .k-left-col { border-right: none; border-bottom: 1px solid #f0f0f0; }
-  .k-chart-container { min-height: 200px; }
+  .pm-carousel, .pm-card--side { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
 }
