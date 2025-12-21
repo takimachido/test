@@ -2,7 +2,7 @@
   const root = document.getElementById("pm-strip");
   if (!root) return;
 
-  const API_PM_BACKEND = "https://seu-repo-privado.onrender.com";
+  const API_PM_BACKEND = "https://prediction-backend-r0vj.onrender.com";
 
   const fmtVol = (n) => {
     if (!n) return "$0";
