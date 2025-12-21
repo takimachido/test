@@ -2,15 +2,17 @@
   const root = document.getElementById("pm-strip");
   if (!root) return;
 
+  const API_PM_BACKEND = "https://seu-repo-privado.onrender.com";
+
   const fmtVol = (n) => {
     if (!n) return "$0";
     if (n >= 1000000) return "$" + (n / 1000000).toFixed(1) + "M";
     if (n >= 1000) return "$" + (n / 1000).toFixed(1) + "k";
-    return "$" + n;
+    return "$" + Math.floor(n);
   };
 
   const drawChart = (color) => {
-    const points = Array.from({length: 10}, () => Math.floor(Math.random() * 50) + 20);
+    const points = Array.from({length: 12}, () => Math.floor(Math.random() * 40) + 30);
     const width = 640;
     const height = 320;
     const min = Math.min(...points);
@@ -34,18 +36,16 @@
 
   async function fetchMarkets() {
     try {
-      const proxy = "https://api.allorigins.win/get?url=";
-      const target = encodeURIComponent("https://api.kalshi.com/trade-api/v2/markets?limit=10&status=open&sort=volume");
-      const response = await fetch(proxy + target);
-      const resData = await response.json();
-      const data = JSON.parse(resData.contents);
+      const response = await fetch(`${API_PM_BACKEND}/kalshi-markets`);
+      const data = await response.json();
       
-      if (data && data.markets) {
+      if (data && data.markets && data.markets.length > 0) {
         updateUI(data.markets);
       }
     } catch (e) {
-      document.getElementById("sideTitle").innerText = "Market Temporary Offline";
-      console.error("CORS Error or API Down", e);
+      const sideTitle = document.getElementById("sideTitle");
+      if (sideTitle) sideTitle.innerText = "Error loading markets";
+      console.error(e);
     }
   }
 
@@ -60,14 +60,16 @@
           <div class="pm-hero">
             <div class="pm-left">
               <div class="pm-header">
-                <div class="pm-market-icon" style="background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; font-size: 20px;">📊</div>
+                <div class="pm-market-icon" style="background-image: url('${m.image_url || ''}'); background-size: cover; background-position: center; background-color: #f0f2f5;">
+                  ${!m.image_url ? '<span style="display:flex;align-items:center;justify-content:center;height:100%;">📊</span>' : ''}
+                </div>
                 <div class="pm-market-title">${m.title}</div>
               </div>
               <div class="pm-outcomes">
                 <div class="pm-row">
-                  <div class="pm-row-label">Probability</div>
+                  <div class="pm-row-label">Market Probability</div>
                   <div class="pm-row-right">
-                    <div class="pm-row-pct">${m.last_price || 50}%</div>
+                    <div class="pm-row-pct">${Math.round(m.last_price || 50)}%</div>
                     <div class="pm-yn">
                       <button class="pm-yn-btn btn-yes">YES</button>
                       <button class="pm-yn-btn btn-no">NO</button>
@@ -76,8 +78,8 @@
                 </div>
               </div>
               <div class="pm-news">
-                <div class="pm-news-label">Volume</div>
-                <div class="pm-news-text">${fmtVol(m.volume)} traded</div>
+                <div class="pm-news-label">Liquidity / Vol</div>
+                <div class="pm-news-text">${fmtVol(m.volume)} traded in this event.</div>
               </div>
             </div>
             <div class="pm-right">
@@ -88,25 +90,31 @@
       `).join('');
     }
 
-    document.getElementById("sideTitle").innerText = sideMarket.title;
-    document.getElementById("sideVol").innerText = fmtVol(sideMarket.volume);
-    
+    const sideTitle = document.getElementById("sideTitle");
+    const sideVol = document.getElementById("sideVol");
     const sideRows = document.getElementById("sideRows");
-    sideRows.innerHTML = `
-      <div class="pm-side-row">
-        <span class="pm-row-label">Current Odds</span>
-        <div class="pm-row-right">
-          <span class="pm-row-pct">${sideMarket.last_price || 50}%</span>
-          <div class="pm-yn">
-             <button class="pm-yn-btn">Y</button>
-             <button class="pm-yn-btn">N</button>
+
+    if (sideTitle) sideTitle.innerText = sideMarket.title;
+    if (sideVol) sideVol.innerText = fmtVol(sideMarket.volume);
+    if (sideRows) {
+      sideRows.innerHTML = `
+        <div class="pm-side-row pm-row">
+          <div class="pm-side-label pm-row-label">Chances</div>
+          <div class="pm-side-right pm-row-right">
+            <div class="pm-side-pct pm-row-pct">${Math.round(sideMarket.last_price || 50)}%</div>
+            <div class="pm-yn">
+              <button class="pm-yn-btn btn-yes">Y</button>
+              <button class="pm-yn-btn btn-no">N</button>
+            </div>
           </div>
         </div>
-      </div>
-    `;
+      `;
+    }
 
     const kBtn = document.getElementById("sideKalshiBtn");
-    kBtn.onclick = () => window.open(`https://kalshi.com/markets/${sideMarket.ticker}?ref=flashscreener`, "_blank");
+    if (kBtn) {
+      kBtn.onclick = () => window.open(`https://kalshi.com/markets/${sideMarket.ticker}?ref=flashscreener`, "_blank");
+    }
   }
 
   const dots = document.querySelectorAll(".pm-dot");
