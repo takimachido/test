@@ -2,6 +2,7 @@
   const root = document.getElementById("pm-strip");
   if (!root) return;
 
+  // URL do seu Backend no Render
   const API_PM_BACKEND = "https://prediction-backend-r0vj.onrender.com";
 
   const fmtVol = (n) => {
@@ -14,7 +15,6 @@
   const drawChart = () => {
     const width = 600;
     const height = 250;
-    
     const generatePath = (color, highlight) => {
       let points = [];
       let start = highlight ? 40 : Math.random() * 30 + 10;
@@ -22,22 +22,16 @@
         start += (Math.random() - 0.5) * 15;
         points.push(Math.max(5, Math.min(95, start)));
       }
-      
       let d = `M 0 ${height - (points[0]/100)*height}`;
       points.forEach((p, i) => {
         const x = (i / (points.length - 1)) * width;
         const y = height - (p / 100) * height;
         d += ` L ${x} ${y}`;
       });
-
       let fill = 'none';
-      if (highlight) {
-         fill = `url(#grad-${color.replace('#','')})`;
-      }
-
+      if (highlight) fill = `url(#grad-${color.replace('#','')})`;
       return { d, color, fill };
     };
-
     const line1 = generatePath('#00d293', true);
     const line2 = generatePath('#3b82f6', false);
     const line3 = generatePath('#9ca3af', false);
@@ -71,19 +65,18 @@
     } catch (e) {
       console.error(e);
       const sideTitle = document.getElementById("sideTitle");
-      if (sideTitle) sideTitle.innerText = "Unable to load data";
+      if (sideTitle) sideTitle.innerText = "Markets Unavailable";
     }
   }
 
   function updateUI(markets) {
-    // AGORA PEGAMOS 6 MERCADOS
     const heroMarkets = markets.slice(0, 6);
-    const sideMarket = markets[6] || markets[0]; // O lateral agora é o 7º ou o 1º
-    
+    const sideMarket = markets[6] || markets[0];
     const slidesContainer = document.getElementById("pmSlides");
+    const carousel = document.querySelector('.pm-carousel');
 
+    // 1. Render Slides
     if (slidesContainer) {
-      // 1. Renderiza os Slides
       slidesContainer.innerHTML = heroMarkets.map((m) => {
         const mainProb = Math.round(m.last_price || 50);
         const altProb1 = Math.round(Math.random() * (100 - mainProb) * 0.6);
@@ -95,12 +88,9 @@
             <div class="pm-hero-container">
               <div class="k-left-col">
                 <div class="k-header">
-                  <div class="k-main-icon" style="background-image: url('${m.image_url || ''}');">
-                     ${!m.image_url ? '📊' : ''}
-                  </div>
+                  <div class="k-main-icon" style="background-image: url('${m.image_url || ''}');">${!m.image_url ? '📊' : ''}</div>
                   <div class="k-title">${m.title}</div>
                 </div>
-
                 <div class="k-outcomes-list">
                   <div class="k-outcome-row">
                     <div class="k-outcome-info">
@@ -109,141 +99,102 @@
                     </div>
                     <div class="k-outcome-right">
                       <span class="k-pct" style="color: #00d293;">${mainProb}%</span>
-                      <div class="k-yn-group">
-                        <button class="k-btn yes">Yes</button>
-                        <button class="k-btn no">No</button>
-                      </div>
+                      <div class="k-yn-group"><button class="k-btn yes">Yes</button><button class="k-btn no">No</button></div>
                     </div>
                   </div>
-                  
                   <div class="k-outcome-row" style="opacity: 0.7;">
-                    <div class="k-outcome-info">
-                      <div class="k-mini-icon"></div>
-                      <span class="k-outcome-name">Alternative A</span>
-                    </div>
-                    <div class="k-outcome-right">
-                      <span class="k-pct" style="color: #3b82f6;">${altProb1}%</span>
-                      <div class="k-yn-group">
-                        <button class="k-btn yes">Yes</button>
-                        <button class="k-btn no">No</button>
-                      </div>
-                    </div>
+                    <div class="k-outcome-info"><div class="k-mini-icon"></div><span class="k-outcome-name">Alt A</span></div>
+                    <div class="k-outcome-right"><span class="k-pct" style="color: #3b82f6;">${altProb1}%</span><div class="k-yn-group"><button class="k-btn yes">Yes</button><button class="k-btn no">No</button></div></div>
                   </div>
                    <div class="k-outcome-row" style="opacity: 0.5; border-bottom: none;">
-                    <div class="k-outcome-info">
-                      <div class="k-mini-icon"></div>
-                      <span class="k-outcome-name">Alternative B</span>
-                    </div>
-                    <div class="k-outcome-right">
-                      <span class="k-pct">${altProb2}%</span>
-                      <div class="k-yn-group">
-                        <button class="k-btn yes">Yes</button>
-                        <button class="k-btn no">No</button>
-                      </div>
-                    </div>
+                    <div class="k-outcome-info"><div class="k-mini-icon"></div><span class="k-outcome-name">Alt B</span></div>
+                    <div class="k-outcome-right"><span class="k-pct">${altProb2}%</span><div class="k-yn-group"><button class="k-btn yes">Yes</button><button class="k-btn no">No</button></div></div>
                   </div>
                 </div>
-
                 <div class="k-news-section">
-                  <div class="k-news-meta">
-                    <span style="font-weight:700; color:#000;">News ·</span>
-                    <span>Vol: ${fmtVol(m.volume)} active in this market block.</span>
-                  </div>
+                  <div class="k-news-meta"><span style="font-weight:700; color:#000;">News ·</span><span>Vol: ${fmtVol(m.volume)}</span></div>
                 </div>
               </div>
-
               <div class="k-right-col">
                 <div class="k-chart-legend">
                   <div class="k-legend-item"><div class="k-dot green"></div> Main ${mainProb}%</div>
                   <div class="k-legend-item"><div class="k-dot blue"></div> Alt A ${altProb1}%</div>
                   <div class="k-legend-item"><div class="k-dot gray"></div> Alt B ${altProb2}%</div>
                 </div>
-                <div class="k-chart-container">
-                  ${drawChart()}
-                </div>
+                <div class="k-chart-container">${drawChart()}</div>
               </div>
             </div>
           </div>
         </article>
       `}).join('');
-
-      // 2. Renderiza os Dots (Bolinhas) fora dos slides
-      // Procura se já existe, se não cria e anexa após o slider
-      const carouselContainer = document.querySelector('.pm-carousel');
-      let dotsContainer = document.querySelector('.pm-dots-container');
-      
-      if (!dotsContainer && carouselContainer) {
-        dotsContainer = document.createElement('div');
-        dotsContainer.className = 'pm-dots-container';
-        carouselContainer.appendChild(dotsContainer);
-      }
-
-      if (dotsContainer) {
-        dotsContainer.innerHTML = heroMarkets.map((_, i) => 
-          `<button class="pm-dot ${i === 0 ? 'is-active' : ''}" data-index="${i}"></button>`
-        ).join('');
-      }
     }
 
+    // 2. Setup Dots & Arrows (Limpeza total antes de criar)
+    if (carousel) {
+      // Remove elementos de navegação antigos
+      carousel.querySelectorAll('.pm-dots-container, .pm-nav-arrow').forEach(el => el.remove());
+
+      // Cria Arrows
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'pm-nav-arrow pm-prev';
+      prevBtn.innerHTML = '←'; // Seta simples
+      
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'pm-nav-arrow pm-next';
+      nextBtn.innerHTML = '→'; // Seta simples
+
+      // Cria Dots
+      const dotsContainer = document.createElement('div');
+      dotsContainer.className = 'pm-dots-container';
+      dotsContainer.innerHTML = heroMarkets.map((_, i) => `<button class="pm-dot ${i === 0 ? 'is-active' : ''}" data-index="${i}"></button>`).join('');
+
+      // Adiciona ao DOM
+      carousel.appendChild(prevBtn);
+      carousel.appendChild(nextBtn);
+      carousel.appendChild(dotsContainer);
+      
+      // Lógica de Navegação
+      const slides = document.getElementById("pmSlides");
+      const dots = dotsContainer.querySelectorAll(".pm-dot");
+      const totalSlides = heroMarkets.length;
+      let currentSlide = 0;
+
+      const goToSlide = (index) => {
+        if (index < 0) index = totalSlides - 1;
+        if (index >= totalSlides) index = 0;
+        currentSlide = index;
+        slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+        dots.forEach((dot, idx) => dot.classList.toggle('is-active', idx === currentSlide));
+      };
+
+      prevBtn.onclick = () => goToSlide(currentSlide - 1);
+      nextBtn.onclick = () => goToSlide(currentSlide + 1);
+      dots.forEach(dot => {
+        dot.onclick = () => goToSlide(parseInt(dot.dataset.index));
+      });
+    }
+
+    // 3. Update Widget Lateral
     const sideWidget = document.getElementById("pmSideWidget");
     if (sideWidget) {
       sideWidget.innerHTML = `
         <div class="k-side-header">${sideMarket.title}</div>
-        
         <div style="margin: 20px 0;">
           <div class="k-side-row">
             <span class="k-side-label">Current Odds</span>
              <div class="k-outcome-right">
                 <span class="k-pct" style="color: #00d293;">${Math.round(sideMarket.last_price || 50)}%</span>
-                <div class="k-yn-group">
-                  <button class="k-btn yes">Y</button>
-                  <button class="k-btn no">N</button>
-                </div>
+                <div class="k-yn-group"><button class="k-btn yes">Y</button><button class="k-btn no">N</button></div>
             </div>
           </div>
         </div>
-
         <div class="k-side-actions">
           <div class="k-vol-label" style="font-size:14px; font-weight:600; margin-bottom:5px;">Volume: ${fmtVol(sideMarket.volume)}</div>
           <button class="btn-dflow">⚡ Bet On-Chain</button>
-          <button class="btn-kalshi-link" onclick="window.open('https://kalshi.com/markets/${sideMarket.ticker}?ref=flashscreener')">
-            Kalshi ↗
-          </button>
+          <button class="btn-kalshi-link" onclick="window.open('https://kalshi.com/markets/${sideMarket.ticker}?ref=flashscreener')">Kalshi ↗</button>
         </div>
       `;
     }
-
-    // --- LÓGICA DE NAVEGAÇÃO ---
-    const slides = document.getElementById("pmSlides");
-    const dots = document.querySelectorAll(".pm-dot");
-    const totalSlides = heroMarkets.length;
-    let currentSlide = 0;
-
-    const goToSlide = (index) => {
-      if (index < 0) index = totalSlides - 1;
-      if (index >= totalSlides) index = 0;
-      currentSlide = index;
-      
-      // Move o Slide
-      slides.style.transform = `translateX(-${currentSlide * 100}%)`;
-      
-      // Atualiza os Dots
-      dots.forEach((dot, idx) => {
-        if (idx === currentSlide) dot.classList.add('is-active');
-        else dot.classList.remove('is-active');
-      });
-    };
-
-    // Adiciona clique nas bolinhas
-    dots.forEach(dot => {
-      dot.onclick = () => {
-        const idx = parseInt(dot.getAttribute('data-index'));
-        goToSlide(idx);
-      };
-    });
-
-    // Auto-play opcional (se quiser, descomente abaixo)
-    // setInterval(() => goToSlide(currentSlide + 1), 6000);
   }
 
   fetchMarkets();
