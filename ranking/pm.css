@@ -1,23 +1,21 @@
-/* pm.css - Dark Mode & Layout Fixes */
-
-/* Container Principal */
 .pm-strip {
   width: 100%;
-  margin-bottom: 24px;
+  max-width: 1280px;
+  margin: 0 auto 24px auto;
+  padding: 0 16px;
 }
 
 .pm-grid {
   display: grid;
-  grid-template-columns: 2fr 1.2fr; /* Ajuste de proporção para dar mais espaço ao gráfico */
+  grid-template-columns: 2fr 1.2fr;
   gap: 16px;
   align-items: stretch;
 }
 
-/* Cards (Base) */
 .pm-card {
   border-radius: 16px;
-  background: #0e1221; /* Fundo Dark Profundo */
-  border: 1px solid #1e2338; /* Borda sutil */
+  background: #0e1221;
+  border: 1px solid #1e2338;
   color: #f5f5f7;
   overflow: hidden;
   position: relative;
@@ -26,15 +24,14 @@
 }
 
 .pm-card--hero {
-  padding: 0; /* Removido padding interno do card para o carrossel funcionar bem */
+  padding: 0;
 }
 
-/* Carrossel */
 .pm-carousel {
   position: relative;
   height: 100%;
   width: 100%;
-  overflow: hidden; /* Isso impede que o slide vizinho apareça cortado */
+  overflow: hidden;
 }
 
 .pm-slides {
@@ -52,10 +49,9 @@
   padding: 20px;
 }
 
-/* Layout Interno do Slide */
 .pm-hero {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 50% 50% para evitar cortes */
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
   height: 100%;
   align-items: stretch;
@@ -71,10 +67,9 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  min-width: 0; /* Crucial para Grid CSS não estourar com charts */
+  min-width: 0;
 }
 
-/* Header do Market */
 .pm-header {
   display: flex;
   gap: 12px;
@@ -88,8 +83,6 @@
   border-radius: 10px;
   background: #181b2a;
   flex: 0 0 auto;
-  position: relative;
-  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -100,7 +93,6 @@
   color: #fff;
 }
 
-/* Outcomes (Barras de Probabilidade) */
 .pm-outcomes {
   display: flex;
   flex-direction: column;
@@ -127,12 +119,6 @@
   text-overflow: ellipsis;
 }
 
-.pm-row-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .pm-row-pct {
   font-size: 14px;
   font-weight: 700;
@@ -141,7 +127,12 @@
   text-align: right;
 }
 
-/* Botões Yes/No com Cores de Trading */
+.pm-row-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .pm-yn {
   display: flex;
   background: #000;
@@ -158,24 +149,18 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
-  min-width: 40px;
 }
 
-/* Cores Semânticas */
 .btn-yes {
   background: rgba(16, 185, 129, 0.15);
   color: #34d399;
 }
-.btn-yes:hover { background: rgba(16, 185, 129, 0.25); }
 
 .btn-no {
   background: rgba(239, 68, 68, 0.15);
   color: #f87171;
 }
-.btn-no:hover { background: rgba(239, 68, 68, 0.25); }
 
-
-/* News Section */
 .pm-news {
   padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -200,23 +185,14 @@
   overflow: hidden;
 }
 
-/* Gráfico */
 .pm-chart {
   width: 100%;
   flex: 1;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.2);
-  position: relative;
-  overflow: hidden;
-  min-height: 120px; /* Garante altura mínima */
+  min-height: 120px;
 }
 
-.pm-chart svg {
-  width: 100%;
-  height: 100%;
-}
-
-/* Paginação (Dots) */
 .pm-dots {
   position: absolute;
   bottom: 12px;
@@ -225,7 +201,6 @@
   display: flex;
   justify-content: center;
   gap: 6px;
-  z-index: 10;
 }
 
 .pm-dot {
@@ -235,15 +210,12 @@
   border: 0;
   background: rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  transition: all 0.2s;
 }
 
 .pm-dot.is-active {
   background: #3b82f6;
-  transform: scale(1.2);
 }
 
-/* Widget Lateral (Menor) */
 .pm-card--side {
   padding: 20px;
 }
@@ -251,7 +223,6 @@
 .pm-side-head {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
   margin-bottom: 16px;
 }
 
@@ -279,9 +250,6 @@
   font-size: 11px;
   color: #64748b;
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .pm-vol-val {
@@ -289,12 +257,10 @@
   font-weight: 600;
 }
 
-/* BOTÕES DE AÇÃO (SPLIT) */
 .pm-actions {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 8px;
-  margin-top: 8px;
 }
 
 .btn-dflow {
@@ -306,33 +272,19 @@
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: opacity 0.2s;
 }
-.btn-dflow:hover { opacity: 0.9; }
 
 .btn-kalshi-link {
   background: transparent;
   border: 1px solid #2d3248;
   color: #94a3b8;
   font-size: 12px;
-  font-weight: 500;
   padding: 0 12px;
   border-radius: 8px;
   cursor: pointer;
 }
-.btn-kalshi-link:hover {
-  border-color: #4f46e5;
-  color: #fff;
-}
 
-/* Responsividade */
 @media (max-width: 900px) {
   .pm-grid { grid-template-columns: 1fr; }
-  .pm-hero { grid-template-columns: 1fr; gap: 16px; }
-  .pm-chart { min-height: 140px; }
-  .pm-card--side { min-height: auto; }
+  .pm-hero { grid-template-columns: 1fr; }
 }
