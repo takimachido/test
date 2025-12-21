@@ -76,11 +76,14 @@
   }
 
   function updateUI(markets) {
-    const heroMarkets = markets.slice(0, 3);
-    const sideMarket = markets[3] || markets[0];
+    // AGORA PEGAMOS 6 MERCADOS
+    const heroMarkets = markets.slice(0, 6);
+    const sideMarket = markets[6] || markets[0]; // O lateral agora é o 7º ou o 1º
+    
     const slidesContainer = document.getElementById("pmSlides");
 
     if (slidesContainer) {
+      // 1. Renderiza os Slides
       slidesContainer.innerHTML = heroMarkets.map((m) => {
         const mainProb = Math.round(m.last_price || 50);
         const altProb1 = Math.round(Math.random() * (100 - mainProb) * 0.6);
@@ -160,19 +163,26 @@
                 </div>
               </div>
             </div>
-            
-            <div class="k-footer-nav">
-              <div class="k-nav-btn prev-slide">
-                <span>← Previous market</span>
-              </div>
-              <div class="k-nav-btn next-slide">
-                <span>Next market →</span>
-              </div>
-            </div>
-
           </div>
         </article>
       `}).join('');
+
+      // 2. Renderiza os Dots (Bolinhas) fora dos slides
+      // Procura se já existe, se não cria e anexa após o slider
+      const carouselContainer = document.querySelector('.pm-carousel');
+      let dotsContainer = document.querySelector('.pm-dots-container');
+      
+      if (!dotsContainer && carouselContainer) {
+        dotsContainer = document.createElement('div');
+        dotsContainer.className = 'pm-dots-container';
+        carouselContainer.appendChild(dotsContainer);
+      }
+
+      if (dotsContainer) {
+        dotsContainer.innerHTML = heroMarkets.map((_, i) => 
+          `<button class="pm-dot ${i === 0 ? 'is-active' : ''}" data-index="${i}"></button>`
+        ).join('');
+      }
     }
 
     const sideWidget = document.getElementById("pmSideWidget");
@@ -203,7 +213,9 @@
       `;
     }
 
+    // --- LÓGICA DE NAVEGAÇÃO ---
     const slides = document.getElementById("pmSlides");
+    const dots = document.querySelectorAll(".pm-dot");
     const totalSlides = heroMarkets.length;
     let currentSlide = 0;
 
@@ -211,15 +223,27 @@
       if (index < 0) index = totalSlides - 1;
       if (index >= totalSlides) index = 0;
       currentSlide = index;
+      
+      // Move o Slide
       slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      // Atualiza os Dots
+      dots.forEach((dot, idx) => {
+        if (idx === currentSlide) dot.classList.add('is-active');
+        else dot.classList.remove('is-active');
+      });
     };
 
-    document.querySelectorAll('.next-slide').forEach(btn => {
-      btn.onclick = () => goToSlide(currentSlide + 1);
+    // Adiciona clique nas bolinhas
+    dots.forEach(dot => {
+      dot.onclick = () => {
+        const idx = parseInt(dot.getAttribute('data-index'));
+        goToSlide(idx);
+      };
     });
-    document.querySelectorAll('.prev-slide').forEach(btn => {
-      btn.onclick = () => goToSlide(currentSlide - 1);
-    });
+
+    // Auto-play opcional (se quiser, descomente abaixo)
+    // setInterval(() => goToSlide(currentSlide + 1), 6000);
   }
 
   fetchMarkets();
