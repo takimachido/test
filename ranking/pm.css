@@ -53,13 +53,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 12px; /* Espaço entre setas e bolinhas */
   padding: 12px 0 16px;
   background: #fff;
   border-top: 1px solid #f9f9f9;
   z-index: 10;
 }
 
+/* Dots */
 .pm-dot {
   width: 10px;
   height: 10px;
@@ -69,35 +70,34 @@
   cursor: pointer;
   transition: all 0.2s;
   padding: 0;
+  margin: 0 4px; /* Pequeno espaço entre cada bolinha */
 }
 .pm-dot:hover { background-color: #d1d5db; }
 .pm-dot.is-active { background-color: #111; transform: scale(1.1); }
 
-/* Setas Flutuantes nos Cantos */
+/* Setas (Agora estáticas, não absolutas) */
 .pm-nav-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #fff;
   border: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra mais leve */
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  color: #333;
+  font-size: 16px;
+  color: #555;
   cursor: pointer;
-  z-index: 20; /* Fica acima dos slides */
   transition: all 0.2s;
+  /* Removemos position absolute */
 }
 
 .pm-nav-arrow:hover {
   background: #f9f9f9;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   color: #000;
+  transform: translateY(-1px);
 }
 
 .pm-prev { left: 16px; }
