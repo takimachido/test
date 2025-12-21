@@ -13,7 +13,7 @@
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a href="https://www.flashscreener.com/" class="brand">FLASHSCREENER</a>
+      <a href="https://www.flashscreener.com//" class="brand">FLASHSCREENER</a>
       <div class="search-wrapper">
         <input type="text" class="search-input" placeholder="Search...">
       </div>
@@ -23,7 +23,133 @@
   </header>
 
   <main class="ranking-container">
-    <section class="pm-strip" id="pm-strip"></section>
+    <section class="pm-strip" id="pm-strip">
+      <div class="pm-grid">
+        <div class="pm-card pm-card--hero">
+          <div class="pm-carousel">
+            <div class="pm-slides" id="pmSlides">
+              <article class="pm-slide">
+                <div class="pm-hero">
+                  <div class="pm-left">
+                    <div class="pm-header">
+                      <div class="pm-market-icon" style="background-image: linear-gradient(135deg, #1e293b, #0f172a)"></div>
+                      <div class="pm-market-title">House passes bill to extend ACA tax credits?</div>
+                    </div>
+                    <div class="pm-outcomes">
+                      <div class="pm-row">
+                        <div class="pm-row-label">Before Feb 2026</div>
+                        <div class="pm-row-right">
+                          <div class="pm-row-pct">83%</div>
+                          <div class="pm-yn">
+                            <button class="pm-yn-btn btn-yes">YES</button>
+                            <button class="pm-yn-btn btn-no">NO</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="pm-row">
+                        <div class="pm-row-label">Before 2027</div>
+                        <div class="pm-row-right">
+                          <div class="pm-row-pct">84%</div>
+                          <div class="pm-yn">
+                            <button class="pm-yn-btn btn-yes">YES</button>
+                            <button class="pm-yn-btn btn-no">NO</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pm-news">
+                      <div class="pm-news-label">Latest News</div>
+                      <div class="pm-news-text">Four moderate House Republicans joined Democrats to force a vote on extending Affordable Care…</div>
+                    </div>
+                  </div>
+                  <div class="pm-right">
+                    <div class="pm-chart" id="chart-slide-1"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="pm-slide">
+                <div class="pm-hero">
+                  <div class="pm-left">
+                    <div class="pm-header">
+                      <div class="pm-market-icon" style="background-image: linear-gradient(135deg, #1e293b, #0f172a)"></div>
+                      <div class="pm-market-title">Will the Fed cut rates next meeting?</div>
+                    </div>
+                    <div class="pm-outcomes">
+                      <div class="pm-row">
+                        <div class="pm-row-label">Cut by 25 bps</div>
+                        <div class="pm-row-right">
+                          <div class="pm-row-pct">41%</div>
+                          <div class="pm-yn">
+                            <button class="pm-yn-btn btn-yes">YES</button>
+                            <button class="pm-yn-btn btn-no">NO</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="pm-row">
+                        <div class="pm-row-label">No change</div>
+                        <div class="pm-row-right">
+                          <div class="pm-row-pct">59%</div>
+                          <div class="pm-yn">
+                            <button class="pm-yn-btn btn-yes">YES</button>
+                            <button class="pm-yn-btn btn-no">NO</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pm-news">
+                      <div class="pm-news-label">Analysis</div>
+                      <div class="pm-news-text">Traders are repricing expectations after the latest inflation print and updated guidance…</div>
+                    </div>
+                  </div>
+                  <div class="pm-right">
+                    <div class="pm-chart" id="chart-slide-2"></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="pm-dots" id="pmDots">
+              <button class="pm-dot is-active" data-i="0"></button>
+              <button class="pm-dot" data-i="1"></button>
+            </div>
+          </div>
+        </div>
+        <div class="pm-card pm-card--side">
+          <div class="pm-side-head">
+            <div class="pm-side-icon"></div>
+            <div class="pm-side-title">How high will Bitcoin get this year?</div>
+          </div>
+          <div class="pm-side-rows">
+            <div class="pm-side-row pm-row">
+              <div class="pm-side-label pm-row-label">$150k or above</div>
+              <div class="pm-side-right pm-row-right">
+                <div class="pm-side-pct pm-row-pct">1%</div>
+                <div class="pm-yn">
+                  <button class="pm-yn-btn btn-yes">Y</button>
+                  <button class="pm-yn-btn btn-no">N</button>
+                </div>
+              </div>
+            </div>
+            <div class="pm-side-row pm-row">
+              <div class="pm-side-label pm-row-label">$130k or above</div>
+              <div class="pm-side-right pm-row-right">
+                <div class="pm-side-pct pm-row-pct">2%</div>
+                <div class="pm-yn">
+                  <button class="pm-yn-btn btn-yes">Y</button>
+                  <button class="pm-yn-btn btn-no">N</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pm-side-meta">
+            <div class="pm-volume-badge">Vol: <span class="pm-vol-val">$30.4M</span></div>
+            <div class="pm-actions">
+              <button class="btn-dflow"><span>⚡ Bet On-Chain</span></button>
+              <button class="btn-kalshi-link" data-url="https://kalshi.com/?ref=flashscreener">Kalshi ↗</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <div class="table">
       <div class="table-header">
@@ -47,13 +173,13 @@
       <a href="https://x.com/flashscreener"><img src="./img/twitter-x-logo.png" alt="Twitter/X"></a>
       <a href="https://t.me/FlashScreener"><img src="./img/Telegram_logo.webp" alt="Telegram"></a>
     </div>
-    <p class="footer-links">
-      <a href="/privacy">Privacy Policy</a>
-    </p>
+    <div class="footer-links">
+      <a href="https://www.flashscreener.com/privacy-policy">Privacy Policy</a>
+    </div>
     <p class="copyright">© 2025 FlashScreener. All rights reserved.</p>
   </footer>
 
-  <script src="./data.js?v=1" defer></script>
-  <script src="./pm.js?v=1" defer></script>
+  <script src="./data.js?v=1"></script>
+  <script src="./pm.js?v=1"></script>
 </body>
 </html>
