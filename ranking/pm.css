@@ -3,7 +3,7 @@
    ========================================= */
 .pm-strip {
   /* Reduzi de 1280px para 1120px para ficar mais compacto e "app-like" */
-  max-width: 1120px; 
+  max-width: 1320px; 
   margin: 24px auto;
   padding: 0 24px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -57,7 +57,7 @@
   display: grid;
   grid-template-columns: 1.3fr 1fr; /* Coluna de dados um pouco maior que o gráfico */
   height: 100%;
-  min-height: 360px; /* Altura mínima fixa para consistência */
+  min-height: 320px; /* Altura mínima fixa para consistência */
   background: #fff;
 }
 
