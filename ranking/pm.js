@@ -2,7 +2,20 @@
   const root = document.getElementById("pm-strip");
   if (!root) return;
 
-  const DFLOW_BASE = "https://prediction-markets-api.dflow.net/api/v1";
+  const pickBackend = () => {
+    const attr =
+      root.getAttribute("data-pm-backend") ||
+      (root.dataset ? root.dataset.pmBackend : "") ||
+      "";
+    const win = typeof window !== "undefined" ? window.PM_BACKEND : "";
+    const env = String(win || attr || "").trim();
+    if (env) return env.replace(/\/+$/, "");
+    if (String(location.hostname || "").endsWith("github.io")) return "https://prediction-backend-r0vj.onrender.com";
+    return "";
+  };
+
+  const BACKEND_BASE = pickBackend();
+  const join = (b, p) => (b ? b + p : p);
 
   const fmtVolAbbrev = (n) => {
     const v = Number(n);
@@ -132,6 +145,36 @@
   };
 
   const normalizeEvent = (evt) => {
+    const img = evt?.image_url ?? evt?.imageUrl ?? evt?.image ?? null;
+
+    if (Array.isArray(evt?.outcomes)) {
+      const outs = evt.outcomes
+        .map((o) => {
+          const name = (o?.name && String(o.name).trim()) || "Yes";
+          const price = clampPct(centsFromMaybe(o?.price));
+          return {
+            name,
+            price,
+            volume: toNum(o?.volume) ?? 0,
+            ticker: o?.ticker || "",
+            image_url: o?.image_url || null
+          };
+        })
+        .filter((o) => o.ticker || o.name);
+
+      outs.sort((a, b) => (b.price ?? -1) - (a.price ?? -1));
+
+      return {
+        ticker: evt?.ticker || "",
+        title: evt?.title || "",
+        subtitle: evt?.subtitle || "",
+        volume: toNum(evt?.volume) ?? 0,
+        volume24h: toNum(evt?.volume24h) ?? 0,
+        image_url: img,
+        outcomes: outs.slice(0, 3)
+      };
+    }
+
     const markets = Array.isArray(evt?.markets) ? evt.markets : [];
     const outcomes = markets
       .map((m) => {
@@ -159,7 +202,7 @@
       subtitle: evt?.subtitle || "",
       volume: toNum(evt?.volume) ?? 0,
       volume24h: toNum(evt?.volume24h) ?? 0,
-      image_url: evt?.imageUrl || null,
+      image_url: img,
       outcomes: outcomes.slice(0, 3)
     };
   };
@@ -170,37 +213,14 @@
     return r.json();
   };
 
-  const fetchHeroEvents = async () => {
-    const url = `${DFLOW_BASE}/events?limit=18&withNestedMarkets=true&status=active&sort=volume&cursor=0`;
+  const fetchBundle = async () => {
+    const url = join(BACKEND_BASE, "/kalshi-markets");
     const data = await fetchJson(url);
-    const events = Array.isArray(data?.events) ? data.events : [];
-    return events.map(normalizeEvent).filter((e) => e.title && e.outcomes.length);
-  };
-
-  const fetchCryptoEvents = async () => {
-    const qs = ["bitcoin", "ethereum", "solana", "crypto", "btc", "eth"];
-    const res = await Promise.allSettled(
-      qs.map((q) =>
-        fetchJson(
-          `${DFLOW_BASE}/search?q=${encodeURIComponent(q)}&sort=volume&order=desc&limit=24&cursor=0&withNestedMarkets=true`
-        )
-      )
-    );
-
-    const map = new Map();
-    for (const r of res) {
-      if (r.status !== "fulfilled") continue;
-      const events = Array.isArray(r.value?.events) ? r.value.events : [];
-      for (const e of events) {
-        const ne = normalizeEvent(e);
-        if (!ne.ticker || !ne.title || !ne.outcomes.length) continue;
-        if (!isCryptoEvent(ne)) continue;
-        const prev = map.get(ne.ticker);
-        if (!prev || (ne.volume ?? 0) > (prev.volume ?? 0)) map.set(ne.ticker, ne);
-      }
-    }
-
-    return [...map.values()].sort((a, b) => (b.volume ?? 0) - (a.volume ?? 0));
+    const marketsRaw = Array.isArray(data?.markets) ? data.markets : [];
+    const cryptoRaw = Array.isArray(data?.crypto) ? data.crypto : [];
+    const markets = marketsRaw.map(normalizeEvent).filter((e) => e.title && e.outcomes.length);
+    const crypto = cryptoRaw.map(normalizeEvent).filter((e) => e.title && e.outcomes.length);
+    return { markets, crypto };
   };
 
   function ensureSideMarkup() {
@@ -235,16 +255,40 @@
   function setSideEmpty(msg) {
     const ensured = ensureSideMarkup();
     if (!ensured) return;
-    ensured.slides.innerHTML = `<div class="pm-side-empty">${msg || "No crypto markets available"}</div>`;
+    ensured.slides.innerHTML = `<div class="pm-side-empty-state">${msg || "Markets unavailable"}</div>`;
     ensured.dots.innerHTML = "";
   }
 
+  function setHeroEmpty(msg) {
+    const slidesContainer = document.getElementById("pmSlides");
+    const carousel = document.querySelector(".pm-carousel");
+    if (!slidesContainer) return;
+
+    slidesContainer.style.transform = `translateX(0%)`;
+    slidesContainer.innerHTML = `
+      <article class="pm-slide">
+        <div class="pm-hero-container" style="grid-template-columns:1fr;">
+          <div class="pm-side-empty-state">${msg || "Markets unavailable"}</div>
+        </div>
+      </article>
+    `;
+
+    if (!carousel) return;
+    const oldNav = carousel.querySelector(".pm-dots-container");
+    if (oldNav) oldNav.remove();
+  }
+
   function updateHero(events) {
-    const heroEvents = events.slice(0, 6);
+    const heroEvents = (Array.isArray(events) ? events : []).slice(0, 6);
     const slidesContainer = document.getElementById("pmSlides");
     const carousel = document.querySelector(".pm-carousel");
 
     if (!slidesContainer) return;
+
+    if (!heroEvents.length) {
+      setHeroEmpty("Markets unavailable");
+      return;
+    }
 
     slidesContainer.innerHTML = heroEvents
       .map((evt) => {
@@ -465,10 +509,12 @@
 
   async function init() {
     try {
-      const [hero, crypto] = await Promise.all([fetchHeroEvents(), fetchCryptoEvents()]);
-      updateHero(hero);
-      updateSide(crypto);
+      const { markets, crypto } = await fetchBundle();
+      updateHero(markets);
+      const side = (crypto && crypto.length ? crypto : markets.filter(isCryptoEvent)).slice(0, 3);
+      updateSide(side);
     } catch (e) {
+      setHeroEmpty("Markets unavailable");
       setSideEmpty("Markets unavailable");
     }
   }
