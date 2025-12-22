@@ -96,12 +96,16 @@
     `;
   };
 
-  const CRYPTO_RE =
-    /\b(CRYPTO|CRYPTOCURRENCY|BITCOIN|BTC|ETHEREUM|ETH|SOLANA|\bSOL\b|DOGE|XRP|BNB|AVAX|ADA|USDT|USDC|STABLECOIN|DEFI|BLOCKCHAIN|NFT|ALTCOIN|MEME|COINBASE|BINANCE)\b/i;
+  const CRYPTO_STRONG_RE =
+    /\b(CRYPTO|CRYPTOCURRENCY|BTC|BITCOIN|ETH|ETHEREUM|SOLANA|\bSOL\b|DOGE|DOGECOIN|XRP|RIPPLE|BNB|BINANCE\s*COIN|AVAX|AVALANCHE|ADA|CARDANO|SUI|APTOS|TON|POLKADOT|\bDOT\b|CHAINLINK|\bLINK\b|ARBITRUM|\bARB\b|OPTIMISM|\bOP\b|USDT|TETHER|USDC|STABLECOIN|DEFI|BLOCKCHAIN|ON-?CHAIN|NFT|ALTCOIN|MEMECOIN|COINBASE|BINANCE|KRAKEN|BYBIT|OKX|METAMASK|PHANTOM|HALVING|HASHRATE|MINING)\b/i;
 
   const isCryptoEvent = (evt) => {
-    const s = `${evt?.title || ""} ${evt?.ticker || ""}`;
-    return CRYPTO_RE.test(s);
+    const o = Array.isArray(evt?.outcomes) ? evt.outcomes : [];
+    const extra = o
+      .map((x) => `${x?.name || ""} ${x?.ticker || ""}`)
+      .join(" ");
+    const s = `${evt?.title || ""} ${evt?.ticker || ""} ${extra}`;
+    return CRYPTO_STRONG_RE.test(s);
   };
 
   function ensureSideMarkup() {
@@ -159,11 +163,10 @@
     try {
       const response = await fetch(`${API_PM_BACKEND}/kalshi-markets`);
       const data = await response.json();
-      if (data && Array.isArray(data.markets) && data.markets.length > 0) {
-        updateUI(data.markets, data.crypto);
-      } else {
-        setSideEmpty();
-      }
+      const markets = Array.isArray(data?.markets) ? data.markets : [];
+      const crypto = Array.isArray(data?.crypto) ? data.crypto : [];
+      if (markets.length) updateUI(markets, crypto);
+      else setSideEmpty();
     } catch (e) {
       setSideEmpty();
     }
@@ -310,18 +313,20 @@
     const sideSlides = ensured.slides;
     const sideDots = ensured.dots;
 
-const cryptoBase = Array.isArray(cryptoFromBackend) && cryptoFromBackend.length
-      ? cryptoFromBackend
-      : events
-          .filter(isCryptoEvent)
-          .sort((a, b) => (Number(b.volume) || 0) - (Number(a.volume) || 0));
+    const backend = Array.isArray(cryptoFromBackend) ? cryptoFromBackend : [];
+    const backendFiltered = backend.filter(isCryptoEvent);
 
-    const base = cryptoBase.length
-      ? cryptoBase
-      : events.slice().sort((a, b) => (Number(b.volume) || 0) - (Number(a.volume) || 0));
+    const fallbackFiltered = events
+      .filter(isCryptoEvent)
+      .slice()
+      .sort((a, b) => (Number(b.volume) || 0) - (Number(a.volume) || 0));
 
-    const list = base.slice(0, 3);
-if (!list.length) {
+    const list = (backendFiltered.length ? backendFiltered : fallbackFiltered).slice(0, 3);
+
+    if (sideTimer) clearInterval(sideTimer);
+    sideIdx = 0;
+
+    if (!list.length) {
       sideSlides.innerHTML = `<div class="pm-side-empty">No crypto markets available</div>`;
       sideDots.innerHTML = "";
       return;
@@ -336,7 +341,9 @@ if (!list.length) {
         const yesPay = payoutFromPct(yesPct);
         const noPay = payoutFromPct(noPct);
         const marketTicker = top.marketTicker || "";
-        const url = marketTicker ? `https://kalshi.com/markets/${encodeURIComponent(marketTicker)}?ref=flashscreener` : "https://kalshi.com/market-data";
+        const url = marketTicker
+          ? `https://kalshi.com/markets/${encodeURIComponent(marketTicker)}?ref=flashscreener`
+          : "https://kalshi.com/market-data";
 
         const yesPayTxt = yesPay ? "$" + yesPay.toLocaleString("en-US") : "--";
         const noPayTxt = noPay ? "$" + noPay.toLocaleString("en-US") : "--";
@@ -387,7 +394,9 @@ if (!list.length) {
       if (i >= total) i = 0;
       sideIdx = i;
       sideSlides.style.transform = `translateX(-${sideIdx * 100}%)`;
-      [...sideDots.querySelectorAll(".pm-side-dot")].forEach((d, idx) => d.classList.toggle("is-active", idx === sideIdx));
+      [...sideDots.querySelectorAll(".pm-side-dot")].forEach((d, idx) =>
+        d.classList.toggle("is-active", idx === sideIdx)
+      );
     };
 
     sideDots.querySelectorAll(".pm-side-dot").forEach((d) => {
@@ -403,7 +412,6 @@ if (!list.length) {
       if (url) window.open(url, "_blank");
     };
 
-    if (sideTimer) clearInterval(sideTimer);
     sideTimer = setInterval(() => go(sideIdx + 1), 6500);
 
     go(0);
