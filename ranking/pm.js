@@ -4,7 +4,7 @@
 
   const API_PM_BACKEND = "https://prediction-backend-r0vj.onrender.com";
 
-  const fmtVol = (n) => {
+  const fmtVolAbbrev = (n) => {
     const v = Number(n);
     if (!Number.isFinite(v) || v <= 0) return "$0";
     const abs = Math.abs(v);
@@ -15,6 +15,12 @@
     return "$" + Math.floor(v).toLocaleString();
   };
 
+  const fmtVolFull = (n) => {
+    const v = Number(n);
+    if (!Number.isFinite(v) || v <= 0) return "--";
+    return "$" + Math.floor(v).toLocaleString("en-US");
+  };
+
   const pct = (v) => {
     const n = Number(v);
     if (!Number.isFinite(n)) return null;
@@ -23,10 +29,18 @@
     return Math.max(0, Math.min(100, r));
   };
 
+  const payoutFromPct = (p) => {
+    const n = Number(p);
+    if (!Number.isFinite(n) || n <= 0) return null;
+    const x = Math.round(10000 / n);
+    if (!Number.isFinite(x) || x <= 0) return null;
+    return x;
+  };
+
   const iconStyle = (url) =>
     url
       ? `background-image:url('${url}');background-size:cover;background-position:center;`
-      : `background-color:#f7f7f7;display:flex;align-items:center;justify-content:center;`;
+      : `background-color:#f3f4f6;display:flex;align-items:center;justify-content:center;`;
 
   const drawChart = (outcomeCount) => {
     const width = 600;
@@ -82,9 +96,6 @@
     `;
   };
 
-  let sideTimer = null;
-  let sideState = { list: [], idx: 0 };
-
   const CRYPTO_RE =
     /\b(CRYPTO|CRYPTOCURRENCY|BITCOIN|BTC|ETHEREUM|ETH|SOLANA|\bSOL\b|DOGE|XRP|BNB|AVAX|ADA|USDT|USDC|STABLECOIN|DEFI|BLOCKCHAIN|NFT|ALTCOIN|MEME|COINBASE|BINANCE)\b/i;
 
@@ -93,134 +104,59 @@
     return CRYPTO_RE.test(s);
   };
 
+  const getYesNoFromEvent = (evt) => {
+    const outcomes = Array.isArray(evt?.outcomes) ? evt.outcomes : [];
+    const norm = outcomes.map((o) => ({ ...o, _n: String(o?.name || "").trim().toUpperCase() }));
+    const yes = norm.find((o) => o._n === "YES") || null;
+    const no = norm.find((o) => o._n === "NO") || null;
+
+    if (yes && no) {
+      const y = pct(yes.price);
+      const n = pct(no.price);
+      if (y !== null && n !== null) return { yesPct: y, noPct: n, marketTicker: yes.ticker || no.ticker || "" };
+      if (y !== null) return { yesPct: y, noPct: Math.max(0, 100 - y), marketTicker: yes.ticker || "" };
+      if (n !== null) return { yesPct: Math.max(0, 100 - n), noPct: n, marketTicker: no.ticker || "" };
+    }
+
+    const top = norm[0] || null;
+    const second = norm[1] || null;
+    const pTop = pct(top?.price);
+    const pSecond = pct(second?.price);
+
+    if (pTop !== null && pSecond !== null && pTop + pSecond <= 110) {
+      return { yesPct: pTop, noPct: pSecond, marketTicker: top?.ticker || second?.ticker || "" };
+    }
+
+    if (pTop !== null) {
+      return { yesPct: pTop, noPct: Math.max(0, 100 - pTop), marketTicker: top?.ticker || "" };
+    }
+
+    return { yesPct: null, noPct: null, marketTicker: top?.ticker || "" };
+  };
+
   async function fetchMarkets() {
     try {
       const response = await fetch(`${API_PM_BACKEND}/kalshi-markets`);
       const data = await response.json();
       if (data && Array.isArray(data.markets) && data.markets.length > 0) {
         updateUI(data.markets);
+      } else {
+        setSideEmpty();
       }
     } catch (e) {
-      const sideTitle = document.getElementById("sideTitle");
-      if (sideTitle) sideTitle.innerText = "Markets Unavailable";
+      setSideEmpty();
     }
   }
 
-  function renderSideSlide(evt) {
-    const sideIcon = document.getElementById("sideIcon");
-    const sideTitle = document.getElementById("sideTitle");
-    const sideRows = document.getElementById("sideRows");
-    const sideVol = document.getElementById("sideVol");
-    const sideKalshiBtn = document.getElementById("sideKalshiBtn");
-
-    if (!sideIcon || !sideTitle || !sideRows || !sideVol || !sideKalshiBtn) return;
-
-    const outcomes = Array.isArray(evt?.outcomes) ? evt.outcomes : [];
-    const top = outcomes[0] || null;
-
-    const evtImg = evt?.image_url || null;
-    sideIcon.style.cssText = iconStyle(evtImg);
-    sideIcon.textContent = evtImg ? "" : "📈";
-
-    sideTitle.textContent = evt?.title || "";
-
-    sideVol.textContent = fmtVol(evt?.volume);
-
-    const rowsHtml = outcomes.slice(0, 2).map((o, idx) => {
-      const p = pct(o?.price);
-      const color = idx === 0 ? "#00d293" : "#3b82f6";
-      const oImg = o?.image_url || evtImg;
-      const mini = iconStyle(oImg);
-      const pTxt = p === null ? "--" : `${p}%`;
-      const name = o?.name || "";
-      return `
-        <div class="k-outcome-row" style="padding:10px 0;">
-          <div class="k-outcome-info">
-            <div class="k-mini-icon" style="${mini}"></div>
-            <span class="k-outcome-name">${name}</span>
-          </div>
-          <div class="k-outcome-right">
-            <span class="k-pct" style="color:${color};">${pTxt}</span>
-            <div class="k-yn-group">
-              <button class="k-btn yes">Yes</button>
-              <button class="k-btn no">No</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join("");
-
-    sideRows.innerHTML = rowsHtml || `<div style="color:#777;font-size:13px;">--</div>`;
-
-    const targetTicker = top?.ticker || "";
-    const url = targetTicker ? `https://kalshi.com/markets/${encodeURIComponent(targetTicker)}?ref=flashscreener` : "https://kalshi.com/market-data";
-    sideKalshiBtn.onclick = () => window.open(url, "_blank");
+  function setSideEmpty() {
+    const sideSlides = document.getElementById("pmSideSlides");
+    const sideDots = document.getElementById("pmSideDots");
+    if (sideSlides) sideSlides.innerHTML = "";
+    if (sideDots) sideDots.innerHTML = "";
   }
 
-  function setupSideCarousel(cryptoEvents) {
-    const sideWidget = document.getElementById("pmSideWidget");
-    const sideRows = document.getElementById("sideRows");
-    if (!sideWidget || !sideRows) return;
-
-    const oldNav = sideWidget.querySelector(".pm-side-nav");
-    if (oldNav) oldNav.remove();
-
-    const nav = document.createElement("div");
-    nav.className = "pm-side-nav";
-    nav.style.cssText = "display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px;";
-
-    const prev = document.createElement("button");
-    prev.type = "button";
-    prev.innerHTML = "←";
-    prev.style.cssText = "width:28px;height:28px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer;";
-
-    const next = document.createElement("button");
-    next.type = "button";
-    next.innerHTML = "→";
-    next.style.cssText = "width:28px;height:28px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer;";
-
-    const dotsWrap = document.createElement("div");
-    dotsWrap.style.cssText = "display:flex;align-items:center;gap:8px;";
-
-    const dots = cryptoEvents.map((_, i) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.dataset.index = String(i);
-      b.style.cssText = `width:9px;height:9px;border-radius:50%;border:none;cursor:pointer;background:${i === 0 ? "#111" : "#e5e7eb"};`;
-      return b;
-    });
-
-    dots.forEach((d) => dotsWrap.appendChild(d));
-
-    nav.appendChild(prev);
-    nav.appendChild(dotsWrap);
-    nav.appendChild(next);
-
-    sideWidget.appendChild(nav);
-
-    const go = (i) => {
-      const total = cryptoEvents.length;
-      if (total === 0) return;
-      if (i < 0) i = total - 1;
-      if (i >= total) i = 0;
-      sideState.idx = i;
-      dots.forEach((b, idx) => (b.style.background = idx === i ? "#111" : "#e5e7eb"));
-      renderSideSlide(cryptoEvents[i]);
-    };
-
-    prev.onclick = () => go(sideState.idx - 1);
-    next.onclick = () => go(sideState.idx + 1);
-    dots.forEach((b) => (b.onclick = () => go(parseInt(b.dataset.index || "0"))));
-
-    if (sideTimer) clearInterval(sideTimer);
-    sideTimer = setInterval(() => go(sideState.idx + 1), 6500);
-
-    go(0);
-  }
-
-  function updateUI(events) {
+  function updateHero(events) {
     const heroEvents = events.slice(0, 6);
-
     const slidesContainer = document.getElementById("pmSlides");
     const carousel = document.querySelector(".pm-carousel");
 
@@ -230,7 +166,6 @@
           const imgUrl = evt.image_url;
           const imgStyle = iconStyle(imgUrl);
           const imgContent = !imgUrl ? "📊" : "";
-
           const outcomes = Array.isArray(evt.outcomes) ? evt.outcomes : [];
 
           const outcomesHtml = outcomes
@@ -284,7 +219,7 @@
                     <div class="k-news-section">
                       <div class="k-news-meta">
                         <span style="font-weight:700;color:#000;">Market Data ·</span>
-                        <span>Total Vol: ${fmtVol(evt.volume)}</span>
+                        <span>Total Vol: ${fmtVolAbbrev(evt.volume)}</span>
                       </div>
                     </div>
                   </div>
@@ -343,18 +278,112 @@
       next.onclick = () => go(curr + 1);
       dots.forEach((d) => (d.onclick = () => go(parseInt(d.dataset.index))));
     }
+  }
 
-    const cryptoTop = events.filter(isCryptoEvent).sort((a, b) => (Number(b.volume) || 0) - (Number(a.volume) || 0)).slice(0, 3);
+  let sideTimer = null;
+  let sideIdx = 0;
 
-    sideState.list = cryptoTop;
-    sideState.idx = 0;
+  function updateSide(events) {
+    const sideSlides = document.getElementById("pmSideSlides");
+    const sideDots = document.getElementById("pmSideDots");
+    if (!sideSlides || !sideDots) return;
 
-    if (cryptoTop.length) {
-      setupSideCarousel(cryptoTop);
-    } else {
-      const sideTitle = document.getElementById("sideTitle");
-      if (sideTitle) sideTitle.textContent = "No crypto markets";
+    const list = events
+      .filter(isCryptoEvent)
+      .sort((a, b) => (Number(b.volume) || 0) - (Number(a.volume) || 0))
+      .slice(0, 3);
+
+    if (!list.length) {
+      sideSlides.innerHTML = "";
+      sideDots.innerHTML = "";
+      return;
     }
+
+    sideSlides.innerHTML = list
+      .map((evt) => {
+        const imgUrl = evt?.image_url || null;
+        const top = getYesNoFromEvent(evt);
+        const yesPct = top.yesPct;
+        const noPct = top.noPct;
+        const yesPay = payoutFromPct(yesPct);
+        const noPay = payoutFromPct(noPct);
+        const marketTicker = top.marketTicker || "";
+        const url = marketTicker ? `https://kalshi.com/markets/${encodeURIComponent(marketTicker)}?ref=flashscreener` : "https://kalshi.com/market-data";
+
+        const yesPayTxt = yesPay ? "$" + yesPay.toLocaleString("en-US") : "--";
+        const noPayTxt = noPay ? "$" + noPay.toLocaleString("en-US") : "--";
+        const yesPctTxt = yesPct === null ? "--" : `${yesPct}%`;
+
+        return `
+          <article class="pm-side-slide" data-url="${url}">
+            <div class="pm-side-top">
+              <div class="pm-side-icon" style="${iconStyle(imgUrl)}">${imgUrl ? "" : "₿"}</div>
+              <div class="pm-side-question">${evt?.title || ""}</div>
+              <div class="pm-side-pct">${yesPctTxt}</div>
+            </div>
+
+            <div class="pm-side-ctas">
+              <button class="pm-side-btn yes" type="button">Yes</button>
+              <button class="pm-side-btn no" type="button">No</button>
+            </div>
+
+            <div class="pm-side-payout">
+              <div class="pm-side-payline">
+                <span class="pm-side-paybase">$100</span>
+                <span class="pm-side-payarrow">→</span>
+                <span class="pm-side-paywin">${yesPayTxt}</span>
+              </div>
+              <div class="pm-side-payline">
+                <span class="pm-side-paybase">$100</span>
+                <span class="pm-side-payarrow">→</span>
+                <span class="pm-side-paywin">${noPayTxt}</span>
+              </div>
+            </div>
+
+            <div class="pm-side-bottom">
+              <div class="pm-side-vol">${fmtVolFull(evt?.volume)}</div>
+              <button class="pm-side-plus" type="button" aria-label="Open market">+</button>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+
+    sideDots.innerHTML = list
+      .map((_, i) => `<button class="pm-side-dot ${i === 0 ? "is-active" : ""}" data-index="${i}" type="button"></button>`)
+      .join("");
+
+    const go = (i) => {
+      const total = list.length;
+      if (i < 0) i = total - 1;
+      if (i >= total) i = 0;
+      sideIdx = i;
+      sideSlides.style.transform = `translateX(-${sideIdx * 100}%)`;
+      [...sideDots.querySelectorAll(".pm-side-dot")].forEach((d, idx) => d.classList.toggle("is-active", idx === sideIdx));
+    };
+
+    sideDots.querySelectorAll(".pm-side-dot").forEach((d) => {
+      d.onclick = () => go(parseInt(d.dataset.index || "0"));
+    });
+
+    sideSlides.onclick = (e) => {
+      const t = e.target;
+      const btn = t.closest(".pm-side-btn, .pm-side-plus");
+      if (!btn) return;
+      const slide = t.closest(".pm-side-slide");
+      const url = slide?.dataset?.url;
+      if (url) window.open(url, "_blank");
+    };
+
+    if (sideTimer) clearInterval(sideTimer);
+    sideTimer = setInterval(() => go(sideIdx + 1), 6500);
+
+    go(0);
+  }
+
+  function updateUI(events) {
+    updateHero(events);
+    updateSide(events);
   }
 
   fetchMarkets();
