@@ -104,6 +104,27 @@
     return CRYPTO_RE.test(s);
   };
 
+  function ensureSideMarkup() {
+    const sideWidget = document.getElementById("pmSideWidget");
+    if (!sideWidget) return null;
+
+    let slides = document.getElementById("pmSideSlides");
+    let dots = document.getElementById("pmSideDots");
+
+    if (!slides || !dots) {
+      sideWidget.innerHTML = `
+        <div class="pm-side-carousel" id="pmSideCarousel">
+          <div class="pm-side-slides" id="pmSideSlides"></div>
+          <div class="pm-side-dots" id="pmSideDots"></div>
+        </div>
+      `;
+      slides = document.getElementById("pmSideSlides");
+      dots = document.getElementById("pmSideDots");
+    }
+
+    return { slides, dots };
+  }
+
   const getYesNoFromEvent = (evt) => {
     const outcomes = Array.isArray(evt?.outcomes) ? evt.outcomes : [];
     const norm = outcomes.map((o) => ({ ...o, _n: String(o?.name || "").trim().toUpperCase() }));
@@ -139,7 +160,7 @@
       const response = await fetch(`${API_PM_BACKEND}/kalshi-markets`);
       const data = await response.json();
       if (data && Array.isArray(data.markets) && data.markets.length > 0) {
-        updateUI(data.markets);
+        updateUI(data.markets, data.crypto);
       } else {
         setSideEmpty();
       }
@@ -283,18 +304,25 @@
   let sideTimer = null;
   let sideIdx = 0;
 
-  function updateSide(events) {
-    const sideSlides = document.getElementById("pmSideSlides");
-    const sideDots = document.getElementById("pmSideDots");
-    if (!sideSlides || !sideDots) return;
+  function updateSide(events, cryptoFromBackend) {
+    const ensured = ensureSideMarkup();
+    if (!ensured) return;
+    const sideSlides = ensured.slides;
+    const sideDots = ensured.dots;
 
-    const list = events
-      .filter(isCryptoEvent)
-      .sort((a, b) => (Number(b.volume) || 0) - (Number(a.volume) || 0))
-      .slice(0, 3);
+const cryptoBase = Array.isArray(cryptoFromBackend) && cryptoFromBackend.length
+      ? cryptoFromBackend
+      : events
+          .filter(isCryptoEvent)
+          .sort((a, b) => (Number(b.volume) || 0) - (Number(a.volume) || 0));
 
-    if (!list.length) {
-      sideSlides.innerHTML = "";
+    const base = cryptoBase.length
+      ? cryptoBase
+      : events.slice().sort((a, b) => (Number(b.volume) || 0) - (Number(a.volume) || 0));
+
+    const list = base.slice(0, 3);
+if (!list.length) {
+      sideSlides.innerHTML = `<div class="pm-side-empty">No crypto markets available</div>`;
       sideDots.innerHTML = "";
       return;
     }
@@ -381,9 +409,9 @@
     go(0);
   }
 
-  function updateUI(events) {
+  function updateUI(events, crypto) {
     updateHero(events);
-    updateSide(events);
+    updateSide(events, crypto);
   }
 
   fetchMarkets();
