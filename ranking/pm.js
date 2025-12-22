@@ -2,20 +2,30 @@
   const root = document.getElementById("pm-strip");
   if (!root) return;
 
+  const DEFAULT_BACKEND = "https://prediction-backend-r0vj.onrender.com";
+
+  const normBase = (u) => String(u || "").trim().replace(/\/+$/, "");
+
   const pickBackend = () => {
     const attr =
       root.getAttribute("data-pm-backend") ||
       (root.dataset ? root.dataset.pmBackend : "") ||
       "";
     const win = typeof window !== "undefined" ? window.PM_BACKEND : "";
-    const env = String(win || attr || "").trim();
-    if (env) return env.replace(/\/+$/, "");
-    if (String(location.hostname || "").endsWith("github.io")) return "https://prediction-backend-r0vj.onrender.com";
-    return "";
+    const env = normBase(win || attr);
+    return env || DEFAULT_BACKEND;
   };
 
   const BACKEND_BASE = pickBackend();
-  const join = (b, p) => (b ? b + p : p);
+
+  const join = (b, p) => {
+    const base = normBase(b);
+    const path = String(p || "");
+    if (!base) return path;
+    if (!path) return base;
+    if (path.startsWith("/")) return base + path;
+    return base + "/" + path;
+  };
 
   const fmtVolAbbrev = (n) => {
     const v = Number(n);
@@ -53,14 +63,31 @@
   };
 
   const priceCentsFromMarket = (m) => {
-    const yb = centsFromMaybe(m?.yesBid ?? m?.yes_bid);
-    const ya = centsFromMaybe(m?.yesAsk ?? m?.yes_ask);
+    const candidates = [
+      m?.last_price,
+      m?.lastPrice,
+      m?.lastPriceDollars,
+      m?.last_price_dollars,
+      m?.probability,
+      m?.prob,
+      m?.p
+    ];
+
+    for (const x of candidates) {
+      const c = centsFromMaybe(x);
+      if (c !== null) return c;
+    }
+
+    const yb = centsFromMaybe(m?.yesBid ?? m?.yes_bid ?? m?.yes_bid_price ?? m?.yesBidPrice ?? m?.yes_price);
+    const ya = centsFromMaybe(m?.yesAsk ?? m?.yes_ask ?? m?.yes_ask_price ?? m?.yesAskPrice ?? m?.yes_price_ask);
+
     if (yb !== null && ya !== null) return clampPct((yb + ya) / 2);
     if (yb !== null) return yb;
     if (ya !== null) return ya;
 
-    const nb = centsFromMaybe(m?.noBid ?? m?.no_bid);
-    const na = centsFromMaybe(m?.noAsk ?? m?.no_ask);
+    const nb = centsFromMaybe(m?.noBid ?? m?.no_bid ?? m?.no_bid_price ?? m?.noBidPrice ?? m?.no_price);
+    const na = centsFromMaybe(m?.noAsk ?? m?.no_ask ?? m?.no_ask_price ?? m?.noAskPrice ?? m?.no_price_ask);
+
     if (nb !== null && na !== null) return clampPct(100 - (nb + na) / 2);
     if (nb !== null) return clampPct(100 - nb);
     if (na !== null) return clampPct(100 - na);
@@ -86,7 +113,7 @@
     const height = 250;
 
     const createPath = (index) => {
-      let points = [];
+      const points = [];
       let start = index === 0 ? 55 : 30 - index * 10;
 
       for (let i = 0; i < 15; i++) {
@@ -137,7 +164,7 @@
   };
 
   const CRYPTO_RE =
-    /\b(CRYPTO|CRYPTOCURRENCY|BITCOIN|BTC|ETHEREUM|ETH|SOLANA|\bSOL\b|DOGE|XRP|BNB|AVAX|ADA|USDT|USDC|STABLECOIN|DEFI|BLOCKCHAIN|NFT|ALTCOIN|MEME|COINBASE|BINANCE)\b/i;
+    /\b(CRYPTO|CRYPTOCURRENCY|BITCOIN|BTC|ETHEREUM|ETH|SOLANA|\bSOL\b|DOGE|XRP|BNB|AVAX|ADA|USDT|USDC|STABLECOIN|DEFI|BLOCKCHAIN|NFT|ALTCOIN|MEME|COINBASE|BINANCE|WEB3)\b/i;
 
   const isCryptoEvent = (evt) => {
     const s = `${evt?.title || ""} ${evt?.ticker || ""} ${(evt?.subtitle || "")}`;
@@ -175,12 +202,20 @@
       };
     }
 
-    const markets = Array.isArray(evt?.markets) ? evt.markets : [];
+    const markets = Array.isArray(evt?.markets)
+      ? evt.markets
+      : Array.isArray(evt?.nestedMarkets)
+      ? evt.nestedMarkets
+      : Array.isArray(evt?.nested_markets)
+      ? evt.nested_markets
+      : [];
+
     const outcomes = markets
       .map((m) => {
         const name =
           (m?.subtitle && String(m.subtitle).trim()) ||
           (m?.yesSubTitle && String(m.yesSubTitle).trim()) ||
+          (m?.yes_sub_title && String(m.yes_sub_title).trim()) ||
           (m?.title && String(m.title).trim()) ||
           "Yes";
         const price = priceCentsFromMarket(m);
@@ -209,12 +244,12 @@
 
   const fetchJson = async (url) => {
     const r = await fetch(url, { headers: { Accept: "application/json" } });
-    if (!r.ok) throw new Error(String(r.status));
+    if (!r.ok) throw new Error(`${r.status}`);
     return r.json();
   };
 
   const fetchBundle = async () => {
-    const url = join(BACKEND_BASE, "/kalshi-markets");
+    const url = join(BACKEND_BASE, "/pm-bundle");
     const data = await fetchJson(url);
     const marketsRaw = Array.isArray(data?.markets) ? data.markets : [];
     const cryptoRaw = Array.isArray(data?.crypto) ? data.crypto : [];
@@ -417,6 +452,7 @@
   function updateSide(cryptoEvents) {
     const ensured = ensureSideMarkup();
     if (!ensured) return;
+
     const sideSlides = ensured.slides;
     const sideDots = ensured.dots;
 
@@ -513,9 +549,9 @@
       updateHero(markets);
       const side = (crypto && crypto.length ? crypto : markets.filter(isCryptoEvent)).slice(0, 3);
       updateSide(side);
-    } catch (e) {
+    } catch {
       setHeroEmpty("Markets unavailable");
-      setSideEmpty("Markets unavailable");
+      setSideEmpty("No crypto markets available");
     }
   }
 
