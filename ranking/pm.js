@@ -1,426 +1,275 @@
-(() => {
-  const root = document.getElementById("pm-strip");
-  if (!root) return;
+import express from "express";
+import cors from "cors";
+import axios from "axios";
 
-  const API_PM_BACKEND = "https://prediction-backend-r0vj.onrender.com";
+const app = express();
+app.use(cors());
 
-  const fmtVolAbbrev = (n) => {
-    const v = Number(n);
-    if (!Number.isFinite(v) || v <= 0) return "$0";
-    const abs = Math.abs(v);
-    const f = (x) => String(x).replace(/\.0$/, "");
-    if (abs >= 1e9) return "$" + f((v / 1e9).toFixed(1)) + "B";
-    if (abs >= 1e6) return "$" + f((v / 1e6).toFixed(1)) + "M";
-    if (abs >= 1e3) return "$" + f((v / 1e3).toFixed(1)) + "k";
-    return "$" + Math.floor(v).toLocaleString();
-  };
+const KALSHI_BASE = "https://api.elections.kalshi.com/trade-api/v2";
+const MARKETS_URL = `${KALSHI_BASE}/markets`;
+const SERIES_URL = `${KALSHI_BASE}/series`;
 
-  const fmtVolFull = (n) => {
-    const v = Number(n);
-    if (!Number.isFinite(v) || v <= 0) return "--";
-    return "$" + Math.floor(v).toLocaleString("en-US");
-  };
+const HERO_TTL_MS = 60 * 1000;
+const CRYPTO_TTL_MS = 60 * 1000;
+const SERIES_TTL_MS = 6 * 60 * 60 * 1000;
+const META_TTL_MS = 15 * 60 * 1000;
 
-  const pct = (v) => {
-    const n = Number(v);
-    if (!Number.isFinite(n)) return null;
-    const p = n <= 1 ? n * 100 : n;
-    const r = Math.round(p);
-    return Math.max(0, Math.min(100, r));
-  };
+const heroCache = { ts: 0, data: null };
+const cryptoCache = { ts: 0, data: null };
+const seriesCache = { ts: 0, data: null };
+const metaCache = new Map();
 
-  const payoutFromPct = (p) => {
-    const n = Number(p);
-    if (!Number.isFinite(n) || n <= 0) return null;
-    const x = Math.round(10000 / n);
-    if (!Number.isFinite(x) || x <= 0) return null;
-    return x;
-  };
+const http = axios.create({
+  timeout: 15000,
+  headers: { Accept: "application/json" }
+});
 
-  const iconStyle = (url) =>
-    url
-      ? `background-image:url('${url}');background-size:cover;background-position:center;`
-      : `background-color:#f3f4f6;display:flex;align-items:center;justify-content:center;`;
+const isAbsUrl = (u) => typeof u === "string" && /^https?:\/\//i.test(u);
+const absImg = (u) => {
+  if (!u) return null;
+  if (isAbsUrl(u)) return u;
+  if (u.startsWith("/")) return `https://kalshi.com${u}`;
+  return `https://kalshi.com/${u}`;
+};
 
-  const drawChart = (outcomeCount) => {
-    const width = 600;
-    const height = 250;
+const toNum = (v) => {
+  const n = typeof v === "string" ? Number(v) : v;
+  return Number.isFinite(n) ? n : null;
+};
 
-    const createPath = (color, index) => {
-      let points = [];
-      let start = index === 0 ? 55 : 30 - index * 10;
+const clampPct = (n) => {
+  if (n === null) return null;
+  const x = Math.round(n);
+  return Math.max(0, Math.min(100, x));
+};
 
-      for (let i = 0; i < 15; i++) {
-        start += (Math.random() - 0.5) * 10;
-        points.push(Math.max(2, Math.min(98, start)));
+const priceCents = (m) => {
+  const lp = toNum(m.last_price);
+  if (lp !== null) return clampPct(lp);
+  const lpd = toNum(m.last_price_dollars);
+  if (lpd !== null) return clampPct(lpd * 100);
+  const yb = toNum(m.yes_bid);
+  if (yb !== null) return clampPct(yb);
+  const ybd = toNum(m.yes_bid_dollars);
+  if (ybd !== null) return clampPct(ybd * 100);
+  const ya = toNum(m.yes_ask);
+  if (ya !== null) return clampPct(ya);
+  const yad = toNum(m.yes_ask_dollars);
+  if (yad !== null) return clampPct(yad * 100);
+  return null;
+};
+
+const volValue = (m) => toNum(m.volume_24h) ?? toNum(m.volume) ?? 0;
+
+const CRYPTO_RE =
+  /\b(CRYPTO|CRYPTOCURRENCY|BITCOIN|BTC|ETHEREUM|ETH|SOLANA|\bSOL\b|DOGE|XRP|BNB|AVAX|ADA|USDT|USDC|STABLECOIN|DEFI|BLOCKCHAIN|NFT|ALTCOIN|MEME|COINBASE|BINANCE|MICROSTRATEGY|MSTR)\b/i;
+
+const isCryptoMarket = (m) => {
+  const s = `${m?.title || ""} ${m?.subtitle || ""} ${m?.yes_sub_title || ""} ${m?.no_sub_title || ""} ${m?.ticker || ""} ${m?.event_ticker || ""}`;
+  return CRYPTO_RE.test(s);
+};
+
+const fetchMarketsPaged = async (params, maxPages = 10) => {
+  let cursor = null;
+  const out = [];
+  for (let i = 0; i < maxPages; i++) {
+    const r = await http.get(MARKETS_URL, {
+      params: {
+        limit: 1000,
+        ...params,
+        ...(cursor ? { cursor } : {})
       }
-
-      let d = `M 0 ${height - (points[0] / 100) * height}`;
-      points.forEach((p, i) => {
-        const x = (i / (points.length - 1)) * width;
-        const y = height - (p / 100) * height;
-        d += ` L ${x} ${y}`;
-      });
-
-      return { d, color };
-    };
-
-    const colors = ["#00d293", "#3b82f6", "#9ca3af"];
-    let pathsHtml = "";
-
-    for (let i = 0; i < outcomeCount; i++) {
-      const path = createPath(colors[i] || "#999", i);
-      if (i === 0) {
-        pathsHtml += `
-          <defs>
-            <linearGradient id="grad-main" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="${path.color}" stop-opacity="0.2"/>
-              <stop offset="100%" stop-color="${path.color}" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <path d="${path.d} L ${width} ${height} L 0 ${height} Z" fill="url(#grad-main)"></path>
-          <path d="${path.d}" fill="none" stroke="${path.color}" stroke-width="3"></path>
-        `;
-      } else {
-        pathsHtml += `<path d="${path.d}" fill="none" stroke="${path.color}" stroke-width="2"></path>`;
-      }
-    }
-
-    return `
-      <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="width:100%;height:100%;">
-        <line x1="0" y1="${height * 0.25}" x2="${width}" y2="${height * 0.25}" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="4"/>
-        <line x1="0" y1="${height * 0.5}" x2="${width}" y2="${height * 0.5}" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="4"/>
-        <line x1="0" y1="${height * 0.75}" x2="${width}" y2="${height * 0.75}" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="4"/>
-        ${pathsHtml}
-      </svg>
-    `;
-  };
-
-  const CRYPTO_STRONG_RE =
-    /\b(CRYPTO|CRYPTOCURRENCY|BTC|BITCOIN|ETH|ETHEREUM|SOLANA|\bSOL\b|DOGE|DOGECOIN|XRP|RIPPLE|BNB|BINANCE\s*COIN|AVAX|AVALANCHE|ADA|CARDANO|SUI|APTOS|TON|POLKADOT|\bDOT\b|CHAINLINK|\bLINK\b|ARBITRUM|\bARB\b|OPTIMISM|\bOP\b|USDT|TETHER|USDC|STABLECOIN|DEFI|BLOCKCHAIN|ON-?CHAIN|NFT|ALTCOIN|MEMECOIN|COINBASE|BINANCE|KRAKEN|BYBIT|OKX|METAMASK|PHANTOM|HALVING|HASHRATE|MINING)\b/i;
-
-  const isCryptoEvent = (evt) => {
-    const o = Array.isArray(evt?.outcomes) ? evt.outcomes : [];
-    const extra = o
-      .map((x) => `${x?.name || ""} ${x?.ticker || ""}`)
-      .join(" ");
-    const s = `${evt?.title || ""} ${evt?.ticker || ""} ${extra}`;
-    return CRYPTO_STRONG_RE.test(s);
-  };
-
-  function ensureSideMarkup() {
-    const sideWidget = document.getElementById("pmSideWidget");
-    if (!sideWidget) return null;
-
-    let slides = document.getElementById("pmSideSlides");
-    let dots = document.getElementById("pmSideDots");
-
-    if (!slides || !dots) {
-      sideWidget.innerHTML = `
-        <div class="pm-side-carousel" id="pmSideCarousel">
-          <div class="pm-side-slides" id="pmSideSlides"></div>
-          <div class="pm-side-dots" id="pmSideDots"></div>
-        </div>
-      `;
-      slides = document.getElementById("pmSideSlides");
-      dots = document.getElementById("pmSideDots");
-    }
-
-    return { slides, dots };
+    });
+    const markets = Array.isArray(r.data?.markets) ? r.data.markets : [];
+    out.push(...markets);
+    cursor = r.data?.cursor || null;
+    if (!cursor) break;
   }
+  return out;
+};
 
-  const getYesNoFromEvent = (evt) => {
-    const outcomes = Array.isArray(evt?.outcomes) ? evt.outcomes : [];
-    const norm = outcomes.map((o) => ({ ...o, _n: String(o?.name || "").trim().toUpperCase() }));
-    const yes = norm.find((o) => o._n === "YES") || null;
-    const no = norm.find((o) => o._n === "NO") || null;
+const fetchAllSeries = async () => {
+  const now = Date.now();
+  if (seriesCache.data && now - seriesCache.ts < SERIES_TTL_MS) return seriesCache.data;
 
-    if (yes && no) {
-      const y = pct(yes.price);
-      const n = pct(no.price);
-      if (y !== null && n !== null) return { yesPct: y, noPct: n, marketTicker: yes.ticker || no.ticker || "" };
-      if (y !== null) return { yesPct: y, noPct: Math.max(0, 100 - y), marketTicker: yes.ticker || "" };
-      if (n !== null) return { yesPct: Math.max(0, 100 - n), noPct: n, marketTicker: no.ticker || "" };
-    }
+  const r = await http.get(SERIES_URL, { params: { include_product_metadata: false } });
+  const series = Array.isArray(r.data?.series) ? r.data.series : [];
+  seriesCache.ts = now;
+  seriesCache.data = series;
+  return series;
+};
 
-    const top = norm[0] || null;
-    const second = norm[1] || null;
-    const pTop = pct(top?.price);
-    const pSecond = pct(second?.price);
+const getEventMetadata = async (eventTicker) => {
+  const cached = metaCache.get(eventTicker);
+  const now = Date.now();
+  if (cached && now - cached.ts < META_TTL_MS) return cached.data;
 
-    if (pTop !== null && pSecond !== null && pTop + pSecond <= 110) {
-      return { yesPct: pTop, noPct: pSecond, marketTicker: top?.ticker || second?.ticker || "" };
-    }
+  const url = `${KALSHI_BASE}/events/${encodeURIComponent(eventTicker)}/metadata`;
+  const r = await http.get(url);
+  const data = r.data || null;
 
-    if (pTop !== null) {
-      return { yesPct: pTop, noPct: Math.max(0, 100 - pTop), marketTicker: top?.ticker || "" };
-    }
+  metaCache.set(eventTicker, { ts: now, data });
+  return data;
+};
 
-    return { yesPct: null, noPct: null, marketTicker: top?.ticker || "" };
-  };
+const hydrateImages = async (events) => {
+  const metas = await Promise.allSettled(events.map((e) => getEventMetadata(e.ticker)));
+  return events.map((evt, i) => {
+    const meta = metas[i]?.status === "fulfilled" ? metas[i].value : null;
+    if (!meta) return evt;
 
-  async function fetchMarkets() {
-    try {
-      const response = await fetch(`${API_PM_BACKEND}/kalshi-markets`);
-      const data = await response.json();
-      const markets = Array.isArray(data?.markets) ? data.markets : [];
-      const crypto = Array.isArray(data?.crypto) ? data.crypto : [];
-      if (markets.length) updateUI(markets, crypto);
-      else setSideEmpty();
-    } catch (e) {
-      setSideEmpty();
-    }
-  }
+    const eventImg = absImg(meta.featured_image_url || meta.image_url);
+    if (eventImg) evt.image_url = eventImg;
 
-  function setSideEmpty() {
-    const sideSlides = document.getElementById("pmSideSlides");
-    const sideDots = document.getElementById("pmSideDots");
-    if (sideSlides) sideSlides.innerHTML = "";
-    if (sideDots) sideDots.innerHTML = "";
-  }
-
-  function updateHero(events) {
-    const heroEvents = events.slice(0, 6);
-    const slidesContainer = document.getElementById("pmSlides");
-    const carousel = document.querySelector(".pm-carousel");
-
-    if (slidesContainer) {
-      slidesContainer.innerHTML = heroEvents
-        .map((evt) => {
-          const imgUrl = evt.image_url;
-          const imgStyle = iconStyle(imgUrl);
-          const imgContent = !imgUrl ? "📊" : "";
-          const outcomes = Array.isArray(evt.outcomes) ? evt.outcomes : [];
-
-          const outcomesHtml = outcomes
-            .map((outcome, idx) => {
-              const color = idx === 0 ? "#00d293" : idx === 1 ? "#3b82f6" : "#9ca3af";
-              const p = pct(outcome?.price);
-              const pctTxt = p === null ? "--" : `${p}%`;
-              const opacity = idx === 0 ? "1" : "0.8";
-              const miniUrl = outcome?.image_url || imgUrl;
-              const miniStyle = iconStyle(miniUrl);
-
-              return `
-                <div class="k-outcome-row" style="opacity:${opacity};border-bottom:1px solid #f7f7f7;">
-                  <div class="k-outcome-info">
-                    <div class="k-mini-icon" style="${miniStyle}"></div>
-                    <span class="k-outcome-name">${outcome?.name || ""}</span>
-                  </div>
-                  <div class="k-outcome-right">
-                    <span class="k-pct" style="color:${color};">${pctTxt}</span>
-                    <div class="k-yn-group">
-                      <button class="k-btn yes">Yes</button>
-                      <button class="k-btn no">No</button>
-                    </div>
-                  </div>
-                </div>
-              `;
-            })
-            .join("");
-
-          const legendHtml = outcomes
-            .map((outcome, idx) => {
-              const colorClass = idx === 0 ? "green" : idx === 1 ? "blue" : "gray";
-              const p = pct(outcome?.price);
-              const pctTxt = p === null ? "--" : `${p}%`;
-              return `<div class="k-legend-item"><div class="k-dot ${colorClass}"></div> ${outcome?.name || ""} ${pctTxt}</div>`;
-            })
-            .join("");
-
-          return `
-            <article class="pm-slide">
-              <div class="pm-card pm-card--hero">
-                <div class="pm-hero-container">
-                  <div class="k-left-col">
-                    <div class="k-header">
-                      <div class="k-main-icon" style="${imgStyle}">${imgContent}</div>
-                      <div class="k-title">${evt.title || ""}</div>
-                    </div>
-
-                    <div class="k-outcomes-list">${outcomesHtml}</div>
-
-                    <div class="k-news-section">
-                      <div class="k-news-meta">
-                        <span style="font-weight:700;color:#000;">Market Data ·</span>
-                        <span>Total Vol: ${fmtVolAbbrev(evt.volume)}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="k-right-col">
-                    <div class="k-chart-legend">${legendHtml}</div>
-                    <div class="k-chart-container">${drawChart(outcomes.length)}</div>
-                  </div>
-                </div>
-              </div>
-            </article>
-          `;
-        })
-        .join("");
-    }
-
-    if (carousel) {
-      const oldNav = carousel.querySelector(".pm-dots-container");
-      if (oldNav) oldNav.remove();
-
-      const controls = document.createElement("div");
-      controls.className = "pm-dots-container";
-
-      const prev = document.createElement("button");
-      prev.className = "pm-nav-arrow pm-prev";
-      prev.innerHTML = "←";
-
-      const next = document.createElement("button");
-      next.className = "pm-nav-arrow pm-next";
-      next.innerHTML = "→";
-
-      const dotsHTML = heroEvents
-        .map((_, i) => `<button class="pm-dot ${i === 0 ? "is-active" : ""}" data-index="${i}"></button>`)
-        .join("");
-
-      controls.appendChild(prev);
-      controls.insertAdjacentHTML("beforeend", dotsHTML);
-      controls.appendChild(next);
-      carousel.appendChild(controls);
-
-      const slides = document.getElementById("pmSlides");
-      const dots = controls.querySelectorAll(".pm-dot");
-      const total = heroEvents.length;
-      let curr = 0;
-
-      const go = (i) => {
-        if (!slides) return;
-        if (i < 0) i = total - 1;
-        if (i >= total) i = 0;
-        curr = i;
-        slides.style.transform = `translateX(-${curr * 100}%)`;
-        dots.forEach((d, idx) => d.classList.toggle("is-active", idx === curr));
+    const details = Array.isArray(meta.market_details) ? meta.market_details : [];
+    const byMarketTicker = {};
+    for (const d of details) {
+      if (!d?.market_ticker) continue;
+      byMarketTicker[d.market_ticker] = {
+        image_url: absImg(d.image_url),
+        color_code: d.color_code || null
       };
-
-      prev.onclick = () => go(curr - 1);
-      next.onclick = () => go(curr + 1);
-      dots.forEach((d) => (d.onclick = () => go(parseInt(d.dataset.index))));
-    }
-  }
-
-  let sideTimer = null;
-  let sideIdx = 0;
-
-  function updateSide(events, cryptoFromBackend) {
-    const ensured = ensureSideMarkup();
-    if (!ensured) return;
-    const sideSlides = ensured.slides;
-    const sideDots = ensured.dots;
-
-    const backend = Array.isArray(cryptoFromBackend) ? cryptoFromBackend : [];
-    const backendFiltered = backend.filter(isCryptoEvent);
-
-    const fallbackFiltered = events
-      .filter(isCryptoEvent)
-      .slice()
-      .sort((a, b) => (Number(b.volume) || 0) - (Number(a.volume) || 0));
-
-    const list = (backendFiltered.length ? backendFiltered : fallbackFiltered).slice(0, 3);
-
-    if (sideTimer) clearInterval(sideTimer);
-    sideIdx = 0;
-
-    if (!list.length) {
-      sideSlides.innerHTML = `<div class="pm-side-empty">No crypto markets available</div>`;
-      sideDots.innerHTML = "";
-      return;
     }
 
-    sideSlides.innerHTML = list
-      .map((evt) => {
-        const imgUrl = evt?.image_url || null;
-        const top = getYesNoFromEvent(evt);
-        const yesPct = top.yesPct;
-        const noPct = top.noPct;
-        const yesPay = payoutFromPct(yesPct);
-        const noPay = payoutFromPct(noPct);
-        const marketTicker = top.marketTicker || "";
-        const url = marketTicker
-          ? `https://kalshi.com/markets/${encodeURIComponent(marketTicker)}?ref=flashscreener`
-          : "https://kalshi.com/market-data";
-
-        const yesPayTxt = yesPay ? "$" + yesPay.toLocaleString("en-US") : "--";
-        const noPayTxt = noPay ? "$" + noPay.toLocaleString("en-US") : "--";
-        const yesPctTxt = yesPct === null ? "--" : `${yesPct}%`;
-
-        return `
-          <article class="pm-side-slide" data-url="${url}">
-            <div class="pm-side-top">
-              <div class="pm-side-icon" style="${iconStyle(imgUrl)}">${imgUrl ? "" : "₿"}</div>
-              <div class="pm-side-question">${evt?.title || ""}</div>
-              <div class="pm-side-pct">${yesPctTxt}</div>
-            </div>
-
-            <div class="pm-side-ctas">
-              <button class="pm-side-btn yes" type="button">Yes</button>
-              <button class="pm-side-btn no" type="button">No</button>
-            </div>
-
-            <div class="pm-side-payout">
-              <div class="pm-side-payline">
-                <span class="pm-side-paybase">$100</span>
-                <span class="pm-side-payarrow">→</span>
-                <span class="pm-side-paywin">${yesPayTxt}</span>
-              </div>
-              <div class="pm-side-payline">
-                <span class="pm-side-paybase">$100</span>
-                <span class="pm-side-payarrow">→</span>
-                <span class="pm-side-paywin">${noPayTxt}</span>
-              </div>
-            </div>
-
-            <div class="pm-side-bottom">
-              <div class="pm-side-vol">${fmtVolFull(evt?.volume)}</div>
-              <button class="pm-side-plus" type="button" aria-label="Open market">+</button>
-            </div>
-          </article>
-        `;
-      })
-      .join("");
-
-    sideDots.innerHTML = list
-      .map((_, i) => `<button class="pm-side-dot ${i === 0 ? "is-active" : ""}" data-index="${i}" type="button"></button>`)
-      .join("");
-
-    const go = (i) => {
-      const total = list.length;
-      if (i < 0) i = total - 1;
-      if (i >= total) i = 0;
-      sideIdx = i;
-      sideSlides.style.transform = `translateX(-${sideIdx * 100}%)`;
-      [...sideDots.querySelectorAll(".pm-side-dot")].forEach((d, idx) =>
-        d.classList.toggle("is-active", idx === sideIdx)
-      );
-    };
-
-    sideDots.querySelectorAll(".pm-side-dot").forEach((d) => {
-      d.onclick = () => go(parseInt(d.dataset.index || "0"));
+    evt.outcomes = evt.outcomes.map((o) => {
+      const d = byMarketTicker[o.ticker];
+      if (!d) return o;
+      return {
+        ...o,
+        image_url: d.image_url || o.image_url,
+        color_code: d.color_code || o.color_code
+      };
     });
 
-    sideSlides.onclick = (e) => {
-      const t = e.target;
-      const btn = t.closest(".pm-side-btn, .pm-side-plus");
-      if (!btn) return;
-      const slide = t.closest(".pm-side-slide");
-      const url = slide?.dataset?.url;
-      if (url) window.open(url, "_blank");
-    };
+    return evt;
+  });
+};
 
-    sideTimer = setInterval(() => go(sideIdx + 1), 6500);
+const buildEventsFromMarkets = (allMarkets, opts = {}) => {
+  const eventsMap = {};
+  const excludeSports = opts.excludeSports ?? true;
+  const excludeLeagues = opts.excludeLeagues ?? true;
 
-    go(0);
+  for (const market of allMarkets) {
+    if (excludeSports && market.category === "Sports") continue;
+
+    if (excludeLeagues) {
+      const t = String((market.title || "") + (market.ticker || "")).toUpperCase();
+      if (["NBA", "NFL", "MLB", "SOCCER"].some((k) => t.includes(k))) continue;
+    }
+
+    const eventId = market.event_ticker;
+    if (!eventId) continue;
+
+    if (!eventsMap[eventId]) {
+      eventsMap[eventId] = {
+        ticker: eventId,
+        title: market.title || eventId,
+        volume: 0,
+        image_url: null,
+        outcomes: []
+      };
+    }
+
+    const v = volValue(market);
+    eventsMap[eventId].volume += v;
+
+    const name =
+      (market.subtitle && String(market.subtitle).trim()) ||
+      (market.yes_sub_title && String(market.yes_sub_title).trim()) ||
+      "Yes";
+
+    eventsMap[eventId].outcomes.push({
+      name,
+      price: priceCents(market),
+      volume: v,
+      ticker: market.ticker,
+      image_url: null,
+      color_code: null
+    });
   }
 
-  function updateUI(events, crypto) {
-    updateHero(events);
-    updateSide(events, crypto);
+  return Object.values(eventsMap)
+    .map((event) => {
+      event.outcomes.sort((a, b) => (b.price ?? -1) - (a.price ?? -1));
+      event.outcomes = event.outcomes.slice(0, 3);
+      return event;
+    })
+    .sort((a, b) => (b.volume ?? 0) - (a.volume ?? 0));
+};
+
+const getHeroEvents = async () => {
+  const now = Date.now();
+  if (heroCache.data && now - heroCache.ts < HERO_TTL_MS) return heroCache.data;
+
+  const markets = await fetchMarketsPaged({ status: "open" }, 6);
+  let events = buildEventsFromMarkets(markets, { excludeSports: true, excludeLeagues: true }).slice(0, 69);
+  events = await hydrateImages(events);
+
+  heroCache.ts = now;
+  heroCache.data = events;
+  return events;
+};
+
+const getCryptoEvents = async () => {
+  const now = Date.now();
+  if (cryptoCache.data && now - cryptoCache.ts < CRYPTO_TTL_MS) return cryptoCache.data;
+
+  const allSeries = await fetchAllSeries();
+  const cryptoSeriesTickers = allSeries
+    .filter((s) => {
+      const tags = Array.isArray(s?.tags) ? s.tags.join(" ") : "";
+      const hay = `${s?.title || ""} ${s?.category || ""} ${tags}`;
+      return CRYPTO_RE.test(hay);
+    })
+    .map((s) => s.ticker)
+    .filter(Boolean);
+
+  const pickedSeries = cryptoSeriesTickers.slice(0, 18);
+
+  const seriesReqs = pickedSeries.map((st) =>
+    http.get(MARKETS_URL, {
+      params: {
+        status: "open",
+        series_ticker: st,
+        limit: 1000
+      }
+    })
+  );
+
+  const seriesRes = await Promise.allSettled(seriesReqs);
+
+  let cryptoMarkets = [];
+  for (const r of seriesRes) {
+    if (r.status !== "fulfilled") continue;
+    const ms = Array.isArray(r.value.data?.markets) ? r.value.data.markets : [];
+    cryptoMarkets.push(...ms);
   }
 
-  fetchMarkets();
-})();
+  cryptoMarkets = cryptoMarkets.filter(isCryptoMarket);
+
+  if (cryptoMarkets.length < 10) {
+    const scanned = await fetchMarketsPaged({ status: "open" }, 12);
+    cryptoMarkets = scanned.filter(isCryptoMarket);
+  }
+
+  let cryptoEvents = buildEventsFromMarkets(cryptoMarkets, { excludeSports: true, excludeLeagues: false }).slice(0, 15);
+  cryptoEvents = await hydrateImages(cryptoEvents);
+  cryptoEvents = cryptoEvents.slice(0, 3);
+
+  cryptoCache.ts = now;
+  cryptoCache.data = cryptoEvents;
+  return cryptoEvents;
+};
+
+app.get("/kalshi-markets", async (req, res) => {
+  try {
+    const [markets, crypto] = await Promise.all([getHeroEvents(), getCryptoEvents()]);
+    res.json({ markets, crypto });
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao processar dados" });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {});
