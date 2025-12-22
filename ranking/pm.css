@@ -433,3 +433,5 @@
   .pm-side-payline{font-size:20px;}
   .pm-side-vol{font-size:20px;}
 }
+
+.pm-side-empty{height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-weight:600;font-size:14px;padding:24px;text-align:center;}
