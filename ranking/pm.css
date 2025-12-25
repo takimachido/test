@@ -1,15 +1,15 @@
 .pm-strip {
-  max-width: 1320px;
-  margin: 24px auto;
-  padding: 0 24px;
+  max-width: 1280px;
+  margin: 22px auto;
+  padding: 0 32px;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
 }
 
 .pm-grid {
   display: grid;
-  grid-template-columns: 1.7fr 1fr;
-  gap: 18px;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
   align-items: stretch;
 }
 
@@ -24,6 +24,7 @@
   position: relative;
   padding: 0;
   height: 100%;
+  min-height: 400px;
 }
 
 .pm-carousel {
@@ -48,41 +49,41 @@
 
 .pm-hero-container {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1.08fr 0.92fr;
   height: 100%;
   gap: 0;
 }
 
 .k-left-col {
-  padding: 22px 22px 18px;
+  padding: 18px 18px 14px;
   border-right: 1px solid #efefef;
 }
 
 .k-right-col {
-  padding: 20px 22px 18px;
+  padding: 18px 18px 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .k-header {
   display: grid;
-  grid-template-columns: 58px 1fr;
-  gap: 14px;
+  grid-template-columns: 54px 1fr;
+  gap: 12px;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .k-main-icon {
-  width: 58px;
-  height: 58px;
+  width: 54px;
+  height: 54px;
   border-radius: 14px;
   border: 1px solid #ececf2;
   background: #f3f4f6;
 }
 
 .k-title {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
   color: #121212;
   line-height: 1.15;
@@ -93,14 +94,14 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .k-outcome-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #efefef;
 }
 
@@ -116,8 +117,8 @@
 }
 
 .k-mini-icon {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 999px;
   border: 1px solid #ececf2;
   background: #f3f4f6;
@@ -125,7 +126,7 @@
 }
 
 .k-outcome-name {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   color: #1f2937;
   overflow: hidden;
@@ -137,12 +138,12 @@
 .k-outcome-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   flex: 0 0 auto;
 }
 
 .k-pct {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 900;
   letter-spacing: -0.02em;
   min-width: 52px;
@@ -177,14 +178,14 @@
 
 .k-chart-legend {
   display: flex;
-  gap: 18px;
+  gap: 16px;
   flex-wrap: wrap;
   align-items: center;
   padding-top: 2px;
 }
 
 .k-legend-item {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #4b5563;
   display: flex;
@@ -211,32 +212,34 @@
 .k-chart-container {
   flex: 1;
   border-top: 1px dashed #efefef;
-  padding-top: 14px;
-  min-height: 220px;
+  padding-top: 12px;
+  min-height: 200px;
 }
 
 .k-news-section {
-  margin-top: 12px;
-  padding-top: 14px;
+  margin-top: 10px;
+  padding-top: 12px;
   border-top: 1px solid #efefef;
 }
 
 .k-news-meta {
-  font-size: 14px;
+  font-size: 13.5px;
   color: #6b7280;
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-/* =========================================
-   NAV DOTS (CARROSSEL ESQUERDA)
-   ========================================= */
+.k-news-label {
+  font-weight: 700;
+  color: #000;
+}
+
 .pm-dots-container {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 14px;
+  bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -245,8 +248,8 @@
 }
 
 .pm-dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 999px;
   border: 0;
   background: #e5e7eb;
@@ -259,13 +262,13 @@
 
 .pm-nav-arrow {
   border: 0;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   background: #fff;
   box-shadow: 0 6px 16px rgba(0,0,0,0.12);
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 900;
   color: #111;
   display: flex;
@@ -277,18 +280,16 @@
   transform: scale(0.98);
 }
 
-/* =========================================
-   WIDGET DIREITA (CARD)
-   ========================================= */
 .pm-card--side {
   background: #fff;
   border-radius: 16px;
-  padding: 18px;
+  padding: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  min-height: 400px;
   box-sizing: border-box;
 }
 
@@ -303,14 +304,43 @@
   padding: 24px;
 }
 
-/* =========================================
-   RESPONSIVO
-   ========================================= */
+.pm-side-carousel{position:relative;width:100%;height:100%;overflow:hidden;border-radius:16px;}
+.pm-side-slides{display:flex;width:100%;height:100%;transition:transform .55s ease;}
+.pm-side-slide{flex:0 0 100%;padding:16px 16px 46px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;}
+.pm-side-top{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;}
+.pm-side-icon{width:44px;height:44px;border-radius:12px;border:1px solid #ececf2;background:#f3f4f6;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#111;}
+.pm-side-question{font-weight:800;font-size:19px;line-height:1.2;color:#111;letter-spacing:-.01em;max-height:3.6em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+.pm-side-pct{font-weight:900;font-size:23px;line-height:1;color:#111;white-space:nowrap;}
+.pm-side-ctas{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:2px;}
+.pm-side-btn{border:0;border-radius:14px;padding:14px 0;font-size:19px;font-weight:800;cursor:pointer;transition:filter .15s ease;}
+.pm-side-btn:active{filter:brightness(.96);}
+.pm-side-btn.yes{background:#e8efff;color:#2b64ff;}
+.pm-side-btn.no{background:#f0e7ff;color:#8b3dff;}
+.pm-side-payout{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:2px;}
+.pm-side-payline{display:flex;align-items:center;justify-content:center;gap:10px;font-size:24px;letter-spacing:-.02em;}
+.pm-side-paybase{color:#b5b5bd;font-weight:600;}
+.pm-side-payarrow{color:#b5b5bd;font-weight:600;}
+.pm-side-paywin{color:#16a34a;font-weight:800;}
+.pm-side-bottom{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:6px;}
+.pm-side-vol{font-size:20px;font-weight:700;color:#c3c3cc;}
+.pm-side-plus{width:32px;height:32px;border-radius:999px;border:3px solid #111;background:transparent;font-size:20px;line-height:1;font-weight:900;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+.pm-side-controls{position:absolute;left:0;right:0;bottom:12px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:auto;}
+.pm-side-dots{display:flex;justify-content:center;gap:9px;}
+.pm-side-dot{width:8px;height:8px;border-radius:999px;border:0;background:#e5e7eb;cursor:pointer;}
+.pm-side-dot.is-active{background:#111827;}
+.pm-side-nav-arrow{border:0;width:30px;height:30px;border-radius:999px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,0.12);cursor:pointer;font-size:15px;font-weight:900;color:#111;display:flex;align-items:center;justify-content:center;}
+.pm-side-nav-arrow:active{transform:scale(0.98);}
+.pm-side-nav-arrow:disabled{opacity:.35;cursor:default;box-shadow:none;}
+
 @media (max-width: 1100px) {
   .pm-grid {
     grid-template-columns: 1fr;
   }
   .pm-card--side {
+    min-height: 320px;
+  }
+  .pm-card--hero {
     min-height: 320px;
   }
   .pm-hero-container {
@@ -336,40 +366,18 @@
     font-size: 18px;
   }
   .pm-nav-arrow {
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
+  }
+  .pm-side-nav-arrow{
+    width: 28px;
+    height: 28px;
   }
 }
 
-.pm-side-carousel{position:relative;width:100%;height:100%;overflow:hidden;border-radius:16px;}
-.pm-side-slides{display:flex;width:100%;height:100%;transition:transform .55s ease;}
-.pm-side-slide{flex:0 0 100%;padding:18px 18px 54px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px;}
-.pm-side-top{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;}
-.pm-side-icon{width:44px;height:44px;border-radius:12px;border:1px solid #ececf2;background:#f3f4f6;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#111;}
-.pm-side-question{font-weight:800;font-size:20px;line-height:1.2;color:#111;letter-spacing:-.01em;max-height:3.6em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
-.pm-side-pct{font-weight:900;font-size:24px;line-height:1;color:#111;white-space:nowrap;}
-.pm-side-ctas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:2px;}
-.pm-side-btn{border:0;border-radius:14px;padding:16px 0;font-size:20px;font-weight:800;cursor:pointer;transition:filter .15s ease;}
-.pm-side-btn:active{filter:brightness(.96);}
-.pm-side-btn.yes{background:#e8efff;color:#2b64ff;}
-.pm-side-btn.no{background:#f0e7ff;color:#8b3dff;}
-.pm-side-payout{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:2px;}
-.pm-side-payline{display:flex;align-items:center;justify-content:center;gap:10px;font-size:26px;letter-spacing:-.02em;}
-.pm-side-paybase{color:#b5b5bd;font-weight:600;}
-.pm-side-payarrow{color:#b5b5bd;font-weight:600;}
-.pm-side-paywin{color:#16a34a;font-weight:800;}
-.pm-side-bottom{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:6px;}
-.pm-side-vol{font-size:22px;font-weight:700;color:#c3c3cc;}
-.pm-side-plus{width:34px;height:34px;border-radius:999px;border:3px solid #111;background:transparent;font-size:22px;line-height:1;font-weight:900;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.pm-side-dots{position:absolute;left:0;right:0;bottom:16px;display:flex;justify-content:center;gap:9px;}
-.pm-side-dot{width:8px;height:8px;border-radius:999px;border:0;background:#e5e7eb;cursor:pointer;}
-.pm-side-dot.is-active{background:#111827;}
-.pm-side-empty{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-weight:700;font-size:22px;padding:26px;text-align:center;}
-
 @media (max-width: 980px){
-  .pm-side-slide{padding:16px 16px 48px;}
+  .pm-side-slide{padding:14px 14px 44px;}
   .pm-side-question{font-size:18px;}
   .pm-side-payline{font-size:22px;}
   .pm-side-vol{font-size:18px;}
 }
-.k-news-label{font-weight:700;color:#000;}
