@@ -3,6 +3,7 @@
   if (!root) return;
 
   const DEFAULT_BACKEND = "https://prediction-backend-r0vj.onrender.com";
+  const SIDE_COUNT = 6;
 
   const normBase = (u) => String(u || "").trim().replace(/\/+$/, "");
 
@@ -264,19 +265,27 @@
 
     let slides = document.getElementById("pmSideSlides");
     let dots = document.getElementById("pmSideDots");
+    let prev = document.getElementById("pmSidePrev");
+    let next = document.getElementById("pmSideNext");
 
-    if (!slides || !dots) {
+    if (!slides || !dots || !prev || !next) {
       sideWidget.innerHTML = `
         <div class="pm-side-carousel" id="pmSideCarousel">
           <div class="pm-side-slides" id="pmSideSlides"></div>
-          <div class="pm-side-dots" id="pmSideDots"></div>
+          <div class="pm-side-controls" id="pmSideControls">
+            <button class="pm-side-nav-arrow pm-side-prev" id="pmSidePrev" type="button">←</button>
+            <div class="pm-side-dots" id="pmSideDots"></div>
+            <button class="pm-side-nav-arrow pm-side-next" id="pmSideNext" type="button">→</button>
+          </div>
         </div>
       `;
       slides = document.getElementById("pmSideSlides");
       dots = document.getElementById("pmSideDots");
+      prev = document.getElementById("pmSidePrev");
+      next = document.getElementById("pmSideNext");
     }
 
-    return { slides, dots };
+    return { slides, dots, prev, next };
   }
 
   const getYesNoFromEvent = (evt) => {
@@ -290,8 +299,13 @@
   function setSideEmpty(msg) {
     const ensured = ensureSideMarkup();
     if (!ensured) return;
+    ensured.slides.style.transform = `translateX(0%)`;
     ensured.slides.innerHTML = `<div class="pm-side-empty-state">${msg || "Markets unavailable"}</div>`;
     ensured.dots.innerHTML = "";
+    ensured.prev.disabled = true;
+    ensured.next.disabled = true;
+    if (sideTimer) clearInterval(sideTimer);
+    sideTimer = null;
   }
 
   function setHeroEmpty(msg) {
@@ -456,11 +470,14 @@
     const sideSlides = ensured.slides;
     const sideDots = ensured.dots;
 
-    const list = (Array.isArray(cryptoEvents) ? cryptoEvents : []).slice(0, 3);
+    const list = (Array.isArray(cryptoEvents) ? cryptoEvents : []).slice(0, SIDE_COUNT);
     if (!list.length) {
       setSideEmpty("No crypto markets available");
       return;
     }
+
+    ensured.prev.disabled = false;
+    ensured.next.disabled = false;
 
     sideSlides.innerHTML = list
       .map((evt) => {
@@ -525,30 +542,67 @@
       [...sideDots.querySelectorAll(".pm-side-dot")].forEach((d, idx) => d.classList.toggle("is-active", idx === sideIdx));
     };
 
+    const restart = () => {
+      if (sideTimer) clearInterval(sideTimer);
+      sideTimer = setInterval(() => go(sideIdx + 1), 6500);
+    };
+
+    ensured.prev.onclick = () => {
+      go(sideIdx - 1);
+      restart();
+    };
+
+    ensured.next.onclick = () => {
+      go(sideIdx + 1);
+      restart();
+    };
+
     sideDots.querySelectorAll(".pm-side-dot").forEach((d) => {
-      d.onclick = () => go(parseInt(d.dataset.index || "0"));
+      d.onclick = () => {
+        go(parseInt(d.dataset.index || "0"));
+        restart();
+      };
     });
 
-    const open = (e) => {
+    sideSlides.onclick = (e) => {
+      const isBtn = e.target.closest(".pm-side-btn, .pm-side-plus");
+      if (!isBtn) return;
       const slide = e.target.closest(".pm-side-slide");
       const url = slide?.dataset?.url;
       if (url) window.open(url, "_blank");
     };
 
-    sideSlides.querySelectorAll(".pm-side-btn, .pm-side-plus").forEach((b) => (b.onclick = open));
-
-    if (sideTimer) clearInterval(sideTimer);
-    sideTimer = setInterval(() => go(sideIdx + 1), 6500);
-
+    restart();
     go(0);
   }
+
+  const buildSideList = (crypto, markets) => {
+    const out = [];
+    const seen = new Set();
+
+    const keyOf = (e) => String(e?.ticker || e?.title || "");
+
+    const add = (arr) => {
+      for (const e of Array.isArray(arr) ? arr : []) {
+        if (out.length >= SIDE_COUNT) break;
+        const k = keyOf(e);
+        if (!k) continue;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        out.push(e);
+      }
+    };
+
+    add(crypto);
+    if (out.length < SIDE_COUNT) add((Array.isArray(markets) ? markets : []).filter(isCryptoEvent));
+    return out.slice(0, SIDE_COUNT);
+  };
 
   async function init() {
     try {
       const { markets, crypto } = await fetchBundle();
       updateHero(markets);
-      const side = (crypto && crypto.length ? crypto : markets.filter(isCryptoEvent)).slice(0, 3);
-      updateSide(side);
+      updateSide(buildSideList(crypto, markets));
     } catch {
       setHeroEmpty("Markets unavailable");
       setSideEmpty("No crypto markets available");
