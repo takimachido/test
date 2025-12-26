@@ -504,25 +504,20 @@ body {
 footer{
   background:#02040b;
   padding:0.6rem 1.5rem 0.7rem;
-  text-align:center;
   border-top:1px solid rgba(77, 15, 255, 0.3);
 
-  display:grid;
-  grid-template-columns:auto auto;
-  grid-template-rows:auto auto;
-  justify-content:center;
+  display:flex;
   align-items:center;
-  column-gap:12px;
-  row-gap:2px;
+  justify-content:space-between;
+  gap:12px;
+
+  text-align:left;
 }
 
 .footer-socials{
-  grid-column:1;
-  grid-row:1;
   display:flex;
   align-items:center;
-  justify-content:center;
-  gap:2rem;
+  gap:14px;
   margin:0;
 }
 
@@ -545,10 +540,9 @@ footer{
 }
 
 .footer-links{
-  grid-column:2;
-  grid-row:1;
   display:flex;
   align-items:center;
+  justify-content:center;
   margin:0;
 }
 
@@ -564,13 +558,11 @@ footer{
 }
 
 .copyright{
-  grid-column:1 / -1;
-  grid-row:2;
-  width:auto;
-  text-align:center;
-  margin-top:0;
+  margin:0;
   color:#888;
   font-size:0.5rem;
+  text-align:right;
+  white-space:nowrap;
 }
 
 @media (max-width: 960px) {
@@ -665,3 +657,13 @@ footer{
   }
 }
 
+@media (max-width:640px){
+  footer{
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .copyright{
+    width:100%;
+    text-align:center;
+  }
+}
